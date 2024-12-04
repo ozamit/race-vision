@@ -4,13 +4,12 @@ import CardActions from '@mui/material/CardActions';
 import { Reorder } from 'framer-motion';
 
 const Play = () => {
-    const [items, setItems] = useState([1, 2, 3, 4, 5]);
-    const [drivers, setDrivers] = useState([]);
+    const [drivers, setDrivers] = useState([]); // Store fetched driver data
     const [fetchStatus, setFetchStatus] = useState(''); // Track fetch status
 
     useEffect(() => {
-        // Fetch driver data
-        fetch('https://ergast.com/api/f1/2024/5/results.json')
+        // Fetch driver data from your backend (which proxies the request to the Ergast API)
+        fetch('http://localhost:5000/api/data') // This hits your backend, not the Ergast API directly
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -18,20 +17,21 @@ const Play = () => {
                 return response.json();
             })
             .then((data) => {
-                setDrivers(data.MRData.RaceTable.Races[0].Results || []);
-                setFetchStatus('Data fetched successfully!'); // Update status on success
+                const raceResults = data.MRData.RaceTable.Races[0].Results || [];
+                setDrivers(raceResults);  // Set drivers data to state
+                setFetchStatus('Data fetched successfully!'); // Success status
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
-                setFetchStatus('Failed to fetch data. Please try again later.'); // Update status on failure
+                setFetchStatus('Failed to fetch data. Please try again later.'); // Failure status
             });
-    }, []);
+    }, []);  // Empty dependency array, so this runs once on component mount
 
     return (
         <div>
             <div>play</div>
 
-            {/* Fetch status message */}
+            {/* Display fetch status */}
             <div style={{ marginBottom: '1rem', color: fetchStatus.startsWith('Failed') ? 'red' : 'green' }}>
                 {fetchStatus}
             </div>
