@@ -19,8 +19,10 @@ const Play = () => {
                 return response.json();
             })
             .then((data) => {
-                const raceResults = data.MRData.RaceTable.Races[0].Results || [];
-                setDrivers(raceResults);  // Set drivers data to state
+                console.log("data", data);
+                // Extract name_acronym for each driver and set it to state
+                const raceResults = data.map(driver => driver.name_acronym);
+                setDrivers(raceResults); // Set drivers state to the extracted name_acronyms
                 setFetchStatus('Data fetched successfully!'); // Success status
             })
             .catch((error) => {
@@ -41,9 +43,9 @@ const Play = () => {
             {/* Reorder.Group for drivers */}
             <Reorder.Group values={drivers} onReorder={setDrivers}>
                 {drivers.map((driver, index) => (
-                    <Reorder.Item value={driver} key={driver.Driver.code}>
+                    <Reorder.Item value={driver} key={driver}>
                         <Card>
-                            <CardActions>Driver Code: {driver.Driver.code}</CardActions>
+                            <CardActions>Driver Code: {driver}</CardActions>
                             <CardActions>Predicted Position: {index + 1}</CardActions>
                         </Card>
                     </Reorder.Item>
