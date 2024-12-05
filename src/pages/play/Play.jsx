@@ -11,7 +11,7 @@ const Play = () => {
 
     useEffect(() => {
         // Fetch driver data from your backend (which proxies the request to the Ergast API)
-        fetch(`${host}/api/data`) // This hits your backend, not the Ergast API directly
+        fetch(`${host}api/data`) // This hits your backend, not the Ergast API directly
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
