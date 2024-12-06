@@ -6,9 +6,11 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import HomeIcon from '@mui/icons-material/Home';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import './App.css';
 import Play from './pages/play/Play';
 import Home from './pages/home/Home';
+import RaceResult from './pages/raceResult/RaceResult';
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/play" element={<Play />} />
+          <Route path="/raceresult" element={<RaceResult />} />
         </Routes>
 
         {/* Bottom navigation fixed to the bottom */}
@@ -58,7 +61,7 @@ const BottomNav = () => {
               navigate('/play'); // Navigate to Home
               break;
             case 2:
-              console.log('Bottom Nav: Print to Console'); // Print to console
+              navigate('/raceresult'); // Navigate to raceresult
               break;
             default:
               break;
@@ -67,7 +70,7 @@ const BottomNav = () => {
       >
         <BottomNavigationAction label="Home" icon={<HomeIcon />} />
         <BottomNavigationAction label="Play" icon={<SportsEsportsIcon />} />
-        <BottomNavigationAction label="Profile" icon={<AccountCircleIcon />} />
+        <BottomNavigationAction label="Racing results" icon={<SportsScoreIcon />} />
       </BottomNavigation>
     </Box>
   );
