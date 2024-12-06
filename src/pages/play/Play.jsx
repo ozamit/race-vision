@@ -12,7 +12,7 @@ const Play = () => {
 
     useEffect(() => {
         // Fetch driver data from your backend
-        fetch(`${host}api/data`) // This hits your backend, not the Ergast API directly
+        fetch(`${host}drivers/getdrivers`) // This hits your backend, not the Ergast API directly
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
