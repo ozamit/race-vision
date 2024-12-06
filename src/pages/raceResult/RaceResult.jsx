@@ -7,7 +7,12 @@ import {
     TableContainer, 
     TableHead, 
     TableRow, 
-    Paper 
+    Paper, 
+    Select, 
+    MenuItem, 
+    FormControl, 
+    InputLabel, 
+    Button 
 } from '@mui/material';
 
 const MUI = { 
@@ -17,35 +22,118 @@ const MUI = {
     TableContainer, 
     TableHead, 
     TableRow, 
-    Paper 
+    Paper, 
+    Select, 
+    MenuItem, 
+    FormControl, 
+    InputLabel, 
+    Button 
 };
 
 const RaceResult = () => {
     const [driversForPositions, setDriversForPositions] = useState([]);
-    const sessionKey = 9606; // Provided session key
+    const [raceSessions, setRaceSessions] = useState([]); // State for race sessions
+    const [selectedSession, setSelectedSession] = useState(''); // State for selected session
+    const [loading, setLoading] = useState(false); // Loading state for fetching drivers
+    const sessionKey = 9606; // Default session key (for fallback or initial state)
+    const year = 2024; // Year for fetching race sessions
 
+    // New functionality: Fetch race sessions for a year
     useEffect(() => {
-        const fetchDriversForPositions = async () => {
+        const fetchRaceSessions = async () => {
             try {
-                const response = await fetch(`${host}positions/getAllPositions?sessionKey=${sessionKey}`);
+                const response = await fetch(`${host}sessions/getracesessionsforyear?year=${year}`);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
 
                 const data = await response.json();
-                setDriversForPositions(data);
+                setRaceSessions(data);
+                console.log('Race Sessions:', data); // Log the sessions to the console
             } catch (error) {
-                console.error('Error fetching drivers for positions:', error);
+                console.error('Error fetching race sessions:', error);
             }
         };
 
-        fetchDriversForPositions();
+        fetchRaceSessions();
     }, []);
+
+    // Function to fetch drivers for positions
+    const fetchDriversForPositions = async () => {
+        if (!selectedSession) return; // Don't fetch unless a session is selected
+
+        try {
+            setLoading(true); // Set loading to true when request starts
+            const response = await fetch(`${host}positions/getAllPositions?sessionKey=${selectedSession}`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            setDriversForPositions(data); // Store the fetched data
+            setLoading(false); // Set loading to false after receiving data
+        } catch (error) {
+            console.error('Error fetching drivers for positions:', error);
+            setLoading(false); // Ensure loading is false on error
+        }
+    };
+
+    // Handle session change in the dropdown
+    const handleSessionChange = (event) => {
+        setSelectedSession(event.target.value);
+        console.log('Selected Session:', event.target.value);
+    };
+
+    // Handle the button click to fetch the drivers for the selected session
+    const handleFetchDrivers = () => {
+        if (!selectedSession) {
+            alert('Please select a session first!');
+            return;
+        }
+
+        // Trigger the fetch drivers request when the button is clicked
+        setLoading(true);
+        fetchDriversForPositions(); // Call fetchDriversForPositions when the button is clicked
+    };
 
     return (
         <div>
-            <h2>Race Results for Session {sessionKey} </h2>
+            {/* Dropdown for selecting race sessions */}
+            <FormControl fullWidth>
+                <InputLabel>Choose a Race Session</InputLabel>
+                <Select
+                    value={selectedSession}
+                    onChange={handleSessionChange}
+                    label="Choose a Race Session"
+                >
+                    {raceSessions.map((session) => (
+                        <MenuItem 
+                            key={session.session_key} 
+                            value={session.session_key}
+                        >
+                            {session.circuit_short_name} - {session.country_name}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+
+            {/* Button to fetch drivers */}
+            <Button 
+                variant="contained" 
+                color="primary" 
+                onClick={handleFetchDrivers}
+                style={{ marginTop: '10px' }}
+            >
+                Fetch Drivers for Selected Session
+            </Button>
+
+            {/* Loading state */}
+            {loading && <p>Loading...</p>}
+
+            {/* Original Table for Drivers */}
+            <h2>Race Results for Session {selectedSession}</h2>
             {driversForPositions.length > 0 ? (
                 <MUI.TableContainer component={MUI.Paper}>
                     <MUI.Table aria-label="race results table">
@@ -66,7 +154,7 @@ const RaceResult = () => {
                     </MUI.Table>
                 </MUI.TableContainer>
             ) : (
-                <p>Loading...</p>
+                !loading && <p>No race results available. Please fetch data.</p>
             )}
         </div>
     );
