@@ -1,26 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import HomeIcon from '@mui/icons-material/Home';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import './App.css';
 import Play from './pages/play/Play';
 import Home from './pages/home/Home';
 import RaceResult from './pages/raceResult/RaceResult';
+import { host } from './utils/host';
 
 function App() {
+  const [drivers, setDrivers] = useState([]);
+  const [fetchStatus, setFetchStatus] = useState('');
+
+  // Fetch driver data
+  useEffect(() => {
+    const fetchDrivers = async () => {
+      try {
+        const response = await fetch(`${host}drivers/getdrivers`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        setDrivers(data);
+        setFetchStatus('Drivers fetched successfully!');
+      } catch (error) {
+        console.error('Error fetching drivers:', error);
+        setFetchStatus('Failed to fetch drivers. Please try again later.');
+      }
+    };
+
+    fetchDrivers();
+  }, []);
+
   return (
     <Router>
       <div className="App">
-        {/* Routes for navigating between pages */}
+        {/* Pass drivers and fetchStatus as props */}
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/play" element={<Play />} />
-          <Route path="/raceresult" element={<RaceResult />} />
+          <Route path="/play" element={<Play drivers={drivers} fetchStatus={fetchStatus} />} />
+          <Route path="/raceresult" element={<RaceResult drivers={drivers} fetchStatus={fetchStatus} />} />
         </Routes>
 
         {/* Bottom navigation fixed to the bottom */}
@@ -52,16 +75,15 @@ const BottomNav = () => {
         onChange={(event, newValue) => {
           setValue(newValue);
 
-          // Perform actions based on selected navigation
           switch (newValue) {
             case 0:
-              navigate('/'); // Navigate to Play
+              navigate('/');
               break;
             case 1:
-              navigate('/play'); // Navigate to Home
+              navigate('/play');
               break;
             case 2:
-              navigate('/raceresult'); // Navigate to raceresult
+              navigate('/raceresult');
               break;
             default:
               break;
@@ -70,7 +92,7 @@ const BottomNav = () => {
       >
         <BottomNavigationAction label="Home" icon={<HomeIcon />} />
         <BottomNavigationAction label="Play" icon={<SportsEsportsIcon />} />
-        <BottomNavigationAction label="Racing results" icon={<SportsScoreIcon />} />
+        <BottomNavigationAction label="Racing Results" icon={<SportsScoreIcon />} />
       </BottomNavigation>
     </Box>
   );
