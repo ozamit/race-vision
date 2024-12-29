@@ -144,7 +144,7 @@ const RaceResult = ({ drivers, fetchStatus }) => {
                         </MUI.TableHead>
                         <MUI.TableBody>
                             {driversForPositions.map((driver) => {
-                                const { full_name, headshot_url, team_colour } = getDriverDetailsByNumber(driver.driverNumber);
+                                const { full_name, headshot_url } = getDriverDetailsByNumber(driver.driverNumber);
 
                                 return (
                                     <MUI.TableRow key={driver.position}>

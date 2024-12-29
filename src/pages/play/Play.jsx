@@ -2,19 +2,54 @@ import React, { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { Reorder } from 'framer-motion';
 
 const Play = ({ drivers, fetchStatus }) => {
   // Local state for managing drivers
   const [localDrivers, setLocalDrivers] = useState(drivers);
+  const [savedOrder, setSavedOrder] = useState([]);
+
+  // Snackbar state
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   // Sync local state when the drivers prop changes
   useEffect(() => {
     setLocalDrivers(drivers);
   }, [drivers]);
 
+  // Save the order and show a notification
+  const handleSaveOrder = () => {
+    setSavedOrder(localDrivers);
+    console.log('Saved Order:', localDrivers);
+    showNotification('Driver order saved successfully!', 'success');
+  };
+
+  // Show snackbar notification
+  const showNotification = (message, severity) => {
+    setSnackbar({ open: true, message, severity });
+  };
+
+  // Close snackbar
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
   return (
     <div style={{ margin: '0px' }}>
+      {/* Save Order Button */}
+      <div style={{ margin: '20px 40px' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSaveOrder}
+        >
+          Save Order
+        </Button>
+      </div>
+      
       <div>
         <div>{fetchStatus}</div>
         {/* Reorder.Group for drivers */}
@@ -25,13 +60,11 @@ const Play = ({ drivers, fetchStatus }) => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            marginLeft: '0', // Ensure no margin on the left of the Reorder.Group
-            paddingLeft: '0', // Ensure no padding on the left of the Reorder.Group
-            marginRight: '40px', // Ensure no margin on the left of the Reorder.Group
-            marginLeft: '40px', // Ensure no margin on the left of the Reorder.Group
-            border: '1px solid #ccc', // Add border to the Reorder.Group
-            borderRadius: '15px', // Add border radius to the Reorder.Group
-
+            marginLeft: '40px',
+            marginRight: '40px',
+            border: '1px solid #ccc',
+            borderRadius: '15px',
+            padding: '0px',
           }}
           values={localDrivers}
           onReorder={setLocalDrivers} // Update local state when reordered
@@ -82,6 +115,18 @@ const Play = ({ drivers, fetchStatus }) => {
           ))}
         </Reorder.Group>
       </div>
+
+      {/* Snackbar Component */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
