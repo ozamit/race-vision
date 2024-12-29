@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route,useNavigate } from 'react-router-dom';
 import './App.css';
 import Play from './pages/play/Play';
 import Home from './pages/home/Home';
@@ -26,7 +26,6 @@ function App() {
   const [userInfo, setUserInfo] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
-  const navigate = useNavigate(); // Ensure `useNavigate` is used within a Router context
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -142,7 +141,7 @@ function App() {
                 </Avatar>
               }
               label="Login"
-              onClick={() => navigate('/login')}
+              onClick={() => (window.location.href = '/login')} // Using window.location.href
               sx={{ cursor: 'pointer', fontWeight: 'bold' }}
             />
           )}
@@ -153,7 +152,7 @@ function App() {
           <Route path="/play" element={<Play drivers={drivers} fetchStatus={fetchStatus} />} />
           <Route path="/raceresult" element={<RaceResult drivers={drivers} fetchStatus={fetchStatus} />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/Register" element={<Register />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
 
         <BottomNav />
