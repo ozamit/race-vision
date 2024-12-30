@@ -16,7 +16,7 @@ const Home = () => {
 
   return (
     <div>
-      <div>home</div>
+      <div></div>
               {/* Display the MUI Button only in the App component */}
               {/* <NavigateButton /> */}
     </div>

@@ -6,53 +6,75 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { Reorder } from 'framer-motion';
+import { host } from '../../utils/host';
+
 
 const Play = ({ drivers, fetchStatus }) => {
-  // Local state for managing drivers
   const [localDrivers, setLocalDrivers] = useState(drivers);
   const [savedOrder, setSavedOrder] = useState([]);
-
-  // Snackbar state
+  const [scrollOffset, setScrollOffset] = useState(0);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-  // Sync local state when the drivers prop changes
   useEffect(() => {
     setLocalDrivers(drivers);
   }, [drivers]);
 
-  // Save the order and show a notification
-  const handleSaveOrder = () => {
-    setSavedOrder(localDrivers);
-    console.log('Saved Order:', localDrivers);
-    showNotification('Driver order saved successfully!', 'success');
+  const handleSaveOrder = async () => {
+    console.log('Saving order:', localDrivers);
+    console.log('URL:', `${host}predictions/savePredictions`);
+
+    try {
+      const response = await fetch(`${host}predictions/savePredictions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // body: JSON.stringify(localDrivers),
+        body: JSON.stringify({ drivers: localDrivers }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Saved Order:', localDrivers);
+        showNotification(result.message || 'Driver order saved successfully!', 'success');
+        setSavedOrder(localDrivers);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to save driver order');
+      }
+    } catch (error) {
+      console.error('Error saving order:', error);
+      showNotification(error.message || 'An error occurred while saving the order', 'error');
+    }
   };
 
-  // Show snackbar notification
   const showNotification = (message, severity) => {
     setSnackbar({ open: true, message, severity });
   };
 
-  // Close snackbar
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollOffset(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <div style={{ margin: '0px' }}>
-      {/* Save Order Button */}
+    <div style={{ marginTop: '40px', overflow: 'auto' }}>
       <div style={{ margin: '20px 40px' }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSaveOrder}
-        >
+        <Button variant="contained" color="primary" onClick={handleSaveOrder}>
           Save Order
         </Button>
       </div>
-      
+
       <div>
         <div>{fetchStatus}</div>
-        {/* Reorder.Group for drivers */}
         <Reorder.Group
           style={{
             marginBottom: '100px',
@@ -65,9 +87,11 @@ const Play = ({ drivers, fetchStatus }) => {
             border: '1px solid #ccc',
             borderRadius: '15px',
             padding: '0px',
+            position: 'relative',
           }}
           values={localDrivers}
-          onReorder={setLocalDrivers} // Update local state when reordered
+          onReorder={setLocalDrivers}
+          dragConstraints={{ top: 0, bottom: scrollOffset }}
         >
           {localDrivers.map((driver, index) => (
             <Reorder.Item style={{ marginLeft: '0px' }} value={driver} key={driver.name_acronym}>
@@ -76,21 +100,21 @@ const Play = ({ drivers, fetchStatus }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  boxShadow: 'none', // Remove box-shadow from the card
-                  borderBottom: '1px solid #ccc', // Add border to the card
-                  marginLeft: '0px', // Remove left margin from the card
-                  marginTop: '10px', // 10px margin on top of the card
-                  position: 'relative', // Ensure positioning for the image
-                  padding: ' 0px 0px 0px 10px', // Add padding to the card
+                  boxShadow: 'none',
+                  borderBottom: '1px solid #ccc',
+                  marginLeft: '0px',
+                  marginTop: '10px',
+                  position: 'relative',
+                  padding: ' 0px 0px 0px 10px',
                 }}
               >
                 <CardActions
                   style={{
                     width: '100%',
                     display: 'flex',
-                    alignItems: 'flex-end', // Align content to the bottom of the card
-                    padding: '0', // Remove padding from the CardActions
-                    position: 'relative', // Ensure the image aligns properly
+                    alignItems: 'flex-end',
+                    padding: '0',
+                    position: 'relative',
                   }}
                 >
                   <Typography variant="h7" style={{ marginRight: '10px' }}>
@@ -104,8 +128,8 @@ const Play = ({ drivers, fetchStatus }) => {
                     alt={`${driver.name_acronym} driver`}
                     style={{
                       width: '50px',
-                      height: '50px', // Ensure image is square
-                      padding: '0px 0px 0px 10px', // Remove padding to ensure it touches the bottom border
+                      height: '50px',
+                      padding: '0px 0px 0px 10px',
                     }}
                   />
                   <Typography>{driver.full_name}</Typography>
@@ -116,7 +140,6 @@ const Play = ({ drivers, fetchStatus }) => {
         </Reorder.Group>
       </div>
 
-      {/* Snackbar Component */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}

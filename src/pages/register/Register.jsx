@@ -14,6 +14,9 @@ const Register = () => {
 
     const onSubmit = async (data) => {
         try {
+            // Convert email to lowercase
+            data.email = data.email.toLowerCase();
+    
             const response = await fetch(`${host}users/register`, {
                 method: 'POST',
                 headers: {
@@ -21,13 +24,13 @@ const Register = () => {
                 },
                 body: JSON.stringify(data),
             });
-
+    
             if (response.status === 201) {
                 const result = await response.json();
                 setSnackbarMessage(result.message || 'Registration successful');
                 setSnackbarSeverity('success');
                 setSnackbarOpen(true);
-
+    
                 // Redirect to login after showing the snackbar
                 setTimeout(() => {
                     navigate('/login');
@@ -42,7 +45,7 @@ const Register = () => {
             setSnackbarOpen(true);
         }
     };
-
+    
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') return; // Prevent closing on clickaway
         setSnackbarOpen(false);

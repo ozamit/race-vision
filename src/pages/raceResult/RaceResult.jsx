@@ -13,6 +13,8 @@ import {
     FormControl,
     InputLabel,
     Button,
+    CircularProgress,
+    Box,
 } from '@mui/material';
 
 const MUI = {
@@ -91,13 +93,13 @@ const RaceResult = ({ drivers, fetchStatus }) => {
 
     return (
         <div>
-            <div style={{ margin: '10px' }}>
+            <div style={{ marginTop: '20px', marginRight: '10px', marginLeft: '10px' }}>
                 <FormControl fullWidth>
-                    <InputLabel>Choose a Race Session</InputLabel>
+                    <InputLabel>Choose Race</InputLabel>
                     <Select
                         value={selectedSession}
                         onChange={handleSessionChange}
-                        label="Choose a Race Session"
+                        label="Choose Race"
                     >
                         {raceSessions.map((session) => (
                             <MenuItem key={session.session_key} value={session.session_key}>
@@ -113,14 +115,16 @@ const RaceResult = ({ drivers, fetchStatus }) => {
                 onClick={handleFetchDrivers}
                 style={{ marginTop: '10px' }}
             >
-                Get Selected Session Results
+                Get Selected Race Results
             </Button>
 
-            {loading && <p>Loading...</p>}
+            {loading && <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '20px' }}> 
+                            <CircularProgress />
+                        </Box> }
 
-            <h2>Race Results</h2>
             {driversForPositions.length > 0 ? (
                 <MUI.TableContainer component={MUI.Paper}>
+                    {/* <h2> Race Results</h2> */}
                     <MUI.Table
                         aria-label="race results table"
                         sx={{
@@ -181,7 +185,7 @@ const RaceResult = ({ drivers, fetchStatus }) => {
                     </MUI.Table>
                 </MUI.TableContainer>
             ) : (
-                !loading && <p>No race results available. Please fetch data.</p>
+                !loading && <p>To view the race results, please select a race</p>
             )}
         </div>
     );

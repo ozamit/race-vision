@@ -25,6 +25,7 @@ function App() {
   const [userId, setUserId] = useState('');
   const [userInfo, setUserInfo] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [nextRaceSession, setNextRaceSession] = useState([]);
   const menuOpen = Boolean(anchorEl);
 
   useEffect(() => {
@@ -79,6 +80,30 @@ function App() {
     };
 
     fetchDrivers();
+    const fetchNextRaceSession = async () => {
+      try {
+          // Construct the API endpoint URL
+          const response = await fetch(`${host}sessions/getNextRaceSession`);
+          
+          // Check if the response is successful
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          // Parse the response JSON
+          const data = await response.json();
+          
+          // Log the fetched data to the console
+          console.log('Next Race Session:', data);
+          setNextRaceSession(data);
+      } catch (error) {
+          // Log any errors that occur during the fetch
+          console.error('Error fetching the next race session:', error);
+      }
+  };
+
+  // Call the function to fetch the next race session
+  fetchNextRaceSession();
   }, []);
 
   const handleAvatarClick = (event) => {
@@ -100,53 +125,59 @@ function App() {
     <Router>
       <div className="App">
         <Box
-          sx={{
-            position: 'absolute',
-            top: 10,
-            right: 10,
-            display: 'flex',
-            alignItems: 'center',
-          }}
+    sx={{
+      position: 'sticky', // Change to sticky
+      top: 0, // Stick to the top
+      left: 0, // Ensure it stays within the viewport horizontally
+      right: 0, // Ensure it stays within the viewport horizontally
+      backgroundColor: 'white', // Set background to white
+      zIndex: 10, // Ensure it stays above other content
+      paddingTop: '10px', // Optional: Add some padding for better spacing
+      // boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Optional: Add some shadow to separate from the rest of the content
+    }}
+  >
+    <Chip
+      label={nextRaceSession ? `Next Race:  ${nextRaceSession.country_name}` : 'nextRaceSession'}
+      sx={{ cursor: 'pointer', fontWeight: 'bold' }}
+    />
+    {isLoggedIn ? (
+      <>
+        <Chip
+          avatar={
+            <Avatar>
+              {userInfo ? userInfo.name.charAt(0).toUpperCase() : '?'}
+            </Avatar>
+          }
+          label={userInfo ? userInfo.name : 'Guest'}
+          onClick={handleAvatarClick}
+          sx={{ cursor: 'pointer', fontWeight: 'bold' }}
+        />
+        <Menu
+          anchorEl={anchorEl}
+          open={menuOpen}
+          onClose={handleMenuClose}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-          {isLoggedIn ? (
-            <>
-              <Chip
-                avatar={
-                  <Avatar>
-                    {userInfo ? userInfo.name.charAt(0).toUpperCase() : '?'}
-                  </Avatar>
-                }
-                label={userInfo ? userInfo.name : 'Guest'}
-                onClick={handleAvatarClick}
-                sx={{ cursor: 'pointer', fontWeight: 'bold' }}
-              />
-              <Menu
-                anchorEl={anchorEl}
-                open={menuOpen}
-                onClose={handleMenuClose}
-                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-              >
-                <MenuItem onClick={handleLogout}>
-                  <LogoutIcon fontSize="small" sx={{ mr: 1 }} />
-                  Logout
-                </MenuItem>
-              </Menu>
-            </>
-          ) : (
-            <Chip
-              avatar={
-                <Avatar>
-                  <PersonIcon />
-                </Avatar>
-              }
-              label="Login"
-              onClick={() => (window.location.href = '/login')} // Using window.location.href
-              sx={{ cursor: 'pointer', fontWeight: 'bold' }}
-            />
-          )}
-        </Box>
-
+          <MenuItem onClick={handleLogout}>
+            <LogoutIcon fontSize="small" sx={{ mr: 1 }} />
+            Logout
+          </MenuItem>
+        </Menu>
+      </>
+    ) : (
+      <Chip
+        avatar={
+          <Avatar>
+            <PersonIcon />
+          </Avatar>
+        }
+        label="Login"
+        onClick={() => (window.location.href = '/login')}
+        sx={{ cursor: 'pointer', fontWeight: 'bold' }}
+      />
+    )}
+  </Box>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/play" element={<Play drivers={drivers} fetchStatus={fetchStatus} />} />

@@ -11,6 +11,9 @@ const Login = () => {
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
     const onSubmit = (data) => {
+        // Convert email to lowercase
+        data.email = data.email.toLowerCase();
+    
         fetch(`${host}users/login`, {
             method: 'POST',
             headers: {
@@ -20,31 +23,31 @@ const Login = () => {
         })
             .then(response => response.json())
             .then(data => {
-                // Display response message from backend
-                setSnackbarMessage(data.message || 'Login successful');
-                setSnackbarSeverity('success');
-                setSnackbarOpen(true);
-
                 // Log the response data
-                console.log(data);
-
-                // If response status is 200, store token and user id in localStorage
+                console.log("res data: ", data);
+    
+                // Set Snackbar message and severity based on response
+                setSnackbarMessage(data.message);
+                setSnackbarSeverity(data.message === 'Success' ? 'success' : 'error');
+                setSnackbarOpen(true);
+    
+                // If response message is "Success", store token and user id in localStorage
                 if (data.message === 'Success') {
-                    console.log("data.status === 200")
-                    localStorage.setItem('token', data.token); // Assuming the token is in data.token
-                    localStorage.setItem('userId', data.user._id); // Assuming user ID is in data.user._id
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('userId', data.user._id);
                     console.log('Token and User ID stored in localStorage');
                     window.location.href = '/'; // Redirect to home page
                 }
             })
             .catch(error => {
                 // Handle error and display the error message
+                console.error('Error:', error);
                 setSnackbarMessage(error.message || 'Error logging in');
                 setSnackbarSeverity('error');
                 setSnackbarOpen(true);
-                console.log(error);
             });
-    };
+    };    
+    
 
     const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
