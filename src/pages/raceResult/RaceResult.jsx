@@ -32,11 +32,13 @@ const MUI = {
     Button,
 };
 
+
+// Im already fetching raceSessions in App, can pass it and delete the fetch here 
 const RaceResult = ({ drivers, fetchStatus }) => {
     const [driversForPositions, setDriversForPositions] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [raceSessions, setRaceSessions] = useState([]);
     const [selectedSession, setSelectedSession] = useState('');
-    const [loading, setLoading] = useState(false);
     const year = 2024;
 
     useEffect(() => {
@@ -141,15 +143,11 @@ const RaceResult = ({ drivers, fetchStatus }) => {
                     >
                         <MUI.TableHead>
                             <MUI.TableRow>
-                                {/* <MUI.TableCell><strong>Position</strong></MUI.TableCell>
-                                <MUI.TableCell><strong>Driver</strong></MUI.TableCell> */}
-                                {/* <MUI.TableCell><strong>Driver Name</strong></MUI.TableCell> */}
                             </MUI.TableRow>
                         </MUI.TableHead>
                         <MUI.TableBody>
                             {driversForPositions.map((driver) => {
                                 const { full_name, headshot_url } = getDriverDetailsByNumber(driver.driverNumber);
-
                                 return (
                                     <MUI.TableRow key={driver.position}>
                                         <MUI.TableCell>{driver.position}</MUI.TableCell>
