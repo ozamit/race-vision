@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route,useNavigate } from 'react-router-dom';
 import './App.css';
 import Play from './pages/play/Play';
+import MyPredictions from './pages/myPredictions/MyPredictions';
 import Home from './pages/home/Home';
 import RaceResult from './pages/raceResult/RaceResult';
 import Login from './pages/login/Login';
@@ -16,6 +17,7 @@ import {
   BottomNavigationAction,
 } from '@mui/material';
 import { Home as HomeIcon, SportsEsports as SportsEsportsIcon, Logout as LogoutIcon, SportsScore as SportsScoreIcon, Person as PersonIcon } from '@mui/icons-material';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
 import { host } from './utils/host';
 
 function App() {
@@ -26,7 +28,10 @@ function App() {
   const [userInfo, setUserInfo] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [nextRaceSession, setNextRaceSession] = useState([]);
+  const [raceSessions, setRaceSessions] = useState([]);
+  
   const menuOpen = Boolean(anchorEl);
+  const year = 2024;
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -104,6 +109,20 @@ function App() {
 
   // Call the function to fetch the next race session
   fetchNextRaceSession();
+
+          const fetchRaceSessions = async () => {
+              try {
+                  const response = await fetch(`${host}sessions/getracesessionsforyear?year=${year}`);
+                  if (!response.ok) {
+                      throw new Error(`HTTP error! Status: ${response.status}`);
+                  }
+                  const data = await response.json();
+                  setRaceSessions(data);
+              } catch (error) {
+                  console.error('Error fetching race sessions:', error);
+              }
+          };
+          fetchRaceSessions();
   }, []);
 
   const handleAvatarClick = (event) => {
@@ -124,22 +143,46 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Box
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 10,
+          paddingTop: '10px',
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+        }}
+      >
+  {/* Left Chip */}
+  <Box
     sx={{
-      position: 'sticky', // Change to sticky
-      top: 0, // Stick to the top
-      left: 0, // Ensure it stays within the viewport horizontally
-      right: 0, // Ensure it stays within the viewport horizontally
-      backgroundColor: 'white', // Set background to white
-      zIndex: 10, // Ensure it stays above other content
-      paddingTop: '10px', // Optional: Add some padding for better spacing
-      // boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Optional: Add some shadow to separate from the rest of the content
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexGrow: 1, // Take up the available space on the left
     }}
   >
     <Chip
-      label={nextRaceSession ? `Next Race:  ${nextRaceSession.country_name}` : 'nextRaceSession'}
-      sx={{ cursor: 'pointer', fontWeight: 'bold' }}
+      label={nextRaceSession ? `Next Race: ${nextRaceSession.country_name}` : 'Welcome to Race Vision App'}
+      sx={{
+        backgroundColor: 'rgb(235, 235, 235)',
+        cursor: 'pointer',
+        fontWeight: 'bold',
+      }}
     />
+  </Box>
+
+  {/* Right Chip */}
+  <Box
+    sx={{
+      display: 'flex',
+      alignItems: 'center',
+      marginRight: '10px', // 10px from the right edge
+    }}
+  >
     {isLoggedIn ? (
       <>
         <Chip
@@ -150,7 +193,11 @@ function App() {
           }
           label={userInfo ? userInfo.name : 'Guest'}
           onClick={handleAvatarClick}
-          sx={{ cursor: 'pointer', fontWeight: 'bold' }}
+          sx={{
+            backgroundColor: 'rgb(235, 235, 235)',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+          }}
         />
         <Menu
           anchorEl={anchorEl}
@@ -174,14 +221,20 @@ function App() {
         }
         label="Login"
         onClick={() => (window.location.href = '/login')}
-        sx={{ cursor: 'pointer', fontWeight: 'bold' }}
+        sx={{
+          backgroundColor: 'rgb(235, 235, 235)',
+          cursor: 'pointer',
+          fontWeight: 'bold',
+        }}
       />
     )}
   </Box>
+</Box>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/play" element={<Play drivers={drivers} fetchStatus={fetchStatus} />} />
+          <Route path="/play" element={<Play userInfo={userInfo} nextRaceSession={nextRaceSession} drivers={drivers} fetchStatus={fetchStatus} />} />
           <Route path="/raceresult" element={<RaceResult drivers={drivers} fetchStatus={fetchStatus} />} />
+          <Route path="/mypredictions" element={<MyPredictions userInfo={userInfo} raceSessions={raceSessions} drivers={drivers} nextRaceSession={nextRaceSession}/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
@@ -223,6 +276,9 @@ const BottomNav = () => {
             case 2:
               navigate('/raceresult');
               break;
+              case 3:
+                navigate('/mypredictions');
+                break;
             default:
               break;
           }
@@ -230,7 +286,8 @@ const BottomNav = () => {
       >
         <BottomNavigationAction label="Home" icon={<HomeIcon />} />
         <BottomNavigationAction label="Play" icon={<SportsEsportsIcon />} />
-        <BottomNavigationAction label="Racing Results" icon={<SportsScoreIcon />} />
+        <BottomNavigationAction label="Race Results" icon={<SportsScoreIcon />} />
+        <BottomNavigationAction label="Predictions" icon={<FactCheckIcon />} />
       </BottomNavigation>
     </Box>
   );

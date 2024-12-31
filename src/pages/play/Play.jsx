@@ -9,7 +9,7 @@ import { Reorder } from 'framer-motion';
 import { host } from '../../utils/host';
 
 
-const Play = ({ drivers, fetchStatus }) => {
+const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
   const [localDrivers, setLocalDrivers] = useState(drivers);
   const [savedOrder, setSavedOrder] = useState([]);
   const [scrollOffset, setScrollOffset] = useState(0);
@@ -29,8 +29,12 @@ const Play = ({ drivers, fetchStatus }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        // body: JSON.stringify(localDrivers),
-        body: JSON.stringify({ drivers: localDrivers }),
+        body: JSON.stringify({
+          user: userInfo._id,
+          sessionKey: nextRaceSession.session_key,
+          meetingKey: nextRaceSession.meeting_key,
+          predictedOrder: localDrivers,
+        }),
       });
 
       if (response.ok) {
@@ -57,24 +61,30 @@ const Play = ({ drivers, fetchStatus }) => {
   };
 
   useEffect(() => {
+    console.log('userInfo:', userInfo);
+    console.log('nextRaceSession:', nextRaceSession);
+    
     const handleScroll = () => {
       setScrollOffset(window.scrollY);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+
+    
   }, []);
 
   return (
-    <div style={{ marginTop: '40px', overflow: 'auto' }}>
+    <div style={{ marginTop: '0px', overflow: 'auto' }}>
       <div style={{ margin: '20px 40px' }}>
         <Button variant="contained" color="primary" onClick={handleSaveOrder}>
           Save Order
         </Button>
       </div>
+      <Typography>Reorder drivers by dragging them up or down to create your predicted race results</Typography>
 
       <div>
-        <div>{fetchStatus}</div>
+        {/* <div>{fetchStatus}</div> */}
         <Reorder.Group
           style={{
             marginBottom: '100px',
@@ -123,7 +133,7 @@ const Play = ({ drivers, fetchStatus }) => {
                   <img
                     src={
                       driver.headshot_url ||
-                      'https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/M/MAXVER01_Max_Verstappen/maxver01.png.transform/1col/image.png'
+                      'https://i.ibb.co/7V7MXwR/profile.png'
                     }
                     alt={`${driver.name_acronym} driver`}
                     style={{
