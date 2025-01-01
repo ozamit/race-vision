@@ -62,12 +62,15 @@ const RaceResult = ({ drivers, fetchStatus }) => {
 
         try {
             setLoading(true);
-            const response = await fetch(`${host}positions/getAllPositions?sessionKey=${selectedSession}`);
+            // const response = await fetch(`${host}positions/getAllPositions?sessionKey=${selectedSession}`);
+            const response = await fetch(`${host}positions/getRaceResultFromDB?sessionKey=${selectedSession}`);
+            // const response = await fetch(`${host}positions/saveFinalRaceResultToDB?sessionKey=${selectedSession}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
-            setDriversForPositions(data);
+            console.log('data:', data); 
+            setDriversForPositions(data.raceResult.raceResultOrder);
         } catch (error) {
             console.error('Error fetching drivers for positions:', error);
         } finally {
@@ -147,7 +150,7 @@ const RaceResult = ({ drivers, fetchStatus }) => {
                         </MUI.TableHead>
                         <MUI.TableBody>
                             {driversForPositions.map((driver) => {
-                                const { full_name, headshot_url } = getDriverDetailsByNumber(driver.driverNumber);
+                                const { full_name, headshot_url } = getDriverDetailsByNumber(driver.driver_number);
                                 return (
                                     <MUI.TableRow key={driver.position}>
                                         <MUI.TableCell>{driver.position}</MUI.TableCell>

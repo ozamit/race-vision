@@ -144,17 +144,24 @@ function App() {
     <Router>
       <div className="App">
       <Box
-        sx={{
-          position: 'sticky',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 10,
-          paddingTop: '10px',
-          display: 'flex',
-          alignItems: 'center',
-          width: '100%',
-        }}
+sx={{
+  position: 'sticky',
+  top: 0,
+  left: 0,
+  right: 0,
+  zIndex: 10,
+  paddingTop: '10px',
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
+  background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0))', // Gradient for transparency
+  // backdropFilter: 'blur(10px)', // Blur effect
+  // WebkitBackdropFilter: 'blur(10px)', // Safari support
+}}
+
+
+
+
       >
   {/* Left Chip */}
   <Box
