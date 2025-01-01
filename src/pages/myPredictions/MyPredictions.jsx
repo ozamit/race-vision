@@ -16,7 +16,25 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const MyPredictions = ({ userInfo, raceSessions }) => {
   const [userPredictions, setUserPredictions] = useState([]);
+  const [raceResults, setRaceResults] = useState({});
   const [loading, setLoading] = useState(false);
+
+  // Fetch race result for a given sessionKey
+  const fetchRaceResult = async (sessionKey) => {
+    try {
+      const response = await fetch(`${host}positions/getRaceResultFromDB?sessionKey=${sessionKey}`);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch race result');
+      }
+
+      const data = await response.json();
+      return data.raceResult; // Assuming the response contains the 'raceResult'
+    } catch (error) {
+      console.error('Error fetching race result:', error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     const fetchPredictions = async () => {
@@ -41,61 +59,25 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
       }
     };
 
-    const fetchResultsForAllSessions = async (predictions) => {
-      const sessionKeys = predictions.map((p) => p.sessionKey);
-      const results = {};
-
-      try {
-        for (const sessionKey of sessionKeys) {
-        //   const response = await fetch(`${host}positions/getAllPositions?sessionKey=${sessionKey}`);
-        //   if (!response.ok) {
-        //     throw new Error(`Failed to fetch results for session ${sessionKey}`);
-        //   }
-
-        //   const data = await response.json();
-        //   results[sessionKey] = data;
-        }
-
-        return results;
-      } catch (error) {
-        console.error('Error fetching results:', error);
-        return {};
-      }
-    };
-
-    const mergeResultsIntoPredictions = (predictions, results) => {
-        return predictions.map((prediction) => {
-          const sessionResults = results[prediction.sessionKey] || [];
-          if (!sessionResults.length) {
-            // console.error(`No results found for sessionKey: ${prediction.sessionKey}`);
-          }
-      
-          const predictedOrderWithActual = prediction.predictedOrder.map((driver) => {
-            const actualDriver = sessionResults.find((d) => String(d.driver_number) === String(driver.driver_number));
-            if (!actualDriver) {
-            //   console.error(`No matching driver found: ${driver.driver_number} in session: ${prediction.sessionKey}`);
-            //   console.log("sessionResults:" ,sessionResults);
-
-            }
-            return {
-              ...driver,
-              actualPosition: actualDriver ? actualDriver.position : 'N/A',
-            };
-          });
-      
-          return { ...prediction, predictedOrder: predictedOrderWithActual };
-        });
-      };
-      
-
     const initializeData = async () => {
       if (userInfo && userInfo._id) {
         setLoading(true);
         try {
           const predictions = await fetchPredictions();
-          const results = await fetchResultsForAllSessions(predictions);
-          const mergedData = mergeResultsIntoPredictions(predictions, results);
-          setUserPredictions(mergedData);
+          setUserPredictions(predictions);
+
+          // Fetch race results for each session
+          const raceResultsData = {};
+          for (const prediction of predictions) {
+            const sessionKey = prediction.sessionKey;
+            if (!raceResultsData[sessionKey]) {
+              const raceResult = await fetchRaceResult(sessionKey);
+              if (raceResult) {
+                raceResultsData[sessionKey] = raceResult;
+              }
+            }
+          }
+          setRaceResults(raceResultsData);
         } finally {
           setLoading(false);
         }
@@ -124,41 +106,72 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
           <Typography>Loading...</Typography>
         ) : userPredictions.length > 0 ? (
           <Box>
-            {userPredictions.map((userPrediction, index) => (
-              <Accordion key={index} sx={{ marginBottom: 2 }}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />} id={`panel-${userPrediction.sessionKey}`}>
-                  <Typography variant="h6">
-                    {getCircuitShortName(userPrediction.sessionKey)}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell><strong>My Prediction</strong></TableCell>
-                        <TableCell><strong>Actual</strong></TableCell>
-                        <TableCell><strong>Points</strong></TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {userPrediction.predictedOrder.length > 0 ? (
-                        userPrediction.predictedOrder.map((driver, index) => (
-                          <TableRow key={driver._id}>
-                            <TableCell> {index + 1} - {driver.broadcast_name}</TableCell>
-                            <TableCell>{driver.actualPosition}</TableCell>
-                            <TableCell></TableCell> {/* Points logic not implemented yet */}
-                          </TableRow>
-                        ))
-                      ) : (
+            {userPredictions.map((userPrediction, index) => {
+              const raceResult = raceResults[userPrediction.sessionKey];
+              let totalPoints = 0;
+
+              if (raceResult) {
+                totalPoints = userPrediction.predictedOrder.reduce((sum, driver, positionIndex) => {
+                  const actualDriver = raceResult.raceResultOrder.find(d => d.driver_number === driver.driver_number);
+                  const actualPosition = actualDriver ? actualDriver.position : null;
+
+                  if (actualPosition !== null) {
+                    const predictedPosition = positionIndex + 1;
+                    const gap = Math.abs(predictedPosition - actualPosition);
+                    const points = 20 - gap;
+                    return sum + points;
+                  }
+
+                  return sum;
+                }, 0);
+              }
+
+              return (
+                <Accordion key={index} sx={{ marginBottom: 2 }}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} id={`panel-${userPrediction.sessionKey}`}>
+                    <Typography variant="h6">
+                      {getCircuitShortName(userPrediction.sessionKey)} | Score: {totalPoints}
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Table>
+                      <TableHead>
                         <TableRow>
-                          <TableCell colSpan={4}>No drivers predicted for this session.</TableCell>
+                          <TableCell><strong>My Prediction</strong></TableCell>
+                          <TableCell><strong>Actual</strong></TableCell>
+                          <TableCell><strong>Points</strong></TableCell>
                         </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </AccordionDetails>
-              </Accordion>
-            ))}
+                      </TableHead>
+                      <TableBody>
+                        {userPrediction.predictedOrder.length > 0 ? (
+                          userPrediction.predictedOrder.map((driver, positionIndex) => {
+                            const actualDriver = raceResult ? raceResult.raceResultOrder.find(d => d.driver_number === driver.driver_number) : null;
+                            const actualPosition = actualDriver ? actualDriver.position : 'N/A';
+
+                            // Calculate gap and points
+                            const predictedPosition = positionIndex + 1;
+                            const gap = actualPosition !== 'N/A' ? Math.abs(predictedPosition - actualPosition) : 'N/A';
+                            const points = gap !== 'N/A' ? 20 - gap : 'N/A';
+
+                            return (
+                              <TableRow key={driver._id}>
+                                <TableCell>{predictedPosition} - {driver.broadcast_name}</TableCell>
+                                <TableCell>{actualPosition}</TableCell>
+                                <TableCell>{points}</TableCell>
+                              </TableRow>
+                            );
+                          })
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan={3}>No drivers predicted for this session.</TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </AccordionDetails>
+                </Accordion>
+              );
+            })}
           </Box>
         ) : (
           <Typography>No predictions found.</Typography>
