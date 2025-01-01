@@ -7,6 +7,7 @@ import Home from './pages/home/Home';
 import RaceResult from './pages/raceResult/RaceResult';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import {
   Avatar,
   Menu,
@@ -138,6 +139,7 @@ function App() {
     localStorage.removeItem('userId');
     setIsLoggedIn(false);
     setAnchorEl(null);
+    window.location.href = '/'; // Redirect to home page
   };
 
   return (
@@ -158,11 +160,7 @@ sx={{
   // backdropFilter: 'blur(10px)', // Blur effect
   // WebkitBackdropFilter: 'blur(10px)', // Safari support
 }}
-
-
-
-
-      >
+>
   {/* Left Chip */}
   <Box
     sx={{
@@ -178,6 +176,7 @@ sx={{
         backgroundColor: 'rgb(235, 235, 235)',
         cursor: 'pointer',
         fontWeight: 'bold',
+        boxShadow: '1px 1px 6px rgba(0, 0, 0, 0.25), -1px -1px 6px rgba(255, 255, 255, 0.06)',
       }}
     />
   </Box>
@@ -204,6 +203,7 @@ sx={{
             backgroundColor: 'rgb(235, 235, 235)',
             cursor: 'pointer',
             fontWeight: 'bold',
+            boxShadow: '1px 1px 6px rgba(0, 0, 0, 0.25), -1px -1px 6px rgba(255, 255, 255, 0.06)', // Add box shadow
           }}
         />
         <Menu
@@ -232,6 +232,7 @@ sx={{
           backgroundColor: 'rgb(235, 235, 235)',
           cursor: 'pointer',
           fontWeight: 'bold',
+          boxShadow: '1px 1px 6px rgba(0, 0, 0, 0.25), -1px -1px 6px rgba(255, 255, 255, 0.06)',
         }}
       />
     )}
@@ -291,10 +292,20 @@ const BottomNav = () => {
           }
         }}
       >
-        <BottomNavigationAction label="Home" icon={<HomeIcon />} />
-        <BottomNavigationAction label="Play" icon={<SportsEsportsIcon />} />
-        <BottomNavigationAction label="Race Results" icon={<SportsScoreIcon />} />
-        <BottomNavigationAction label="Predictions" icon={<FactCheckIcon />} />
+        {/* <BottomNavigationAction label="Home" icon={<HomeIcon />} /> */}
+        {/* <BottomNavigationAction label="Play" icon={<SportsEsportsIcon />} /> */}
+        {/* <BottomNavigationAction label="Race Results" icon={<SportsScoreIcon />} /> */}
+        {/* <BottomNavigationAction label="Predictions" icon={<FactCheckIcon />} /> */}
+        <BottomNavigationAction label="Home" icon={<i className="bi bi-house" style={{ fontSize: '28px' }}></i>} />
+        <BottomNavigationAction label="Play" icon={<i class="bi bi-controller" style={{ fontSize: '28px' }}></i>} />
+        <BottomNavigationAction label="Race Results" icon={<i class="bi bi-flag" style={{ fontSize: '24px' }}></i>}   sx={{
+            '& .MuiBottomNavigationAction-label': {
+              fontSize: '12px', // Change this to your desired font size
+            },
+          }}/>
+        <BottomNavigationAction label="Predictions" icon={<i class="bi bi-ui-checks" style={{ fontSize: '28px' }}></i>} />
+        {/* <BottomNavigationAction label="Predictions" style={{ fontSize: '28px' }} icon={"😀"} /> */}
+
       </BottomNavigation>
     </Box>
   );

@@ -13,25 +13,22 @@ const Login = () => {
     const onSubmit = (data) => {
         // Convert email to lowercase
         data.email = data.email.toLowerCase();
-    
+
         fetch(`${host}users/login`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
         })
-            .then(response => response.json())
-            .then(data => {
-                // Log the response data
-                console.log("res data: ", data);
-    
-                // Set Snackbar message and severity based on response
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('res data: ', data);
+
                 setSnackbarMessage(data.message);
                 setSnackbarSeverity(data.message === 'Success' ? 'success' : 'error');
                 setSnackbarOpen(true);
-    
-                // If response message is "Success", store token and user id in localStorage
+
                 if (data.message === 'Success') {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('userId', data.user._id);
@@ -39,15 +36,13 @@ const Login = () => {
                     window.location.href = '/'; // Redirect to home page
                 }
             })
-            .catch(error => {
-                // Handle error and display the error message
+            .catch((error) => {
                 console.error('Error:', error);
                 setSnackbarMessage(error.message || 'Error logging in');
                 setSnackbarSeverity('error');
                 setSnackbarOpen(true);
             });
-    };    
-    
+    };
 
     const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
@@ -60,7 +55,7 @@ const Login = () => {
                 open={snackbarOpen}
                 autoHideDuration={6000}
                 onClose={handleCloseSnackbar}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Optional: Change position
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
                 <Alert
                     onClose={handleCloseSnackbar}
@@ -78,12 +73,12 @@ const Login = () => {
                 <TextField
                     label="Email"
                     type="email"
-                    {...register('email', { 
-                        required: 'Email is required', 
+                    {...register('email', {
+                        required: 'Email is required',
                         pattern: {
                             value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                            message: 'Invalid email address'
-                        }
+                            message: 'Invalid email address',
+                        },
                     })}
                     fullWidth
                     margin="normal"
@@ -93,19 +88,19 @@ const Login = () => {
                 <TextField
                     label="Password"
                     type="password"
-                    {...register('password', { 
-                        required: 'Password is required', 
+                    {...register('password', {
+                        required: 'Password is required',
                         minLength: {
-                            value: 4,
-                            message: 'Password must be at least 4 characters long'
-                        }
+                            value: 3,
+                            message: 'Password must be at least 3 characters long',
+                        },
                     })}
                     fullWidth
                     margin="normal"
                     error={!!errors.password}
                     helperText={errors.password ? errors.password.message : ''}
                 />
-                <Button type="submit" variant="contained" color="primary">
+                <Button type="submit" variant="contained" color="primary" fullWidth>
                     Login
                 </Button>
             </form>
@@ -113,7 +108,7 @@ const Login = () => {
                 variant="body1"
                 component="p"
                 onClick={() => window.location.href = '/Register'}
-                style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
+                style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline', marginTop: '1rem' }}
             >
                 I don't have an account. Register me.
             </Typography>

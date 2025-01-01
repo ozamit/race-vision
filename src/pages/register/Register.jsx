@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { TextField, Button, Container, Typography, Snackbar, Alert } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 import { host } from '../../utils/host';
 
@@ -10,13 +10,12 @@ const Register = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
 
     const onSubmit = async (data) => {
         try {
-            // Convert email to lowercase
             data.email = data.email.toLowerCase();
-    
+
             const response = await fetch(`${host}users/register`, {
                 method: 'POST',
                 headers: {
@@ -24,17 +23,16 @@ const Register = () => {
                 },
                 body: JSON.stringify(data),
             });
-    
+
             if (response.status === 201) {
                 const result = await response.json();
                 setSnackbarMessage(result.message || 'Registration successful');
                 setSnackbarSeverity('success');
                 setSnackbarOpen(true);
-    
-                // Redirect to login after showing the snackbar
+
                 setTimeout(() => {
                     navigate('/login');
-                }, 2000); // Wait 2 seconds to display the message
+                }, 2000);
             } else {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Registration failed');
@@ -45,15 +43,14 @@ const Register = () => {
             setSnackbarOpen(true);
         }
     };
-    
+
     const handleCloseSnackbar = (event, reason) => {
-        if (reason === 'clickaway') return; // Prevent closing on clickaway
+        if (reason === 'clickaway') return;
         setSnackbarOpen(false);
     };
 
     return (
         <Container maxWidth="sm">
-            {/* Snackbar for notifications */}
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}
@@ -77,7 +74,13 @@ const Register = () => {
                     fullWidth
                     label="Email"
                     margin="normal"
-                    {...register('email', { required: 'Email is required' })}
+                    {...register('email', {
+                        required: 'Email is required',
+                        pattern: {
+                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                            message: 'Invalid email address',
+                        },
+                    })}
                     error={!!errors.email}
                     helperText={errors.email ? errors.email.message : ''}
                 />
@@ -85,7 +88,13 @@ const Register = () => {
                     fullWidth
                     label="Name"
                     margin="normal"
-                    {...register('name', { required: 'Name is required' })}
+                    {...register('name', {
+                        required: 'Name is required',
+                        minLength: {
+                            value: 3,
+                            message: 'Name must be at least 3 characters',
+                        },
+                    })}
                     error={!!errors.name}
                     helperText={errors.name ? errors.name.message : ''}
                 />
@@ -94,7 +103,13 @@ const Register = () => {
                     label="Password"
                     type="password"
                     margin="normal"
-                    {...register('password', { required: 'Password is required' })}
+                    {...register('password', {
+                        required: 'Password is required',
+                        minLength: {
+                            value: 3,
+                            message: 'Password must be at least 3 characters',
+                        },
+                    })}
                     error={!!errors.password}
                     helperText={errors.password ? errors.password.message : ''}
                 />
