@@ -78,7 +78,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
     <div style={{ marginTop: '0px', overflow: 'auto' }}>
       <div style={{ margin: '20px 40px' }}>
         <Button variant="contained" color="primary" onClick={handleSaveOrder}>
-          Save Order
+          Save Order <i style={{ marginLeft: '15px' }} class="bi bi-floppy"></i>
         </Button>
       </div>
       <Typography>Reorder drivers by dragging them up or down to create your predicted race results</Typography>
