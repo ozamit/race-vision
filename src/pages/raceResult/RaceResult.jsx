@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { host } from '../../utils/host';
+import { unknownProfileIMG } from '../../utils/img';
+
+
 import {
     Table,
     TableBody,
@@ -32,14 +35,13 @@ const MUI = {
     Button,
 };
 
-
-// Im already fetching raceSessions in App, can pass it and delete the fetch here 
-const RaceResult = ({ drivers, fetchStatus }) => {
+// RaceResult component
+const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
     const [driversForPositions, setDriversForPositions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [raceSessions, setRaceSessions] = useState([]);
     const [selectedSession, setSelectedSession] = useState('');
-    const year = 2024;
+    const [year, setYear] = useState(2024); // Default year is 2024
 
     useEffect(() => {
         const fetchRaceSessions = async () => {
@@ -62,14 +64,11 @@ const RaceResult = ({ drivers, fetchStatus }) => {
 
         try {
             setLoading(true);
-            // const response = await fetch(`${host}positions/getAllPositions?sessionKey=${selectedSession}`);
             const response = await fetch(`${host}positions/getRaceResultFromDB?sessionKey=${selectedSession}`);
-            // const response = await fetch(`${host}positions/saveFinalRaceResultToDB?sessionKey=${selectedSession}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
-            console.log('data:', data); 
             setDriversForPositions(data.raceResult.raceResultOrder);
         } catch (error) {
             console.error('Error fetching drivers for positions:', error);
@@ -82,6 +81,12 @@ const RaceResult = ({ drivers, fetchStatus }) => {
         setSelectedSession(event.target.value);
     };
 
+    const handleYearChange = (event) => {
+        setYear(event.target.value);
+        setRaceSessions([]); // Clear sessions when year changes
+        setSelectedSession(''); // Reset selected session
+    };
+
     const handleFetchDrivers = () => {
         if (!selectedSession) {
             alert('Please select a session first!');
@@ -90,15 +95,30 @@ const RaceResult = ({ drivers, fetchStatus }) => {
         fetchDriversForPositions();
     };
 
-    // Helper function to get driver details by number
     const getDriverDetailsByNumber = (driverNumber) => {
-        const driver = drivers.find((d) => d.driver_number === driverNumber);
+        const driver = driversLocalDB.find((d) => d.driver_number === driverNumber);
         return driver || { full_name: 'Unknown Driver', headshot_url: '', team_colour: '000000' };
     };
 
     return (
         <div>
-            <div style={{ marginTop: '20px', marginRight: '10px', marginLeft: '10px' }}>
+            {/* Year Selector */}
+            <div style={{ margin: '20px 10px' }}>
+                <FormControl fullWidth>
+                    <InputLabel>Year</InputLabel>
+                    <Select
+                        value={year}
+                        onChange={handleYearChange}
+                        label="Year"
+                    >
+                        <MenuItem value={2024}>2024</MenuItem>
+                        <MenuItem value={2025}>2025</MenuItem>
+                    </Select>
+                </FormControl>
+            </div>
+
+            {/* Race Selector */}
+            <div style={{ margin: '20px 10px' }}>
                 <FormControl fullWidth>
                     <InputLabel>Choose Race</InputLabel>
                     <Select
@@ -114,6 +134,7 @@ const RaceResult = ({ drivers, fetchStatus }) => {
                     </Select>
                 </FormControl>
             </div>
+
             <Button
                 variant="contained"
                 color="primary"
@@ -123,14 +144,15 @@ const RaceResult = ({ drivers, fetchStatus }) => {
                 Get Selected Race Results
             </Button>
 
-            {loading && <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '20px' }}> 
-                            <CircularProgress />
-                        </Box> }
+            {loading && (
+                <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                    <CircularProgress />
+                </Box>
+            )}
 
             {driversForPositions.length > 0 ? (
                 <MUI.TableContainer component={MUI.Paper}>
-                    {/* <h2> Race Results</h2> */}
-                    <MUI.Table
+                                        <MUI.Table
                         aria-label="race results table"
                         sx={{
                             '& .MuiTableCell-root': {
@@ -146,6 +168,9 @@ const RaceResult = ({ drivers, fetchStatus }) => {
                     >
                         <MUI.TableHead>
                             <MUI.TableRow>
+                                <MUI.TableCell>Position</MUI.TableCell>
+                                <MUI.TableCell>Driver</MUI.TableCell>
+                                <MUI.TableCell>Name</MUI.TableCell>
                             </MUI.TableRow>
                         </MUI.TableHead>
                         <MUI.TableBody>
@@ -155,28 +180,14 @@ const RaceResult = ({ drivers, fetchStatus }) => {
                                     <MUI.TableRow key={driver.position}>
                                         <MUI.TableCell>{driver.position}</MUI.TableCell>
                                         <MUI.TableCell>
-                                            <div
+                                            <img
+                                                src={headshot_url || `${unknownProfileIMG}`}
+                                                alt={full_name}
                                                 style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '10px',
+                                                    width: '50px',
+                                                    height: '50px',
                                                 }}
-                                            >
-                                                <img
-                                                    src={
-                                                        headshot_url ||
-                                                        'https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/M/MAXVER01_Max_Verstappen/maxver01.png.transform/1col/image.png'
-                                                    }
-                                                    alt={full_name}
-                                                    style={{
-                                                        width: '50px',
-                                                        height: '50px',
-                                                    //     border: `3px solid #${team_colour}`,
-                                                    //     borderRadius: '50%',
-                                                    //     objectFit: 'cover',
-                                                    }}
-                                                />
-                                            </div>
+                                            />
                                         </MUI.TableCell>
                                         <MUI.TableCell>{full_name}</MUI.TableCell>
                                     </MUI.TableRow>
