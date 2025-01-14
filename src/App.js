@@ -7,6 +7,7 @@ import Home from './pages/home/Home';
 import RaceResult from './pages/raceResult/RaceResult';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
+import HowToPlay from './pages/howToPlay/HowToPlay';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import {
   Avatar,
@@ -269,6 +270,7 @@ sx={{
           <Route path="/mypredictions" element={<MyPredictions userInfo={userInfo} raceSessions={raceSessions} drivers={drivers} nextRaceSession={nextRaceSession}/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/howtoplay" element={<HowToPlay />} />          
         </Routes>
 
         <BottomNav />
@@ -285,6 +287,7 @@ const BottomNav = () => {
     <Box
       sx={{
         position: 'fixed',
+        height: 60,
         bottom: 0,
         left: 0,
         right: 0,
@@ -303,12 +306,15 @@ const BottomNav = () => {
               navigate('/');
               break;
             case 1:
-              navigate('/play');
+              navigate('/howtoplay');
               break;
             case 2:
+              navigate('/play');
+              break;
+            case 3:
               navigate('/raceresult');
               break;
-              case 3:
+              case 4:
                 navigate('/mypredictions');
                 break;
             default:
@@ -322,10 +328,15 @@ const BottomNav = () => {
         {/* <BottomNavigationAction label="Race Results" icon={<SportsScoreIcon />} /> */}
         {/* <BottomNavigationAction label="Predictions" icon={<FactCheckIcon />} /> */}
         <BottomNavigationAction label="Home" icon={<i className="bi bi-house" style={{ fontSize: '28px' }}></i>} />
-        <BottomNavigationAction label="Play" icon={<i class="bi bi-controller" style={{ fontSize: '28px' }}></i>} />
-        <BottomNavigationAction label="Race Results" icon={<i class="bi bi-flag" style={{ fontSize: '24px' }}></i>}   sx={{
+        <BottomNavigationAction label="How To Play" icon={<i className="bi bi-info-circle" style={{ fontSize: '20px' }}></i>} sx={{
             '& .MuiBottomNavigationAction-label': {
               fontSize: '12px', // Change this to your desired font size
+            },
+          }} />
+        <BottomNavigationAction label="Play" icon={<i class="bi bi-controller" style={{ fontSize: '28px' }}></i>} />
+        <BottomNavigationAction label="Race Results" icon={<i class="bi bi-flag" style={{ fontSize: '20px' }}></i>} sx={{
+            '& .MuiBottomNavigationAction-label': {
+              fontSize: '10px', // Change this to your desired font size
             },
           }}/>
         <BottomNavigationAction label="Predictions" icon={<i class="bi bi-ui-checks" style={{ fontSize: '28px' }}></i>} />
