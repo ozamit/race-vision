@@ -7,6 +7,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { Reorder } from 'framer-motion';
 import { host } from '../../utils/host';
+import { unknownProfileIMG } from '../../utils/img';
 
 
 const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
@@ -24,18 +25,34 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
     console.log('URL:', `${host}predictions/savePredictions`);
 
     try {
+      const body = {
+        user: userInfo?._id,
+        sessionKey: nextRaceSession?.session_key,
+        meetingKey: nextRaceSession?.meeting_key,
+        predictedOrder: localDrivers,
+      };
+      
+      // Check for missing properties in the body
+      Object.entries(body).forEach(([key, value]) => {
+        if (value === undefined || value === null) {
+          if (key === 'user') {
+            showNotification('User information is missing. Please log in again.', 'error');
+            console.log('Missing user field:', key);
+          } else {
+            showNotification(`Missing required field: ${key}. Please try again.`, 'warning');
+            console.log('Missing required field:', key);
+          }
+        }
+      });
+
       const response = await fetch(`${host}predictions/savePredictions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          user: userInfo._id,
-          sessionKey: nextRaceSession.session_key,
-          meetingKey: nextRaceSession.meeting_key,
-          predictedOrder: localDrivers,
-        }),
+        body: JSON.stringify(body),
       });
+      
 
       if (response.ok) {
         const result = await response.json();
@@ -44,6 +61,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
         setSavedOrder(localDrivers);
       } else {
         const errorData = await response.json();
+        console.log('Error saving order:', errorData);
         throw new Error(errorData.message || 'Failed to save driver order');
       }
     } catch (error) {
@@ -87,7 +105,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
         {/* <div>{fetchStatus}</div> */}
         <Reorder.Group
           style={{
-            marginBottom: '100px',
+            marginBottom: '1000px',
             listStyle: 'none',
             display: 'flex',
             flexDirection: 'column',
@@ -133,7 +151,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
                   <img
                     src={
                       driver.headshot_url ||
-                      'https://i.ibb.co/7V7MXwR/profile.png'
+                      `${unknownProfileIMG}`
                     }
                     alt={`${driver.name_acronym} driver`}
                     style={{

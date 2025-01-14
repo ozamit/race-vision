@@ -11,6 +11,7 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  CircularProgress,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -93,7 +94,7 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
   };
 
   if (!userInfo || !userInfo._id) {
-    return <Typography>Please log in to view your predictions.</Typography>;
+    return <Typography style={{ marginTop: '40px' }}>Please log in to view your predictions and score.</Typography>;
   }
 
   return (
@@ -103,7 +104,10 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
           My Predictions
         </Typography>
         {loading ? (
-          <Typography>Loading...</Typography>
+        //   <Typography>Loading...</Typography>
+          <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '20px' }}> 
+                                      <CircularProgress />
+                                  </Box>
         ) : userPredictions.length > 0 ? (
           <Box>
             {userPredictions.map((userPrediction, index) => {

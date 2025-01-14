@@ -23,6 +23,7 @@ import { host } from './utils/host';
 
 function App() {
   const [drivers, setDrivers] = useState([]);
+  const [driversLocalDB, setDriversLocalDB] = useState([]); // State to store drivers from DB
   const [fetchStatus, setFetchStatus] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState('');
@@ -77,6 +78,7 @@ function App() {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
+        console.log('Drivers:', data);
         setDrivers(data);
         setFetchStatus('Drivers fetched successfully!');
       } catch (error) {
@@ -84,8 +86,31 @@ function App() {
         setFetchStatus('Failed to fetch drivers. Please try again later.');
       }
     };
-
     fetchDrivers();
+
+    // Fetch the drivers from DB
+      const handleGetDriversFromDB = async () => {
+        try {
+          const response = await fetch(`${host}drivers/getDriversLocalDB`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+    
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+    
+          const data = await response.json();
+          setDriversLocalDB(data); // Update the state with fetched drivers
+          console.log('Drivers from Local DB:', data); // Print the state to the console
+        } catch (error) {
+          console.error('Error fetching drivers from local DB:', error);
+        }
+      };
+      handleGetDriversFromDB();
+
     const fetchNextRaceSession = async () => {
       try {
           // Construct the API endpoint URL
@@ -107,7 +132,6 @@ function App() {
           console.error('Error fetching the next race session:', error);
       }
   };
-
   // Call the function to fetch the next race session
   fetchNextRaceSession();
 
@@ -239,9 +263,9 @@ sx={{
   </Box>
 </Box>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home userInfo={userInfo} />} />
           <Route path="/play" element={<Play userInfo={userInfo} nextRaceSession={nextRaceSession} drivers={drivers} fetchStatus={fetchStatus} />} />
-          <Route path="/raceresult" element={<RaceResult drivers={drivers} fetchStatus={fetchStatus} />} />
+          <Route path="/raceresult" element={<RaceResult drivers={drivers} driversLocalDB={driversLocalDB} fetchStatus={fetchStatus} />} />
           <Route path="/mypredictions" element={<MyPredictions userInfo={userInfo} raceSessions={raceSessions} drivers={drivers} nextRaceSession={nextRaceSession}/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -292,6 +316,7 @@ const BottomNav = () => {
           }
         }}
       >
+
         {/* <BottomNavigationAction label="Home" icon={<HomeIcon />} /> */}
         {/* <BottomNavigationAction label="Play" icon={<SportsEsportsIcon />} /> */}
         {/* <BottomNavigationAction label="Race Results" icon={<SportsScoreIcon />} /> */}
