@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route,useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route,useNavigate,useLocation } from 'react-router-dom';
 import './App.css';
 import Play from './pages/play/Play';
 import MyPredictions from './pages/myPredictions/MyPredictions';
@@ -8,6 +8,8 @@ import RaceResult from './pages/raceResult/RaceResult';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import HowToPlay from './pages/howToPlay/HowToPlay';
+import BottomNav from './components/BottomNav/BottomNav';
+import Admin from './pages/admin/Admin';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import {
   Avatar,
@@ -21,6 +23,7 @@ import {
 import { Home as HomeIcon, SportsEsports as SportsEsportsIcon, Logout as LogoutIcon, SportsScore as SportsScoreIcon, Person as PersonIcon } from '@mui/icons-material';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import { host } from './utils/host';
+import { backgroundImg1 } from './utils/img';
 
 function App() {
   const [drivers, setDrivers] = useState([]);
@@ -32,6 +35,7 @@ function App() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [nextRaceSession, setNextRaceSession] = useState([]);
   const [raceSessions, setRaceSessions] = useState([]);
+
   
   const menuOpen = Boolean(anchorEl);
   const year = 2024;
@@ -44,6 +48,7 @@ function App() {
       setIsLoggedIn(true);
       setUserId(storedUserId);
     }
+
   }, []);
 
   useEffect(() => {
@@ -62,6 +67,7 @@ function App() {
 
           const data = await response.json();
           setUserInfo(data);
+          console.log('User Info:', data);
         } catch (error) {
           console.error('Error fetching user info:', error);
         }
@@ -159,6 +165,11 @@ function App() {
     setAnchorEl(null);
   };
 
+  const handleAdmin = () => {
+
+    window.location.href = '/admin'; // Redirect to admin page
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
@@ -171,15 +182,24 @@ function App() {
     <Router>
       <div className="App">
       <Box
+        sx={{
+          minHeight: '100vh',
+          // backgroundImage: `url(${backgroundImg1})`,
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover', // Ensures the image covers the whole background
+          backgroundPosition: 'center', // Centers the image
+        }}>
+      <Box
 sx={{
   position: 'sticky',
   top: 0,
   left: 0,
   right: 0,
   zIndex: 10,
-  paddingTop: '10px',
+  paddingTop: '15px',
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'right',
+  flexDirection: 'row-reverse',
   width: '100%',
   background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0))', // Gradient for transparency
   // backdropFilter: 'blur(10px)', // Blur effect
@@ -187,7 +207,7 @@ sx={{
 }}
 >
   {/* Left Chip */}
-  <Box
+  {/* <Box
     sx={{
       display: 'flex',
       alignItems: 'center',
@@ -204,14 +224,14 @@ sx={{
         boxShadow: '1px 1px 6px rgba(0, 0, 0, 0.25), -1px -1px 6px rgba(255, 255, 255, 0.06)',
       }}
     />
-  </Box>
+  </Box> */}
 
   {/* Right Chip */}
   <Box
     sx={{
       display: 'flex',
       alignItems: 'center',
-      marginRight: '10px', // 10px from the right edge
+      marginRight: '15px', // 10px from the right edge
     }}
   >
     {isLoggedIn ? (
@@ -231,18 +251,28 @@ sx={{
             boxShadow: '1px 1px 6px rgba(0, 0, 0, 0.25), -1px -1px 6px rgba(255, 255, 255, 0.06)', // Add box shadow
           }}
         />
-        <Menu
-          anchorEl={anchorEl}
-          open={menuOpen}
-          onClose={handleMenuClose}
-          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-        >
-          <MenuItem onClick={handleLogout}>
-            <LogoutIcon fontSize="small" sx={{ mr: 1 }} />
-            Logout
-          </MenuItem>
-        </Menu>
+<Menu
+  anchorEl={anchorEl}
+  open={menuOpen}
+  onClose={handleMenuClose}
+  transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+>
+  <MenuItem onClick={handleLogout}>
+    <BottomNavigationAction label="Predictions" icon={<i className="bi bi-box-arrow-right" style={{ fontSize: '24px' }}></i>} />
+    Logout
+  </MenuItem>
+  {/* Conditionally render the Admin MenuItem based on userInfo.admin */}
+  {userInfo && userInfo.admin === true && (
+  <MenuItem onClick={handleAdmin}>
+    <BottomNavigationAction label="Predictions" icon={<i className="bi bi-person-gear" style={{ fontSize: '24px' }}></i>} />
+    Admin
+  </MenuItem>
+)}
+
+
+</Menu>
+
       </>
     ) : (
       <Chip
@@ -270,81 +300,17 @@ sx={{
           <Route path="/mypredictions" element={<MyPredictions userInfo={userInfo} raceSessions={raceSessions} drivers={drivers} nextRaceSession={nextRaceSession}/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/howtoplay" element={<HowToPlay />} />          
+          <Route path="/howtoplay" element={<HowToPlay />} />         
+          <Route path="/admin" element={<Admin userInfo={userInfo} />} /> 
         </Routes>
 
-        <BottomNav />
+        {/* BottomNav is a different component */}
+        <BottomNav userInfo={userInfo}/>  
+      </Box>
       </div>
     </Router>
   );
 }
 
-const BottomNav = () => {
-  const navigate = useNavigate();
-  const [value, setValue] = useState(0);
-
-  return (
-    <Box
-      sx={{
-        position: 'fixed',
-        height: 60,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        boxShadow: 3,
-        backgroundColor: 'background.paper',
-      }}
-    >
-      <BottomNavigation
-        showLabels
-        value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-
-          switch (newValue) {
-            case 0:
-              navigate('/');
-              break;
-            case 1:
-              navigate('/howtoplay');
-              break;
-            case 2:
-              navigate('/play');
-              break;
-            case 3:
-              navigate('/raceresult');
-              break;
-              case 4:
-                navigate('/mypredictions');
-                break;
-            default:
-              break;
-          }
-        }}
-      >
-
-        {/* <BottomNavigationAction label="Home" icon={<HomeIcon />} /> */}
-        {/* <BottomNavigationAction label="Play" icon={<SportsEsportsIcon />} /> */}
-        {/* <BottomNavigationAction label="Race Results" icon={<SportsScoreIcon />} /> */}
-        {/* <BottomNavigationAction label="Predictions" icon={<FactCheckIcon />} /> */}
-        <BottomNavigationAction label="Home" icon={<i className="bi bi-house" style={{ fontSize: '28px' }}></i>} />
-        <BottomNavigationAction label="How To Play" icon={<i className="bi bi-info-circle" style={{ fontSize: '20px' }}></i>} sx={{
-            '& .MuiBottomNavigationAction-label': {
-              fontSize: '12px', // Change this to your desired font size
-            },
-          }} />
-        <BottomNavigationAction label="Play" icon={<i class="bi bi-controller" style={{ fontSize: '28px' }}></i>} />
-        <BottomNavigationAction label="Race Results" icon={<i class="bi bi-flag" style={{ fontSize: '20px' }}></i>} sx={{
-            '& .MuiBottomNavigationAction-label': {
-              fontSize: '10px', // Change this to your desired font size
-            },
-          }}/>
-        <BottomNavigationAction label="Predictions" icon={<i class="bi bi-ui-checks" style={{ fontSize: '28px' }}></i>} />
-        {/* <BottomNavigationAction label="Predictions" style={{ fontSize: '28px' }} icon={"😀"} /> */}
-
-      </BottomNavigation>
-    </Box>
-  );
-};
 
 export default App;
