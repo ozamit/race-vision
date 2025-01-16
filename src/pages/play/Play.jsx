@@ -99,12 +99,13 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
           Save Order <i style={{ marginLeft: '15px' }} class="bi bi-floppy"></i>
         </Button>
       </div>
-      <Typography>Reorder drivers by dragging them up or down to create your predicted race results</Typography>
+      <Typography color="white">Reorder drivers by dragging them up or down to create your predicted race results</Typography>
 
       <div>
         {/* <div>{fetchStatus}</div> */}
         <Reorder.Group
           style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.2)', // Semi-transparent background
             marginBottom: '1000px',
             listStyle: 'none',
             display: 'flex',
@@ -112,7 +113,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
             justifyContent: 'center',
             marginLeft: '40px',
             marginRight: '40px',
-            border: '1px solid #ccc',
+            // border: '1px solid #ccc',
             borderRadius: '15px',
             padding: '0px',
             position: 'relative',
@@ -126,6 +127,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
               <Card
                 style={{
                   display: 'flex',
+                  backgroundColor: 'rgba(255, 255, 255, 0)', // Semi-transparent background
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   boxShadow: 'none',
@@ -145,9 +147,27 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
                     position: 'relative',
                   }}
                 >
-                  <Typography variant="h7" style={{ marginRight: '10px' }}>
-                    # {index + 1}
-                  </Typography>
+<Typography
+    variant="h7"
+    sx={{
+        width: '40px', // Diameter of the circle
+        height: '40px', // Diameter of the circle
+        borderRadius: '50%', // Makes it a perfect circle
+        backgroundColor: 'rgba(255, 255, 255, 0)', // Background color of the circle
+        color: 'white', // Text color
+        display: 'flex', // Enables flexbox
+        alignItems: 'center', // Vertically centers the text
+        justifyContent: 'center', // Horizontally centers the text
+        marginLeft: '10px', // Spacing from other elements
+        marginBottom: '10px', // Spacing from other elements
+        fontSize: '16px', // Text size
+        fontWeight: 'bold', // Text weight
+        border: '1px solid #ccc', // Border around the circle
+    }}
+>
+    #{index + 1}
+</Typography>
+
                   <img
                     src={
                       driver.headshot_url ||
@@ -160,7 +180,10 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
                       padding: '0px 0px 0px 10px',
                     }}
                   />
-                  <Typography>{driver.full_name}</Typography>
+                  <Typography color='white' style={{
+                    marginBottom: '10px',
+                    marginLeft: '10px',
+                  }}>{driver.full_name}</Typography>
                 </CardActions>
               </Card>
             </Reorder.Item>

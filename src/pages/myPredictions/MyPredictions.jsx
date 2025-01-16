@@ -100,7 +100,7 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
   return (
     <div style={{ marginBottom: '60px', overflow: 'auto' }}>
       <Box sx={{ padding: 2 }}>
-        <Typography variant="h6" gutterBottom>
+        <Typography sx={{color: 'white', margin: '15px', fontSize: '24px'}} >
           My Predictions
         </Typography>
         {loading ? (
@@ -131,21 +131,39 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
               }
 
               return (
-                <Accordion key={index} sx={{ marginBottom: 2 }}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />} id={`panel-${userPrediction.sessionKey}`}>
+                <Accordion
+                  key={index}
+                  sx={{
+                    marginBottom: '10px',
+                    backgroundColor: 'rgba(255, 255, 255, 0)', // Transparent background
+                    borderRadius: '10px', // Rounded corners
+                  }}
+                >
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    id={`panel-${userPrediction.sessionKey}`}
+                    sx={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.2)', // Semi-transparent background
+                      color: 'white', // Text color
+                      borderRadius: '50px', // Rounded corners for the summary
+                      '& .MuiSvgIcon-root': {
+                        color: 'white', // Change icon color to white
+                      },
+                    }}
+                  >
                     <Typography variant="h6">
                       {getCircuitShortName(userPrediction.sessionKey)} | Score: {totalPoints}
                     </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell><strong>My Prediction</strong></TableCell>
-                          <TableCell><strong>Actual</strong></TableCell>
-                          <TableCell><strong>Points</strong></TableCell>
-                        </TableRow>
-                      </TableHead>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ color: 'white' }}><strong>My Prediction</strong></TableCell>
+                        <TableCell sx={{ color: 'white' }}><strong>Actual</strong></TableCell>
+                        <TableCell sx={{ color: 'white' }}><strong>Points</strong></TableCell>
+                      </TableRow>
+                    </TableHead>
                       <TableBody>
                         {userPrediction.predictedOrder.length > 0 ? (
                           userPrediction.predictedOrder.map((driver, positionIndex) => {
@@ -159,9 +177,30 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
 
                             return (
                               <TableRow key={driver._id}>
-                                <TableCell>{predictedPosition} - {driver.broadcast_name}</TableCell>
-                                <TableCell>{actualPosition}</TableCell>
-                                <TableCell>{points}</TableCell>
+                                <TableCell sx={{ color: 'white', display: 'flex', alignItems: 'center' }}>
+                                  <Typography sx={{
+                                      width: '40px', // Diameter of the circle
+                                      height: '40px', // Diameter of the circle
+                                      borderRadius: '50%', // Makes it a perfect circle
+                                      backgroundColor: 'rgba(255, 255, 255, 0)', // Background color of the circle
+                                      color: 'white', // Text color
+                                      display: 'flex', // Enables flexbox
+                                      alignItems: 'center', // Vertically centers the text
+                                      justifyContent: 'center', // Horizontally centers the text
+                                      marginRight: '10px', // Spacing from other elements
+                                      marginLeft: '-10px', // Spacing from other elements
+                                      marginBottom: '-10px', // Spacing from other elements
+                                      marginTop: '-10px', // Spacing from other elements
+                                      fontSize: '16px', // Text size
+                                      fontWeight: 'bold', // Text weight
+                                      border: '1px solid #ccc', // Border around the circle
+                                  }}>
+                                  {predictedPosition}
+                                  </Typography>
+                                  <Typography sx={{fontSize: '12px'}}>{driver.broadcast_name}</Typography>
+                                </TableCell>
+                                <TableCell sx={{ color: 'white' }}>{actualPosition}</TableCell>
+                                <TableCell sx={{ color: 'white' }}>{points}</TableCell>
                               </TableRow>
                             );
                           })
@@ -176,6 +215,7 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                 </Accordion>
               );
             })}
+
           </Box>
         ) : (
           <Typography>No predictions found.</Typography>
