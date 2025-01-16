@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { host } from '../../utils/host';
 import { unknownProfileIMG } from '../../utils/img';
 
-
 import {
     Table,
     TableBody,
@@ -18,6 +17,7 @@ import {
     Button,
     CircularProgress,
     Box,
+    Typography,
 } from '@mui/material';
 
 const MUI = {
@@ -104,12 +104,19 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
         <div>
             {/* Year Selector */}
             <div style={{ margin: '20px 10px' }}>
-                <FormControl fullWidth>
-                    <InputLabel>Year</InputLabel>
+                <FormControl fullWidth color='white'>
+                    <InputLabel color="white" >Year</InputLabel>
                     <Select
                         value={year}
                         onChange={handleYearChange}
                         label="Year"
+                        sx={{
+                            color: 'white',
+                            '& .MuiSelect-icon': { color: 'white' }, // Icon color
+                            '& .MuiOutlinedInput-root': {
+                                borderColor: 'white', // Border color for the Select input
+                            },
+                        }}
                     >
                         <MenuItem value={2024}>2024</MenuItem>
                         <MenuItem value={2025}>2025</MenuItem>
@@ -119,12 +126,19 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
 
             {/* Race Selector */}
             <div style={{ margin: '20px 10px' }}>
-                <FormControl fullWidth>
-                    <InputLabel>Choose Race</InputLabel>
+                <FormControl fullWidth >
+                    <InputLabel sx={{ color: 'white' }}>Choose Race</InputLabel>
                     <Select
                         value={selectedSession}
                         onChange={handleSessionChange}
                         label="Choose Race"
+                        sx={{
+                            color: 'white',
+                            '& .MuiSelect-icon': { color: 'white' }, // Icon color
+                            '& .MuiOutlinedInput-root': {
+                                borderColor: 'white', // Border color for the Select input
+                            },
+                        }}
                     >
                         {raceSessions.map((session) => (
                             <MenuItem key={session.session_key} value={session.session_key}>
@@ -152,7 +166,7 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
 
             {driversForPositions.length > 0 ? (
                 <MUI.TableContainer component={MUI.Paper}>
-                                        <MUI.Table
+                    <MUI.Table
                         aria-label="race results table"
                         sx={{
                             '& .MuiTableCell-root': {
@@ -160,6 +174,8 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
                                 height: '50px',
                                 lineHeight: '1.5',
                                 fontSize: '0.875rem',
+                                color: 'white', // Make table cell text white
+                                borderColor: 'white', // Make borders white
                             },
                             '& .MuiTableRow-root': {
                                 height: '30px',
@@ -168,9 +184,9 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
                     >
                         <MUI.TableHead>
                             <MUI.TableRow>
-                                <MUI.TableCell>Position</MUI.TableCell>
-                                <MUI.TableCell>Driver</MUI.TableCell>
-                                <MUI.TableCell>Name</MUI.TableCell>
+                                <MUI.TableCell sx={{ color: 'white', borderColor: 'white' }}>Position</MUI.TableCell>
+                                <MUI.TableCell sx={{ color: 'white', borderColor: 'white' }}>Driver</MUI.TableCell>
+                                <MUI.TableCell sx={{ color: 'white', borderColor: 'white' }}>Name</MUI.TableCell>
                             </MUI.TableRow>
                         </MUI.TableHead>
                         <MUI.TableBody>
@@ -178,7 +194,9 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
                                 const { full_name, headshot_url } = getDriverDetailsByNumber(driver.driver_number);
                                 return (
                                     <MUI.TableRow key={driver.position}>
-                                        <MUI.TableCell>{driver.position}</MUI.TableCell>
+                                        <MUI.TableCell sx={{ color: 'white', borderColor: 'white' }}>
+                                            {driver.position}
+                                        </MUI.TableCell>
                                         <MUI.TableCell>
                                             <img
                                                 src={headshot_url || `${unknownProfileIMG}`}
@@ -189,7 +207,9 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
                                                 }}
                                             />
                                         </MUI.TableCell>
-                                        <MUI.TableCell>{full_name}</MUI.TableCell>
+                                        <MUI.TableCell sx={{ color: 'white', borderColor: 'white' }}>
+                                            {full_name}
+                                        </MUI.TableCell>
                                     </MUI.TableRow>
                                 );
                             })}
@@ -197,7 +217,7 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
                     </MUI.Table>
                 </MUI.TableContainer>
             ) : (
-                !loading && <p>To view the race results, please select a race</p>
+                !loading && <Typography sx={{color: 'white', marginTop: '15px'}}>To view the race results, please select a race</Typography>
             )}
         </div>
     );

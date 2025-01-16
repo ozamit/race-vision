@@ -184,7 +184,8 @@ function App() {
       <Box
         sx={{
           minHeight: '100vh',
-          // backgroundImage: `url(${backgroundImg1})`,
+          backgroundImage: `url(https://i.ibb.co/PgYfCpx/Untitled-design-1.png)`,
+          // backgroundColor: `black`,
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover', // Ensures the image covers the whole background
           backgroundPosition: 'center', // Centers the image
@@ -201,7 +202,7 @@ sx={{
   alignItems: 'right',
   flexDirection: 'row-reverse',
   width: '100%',
-  background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0))', // Gradient for transparency
+  // background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0))', // Gradient for transparency
   // backdropFilter: 'blur(10px)', // Blur effect
   // WebkitBackdropFilter: 'blur(10px)', // Safari support
 }}
@@ -231,7 +232,7 @@ sx={{
     sx={{
       display: 'flex',
       alignItems: 'center',
-      marginRight: '15px', // 10px from the right edge
+      marginRight: '15px', // 15px from the right edge
     }}
   >
     {isLoggedIn ? (
