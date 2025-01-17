@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route,useNavigate,useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Play from './pages/play/Play';
 import MyPredictions from './pages/myPredictions/MyPredictions';
@@ -17,11 +17,9 @@ import {
   MenuItem,
   Chip,
   Box,
-  BottomNavigation,
   BottomNavigationAction,
 } from '@mui/material';
-import { Home as HomeIcon, SportsEsports as SportsEsportsIcon, Logout as LogoutIcon, SportsScore as SportsScoreIcon, Person as PersonIcon } from '@mui/icons-material';
-import FactCheckIcon from '@mui/icons-material/FactCheck';
+import { Person as PersonIcon } from '@mui/icons-material';
 import { host } from './utils/host';
 import { backgroundImg1 } from './utils/img';
 

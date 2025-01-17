@@ -165,7 +165,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
         border: '1px solid #ccc', // Border around the circle
     }}
 >
-    #{index + 1}
+    {index + 1}
 </Typography>
 
                   <img
