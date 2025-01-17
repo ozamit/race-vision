@@ -41,7 +41,7 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
     const [loading, setLoading] = useState(false);
     const [raceSessions, setRaceSessions] = useState([]);
     const [selectedSession, setSelectedSession] = useState('');
-    const [year, setYear] = useState(2024); // Default year is 2024
+    const [year, setYear] = useState(); // Default year is 2024
 
     useEffect(() => {
         const fetchRaceSessions = async () => {
@@ -103,18 +103,32 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
     return (
         <div>
             {/* Year Selector */}
-            <div style={{ margin: '20px 10px' }}>
+            <div style={{ margin: '20px 20px' }}>
                 <FormControl fullWidth color='white'>
-                    <InputLabel color="white" >Year</InputLabel>
+                    <InputLabel sx={{ color: 'white' }} >Year</InputLabel>
                     <Select
                         value={year}
                         onChange={handleYearChange}
                         label="Year"
                         sx={{
-                            color: 'white',
-                            '& .MuiSelect-icon': { color: 'white' }, // Icon color
-                            '& .MuiOutlinedInput-root': {
-                                borderColor: 'white', // Border color for the Select input
+                            '& .MuiInputBase-root': {
+                                backgroundColor: 'rgba(255, 255, 255, 0.1)', // Background color
+                                borderRadius: '4px',       // Rounded corners
+                            },
+                            '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#FFFFFF',    // Border color
+                            },
+                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#FFFFFF',    // Hover border color
+                            },
+                            '& .MuiFormLabel-root': {
+                                color: '#FFFFFF',          // Label color
+                            },
+                            '& .MuiFormLabel-root.Mui-focused': {
+                                color: '#FFFFFF',          // Focused label color
+                            },
+                            '& .MuiInputBase-input': {
+                                color: '#FFFFFF',             // Text color
                             },
                         }}
                     >
@@ -125,18 +139,32 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
             </div>
 
             {/* Race Selector */}
-            <div style={{ margin: '20px 10px' }}>
+            <div style={{ margin: '20px 20px' }}>
                 <FormControl fullWidth >
-                    <InputLabel sx={{ color: 'white' }}>Choose Race</InputLabel>
+                    <InputLabel sx={{ color: 'white' }}>Select Race</InputLabel>
                     <Select
                         value={selectedSession}
                         onChange={handleSessionChange}
                         label="Choose Race"
                         sx={{
-                            color: 'white',
-                            '& .MuiSelect-icon': { color: 'white' }, // Icon color
-                            '& .MuiOutlinedInput-root': {
-                                borderColor: 'white', // Border color for the Select input
+                            '& .MuiInputBase-root': {
+                                backgroundColor: 'rgba(255, 255, 255, 0.1)', // Background color
+                                borderRadius: '4px',       // Rounded corners
+                            },
+                            '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#FFFFFF',    // Border color
+                            },
+                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#FFFFFF',    // Hover border color
+                            },
+                            '& .MuiFormLabel-root': {
+                                color: '#FFFFFF',          // Label color
+                            },
+                            '& .MuiFormLabel-root.Mui-focused': {
+                                color: '#FFFFFF',          // Focused label color
+                            },
+                            '& .MuiInputBase-input': {
+                                color: '#FFFFFF',             // Text color
                             },
                         }}
                     >
@@ -150,13 +178,22 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
             </div>
 
             <Button
-                variant="contained"
-                color="primary"
-                onClick={handleFetchDrivers}
-                style={{ marginTop: '10px' }}
-            >
-                Get Selected Race Results
-            </Button>
+        variant="contained"
+        onClick={handleFetchDrivers}
+        sx={{
+        width: '90%', // 90% width of the container
+        backgroundColor: '#FDCA40', // Button color
+        color: '#3772FF', // Text color
+        margin: '10px auto', // Margin to center the button horizontally and spacing on top
+        display: 'block', // Ensures the button is treated as a block element for centering
+        '&:hover': {
+            backgroundColor: '#FDCA40', // Slightly lighter black on hover
+        },
+    }}
+>
+    Get Selected Race Results
+</Button>
+
 
             {loading && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
@@ -164,61 +201,121 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
                 </Box>
             )}
 
-            {driversForPositions.length > 0 ? (
-                <MUI.TableContainer component={MUI.Paper}>
-                    <MUI.Table
-                        aria-label="race results table"
+{driversForPositions.length > 0 ? (
+    <Box
+        sx={{
+            width: '90%',
+            margin: '20px auto', // Center horizontally
+            paddingBottom: '150px', // Ensure 50px space from bottom
+        }}
+    >
+        <MUI.TableContainer
+            component={Paper}
+            sx={{
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: '8px',
+                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.25)',
+            }}
+        >
+            <MUI.Table
+    sx={{
+        width: '100%', // Ensures table spans the full width of the container
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    }}
+>
+    <MUI.TableHead>
+        <MUI.TableRow
+            sx={{
+                borderBottom: '2px solid white', // Thicker border for header
+            }}
+        >
+            <MUI.TableCell
+                sx={{ color: 'white', borderColor: 'white', textAlign: 'center' }}
+            >
+                Position
+            </MUI.TableCell>
+            <MUI.TableCell
+                sx={{ color: 'white', borderColor: 'white', textAlign: 'center' }}
+            >
+                Driver
+            </MUI.TableCell>
+            <MUI.TableCell
+                sx={{ color: 'white', borderColor: 'white', textAlign: 'center' }}
+            >
+                
+            </MUI.TableCell>
+        </MUI.TableRow>
+    </MUI.TableHead>
+    <MUI.TableBody>
+        {driversForPositions.map((driver) => {
+            const { full_name, headshot_url } = getDriverDetailsByNumber(driver.driver_number);
+            return (
+                <MUI.TableRow
+                    key={driver.position}
+                    sx={{
+                        borderBottom: '1px solid white', // Divider line between rows
+                    }}
+                >
+                    <MUI.TableCell
                         sx={{
-                            '& .MuiTableCell-root': {
-                                padding: '5px 10px 0px 10px',
-                                height: '50px',
-                                lineHeight: '1.5',
-                                fontSize: '0.875rem',
-                                color: 'white', // Make table cell text white
-                                borderColor: 'white', // Make borders white
-                            },
-                            '& .MuiTableRow-root': {
-                                height: '30px',
-                            },
+                            width: '10px', // Diameter of the circle
+                            height: '10px', // Diameter of the circle
+                            borderRadius: '50%', // Makes it a perfect circle
+                            backgroundColor: 'rgba(255, 255, 255, 0)', // Background color of the circle
+                            color: 'white', // Text color
+                            display: 'flex', // Enables flexbox
+                            alignItems: 'center', // Vertically centers the text
+                            justifyContent: 'center', // Horizontally centers the text
+                            // marginRight: '10px', // Spacing from other elements
+                            marginLeft: '10px', // Spacing from other elements
+                            // marginBottom: '-10px', // Spacing from other elements
+                            marginTop: '15px', // Spacing from other elements
+                            fontSize: '16px', // Text size
+                            fontWeight: 'bold', // Text weight
+                            border: '1px solid #ccc', // Border around the circle
                         }}
                     >
-                        <MUI.TableHead>
-                            <MUI.TableRow>
-                                <MUI.TableCell sx={{ color: 'white', borderColor: 'white' }}>Position</MUI.TableCell>
-                                <MUI.TableCell sx={{ color: 'white', borderColor: 'white' }}>Driver</MUI.TableCell>
-                                <MUI.TableCell sx={{ color: 'white', borderColor: 'white' }}>Name</MUI.TableCell>
-                            </MUI.TableRow>
-                        </MUI.TableHead>
-                        <MUI.TableBody>
-                            {driversForPositions.map((driver) => {
-                                const { full_name, headshot_url } = getDriverDetailsByNumber(driver.driver_number);
-                                return (
-                                    <MUI.TableRow key={driver.position}>
-                                        <MUI.TableCell sx={{ color: 'white', borderColor: 'white' }}>
-                                            {driver.position}
-                                        </MUI.TableCell>
-                                        <MUI.TableCell>
-                                            <img
-                                                src={headshot_url || `${unknownProfileIMG}`}
-                                                alt={full_name}
-                                                style={{
-                                                    width: '50px',
-                                                    height: '50px',
-                                                }}
-                                            />
-                                        </MUI.TableCell>
-                                        <MUI.TableCell sx={{ color: 'white', borderColor: 'white' }}>
-                                            {full_name}
-                                        </MUI.TableCell>
-                                    </MUI.TableRow>
-                                );
-                            })}
-                        </MUI.TableBody>
-                    </MUI.Table>
-                </MUI.TableContainer>
-            ) : (
-                !loading && <Typography sx={{color: 'white', marginTop: '15px'}}>To view the race results, please select a race</Typography>
-            )}
+                        {driver.position}
+                    </MUI.TableCell>
+                    <MUI.TableCell
+                        sx={{
+                            // display: 'flex', // Enables flexbox
+                            textAlign: 'center', // Aligns image in the center
+                        }}
+                    >
+                        <img
+                            src={headshot_url || `${unknownProfileIMG}`}
+                            alt={full_name}
+                            style={{
+                                width: '40px',
+                                height: '40px',
+                            }}
+                        />
+                    </MUI.TableCell>
+                    <MUI.TableCell
+                        sx={{
+                            color: 'white',
+                            textAlign: 'center', // Centers the name text
+                        }}
+                    >
+                        {full_name}
+                    </MUI.TableCell>
+                </MUI.TableRow>
+            );
+        })}
+    </MUI.TableBody>
+</MUI.Table>
+
+        </MUI.TableContainer>
+    </Box>
+) : (
+    !loading && (
+        <Typography sx={{ color: 'white', marginTop: '15px' }}>
+            To view the race results, please select a race
+        </Typography>
+    )
+)}
+
         </div>
     );
 };

@@ -94,7 +94,7 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
   };
 
   if (!userInfo || !userInfo._id) {
-    return <Typography style={{ marginTop: '40px' }}>Please log in to view your predictions and score.</Typography>;
+    return <Typography color='white' style={{ marginTop: '40px' }}>Please log in to view your predictions and score.</Typography>;
   }
 
   return (

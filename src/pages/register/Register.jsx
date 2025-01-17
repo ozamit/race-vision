@@ -66,7 +66,7 @@ const Register = () => {
                 </Alert>
             </Snackbar>
 
-            <Typography variant="h4" component="h1" gutterBottom>
+            <Typography color='white' variant="h4" component="h1" gutterBottom>
                 Register
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -83,6 +83,27 @@ const Register = () => {
                     })}
                     error={!!errors.email}
                     helperText={errors.email ? errors.email.message : ''}
+                    sx={{
+                        '& .MuiInputBase-root': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)', // Background color
+                            borderRadius: '4px',       // Rounded corners
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#FFFFFF',    // Border color
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#FFFFFF',    // Hover border color
+                        },
+                        '& .MuiFormLabel-root': {
+                            color: '#FFFFFF',          // Label color
+                        },
+                        '& .MuiFormLabel-root.Mui-focused': {
+                            color: '#FFFFFF',          // Focused label color
+                        },
+                        '& .MuiInputBase-input': {
+                            color: '#FFFFFF',             // Text color
+                        },
+                    }}
                 />
                 <TextField
                     fullWidth
@@ -97,6 +118,27 @@ const Register = () => {
                     })}
                     error={!!errors.name}
                     helperText={errors.name ? errors.name.message : ''}
+                    sx={{
+                        '& .MuiInputBase-root': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)', // Background color
+                            borderRadius: '4px',       // Rounded corners
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#FFFFFF',    // Border color
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#FFFFFF',    // Hover border color
+                        },
+                        '& .MuiFormLabel-root': {
+                            color: '#FFFFFF',          // Label color
+                        },
+                        '& .MuiFormLabel-root.Mui-focused': {
+                            color: '#FFFFFF',          // Focused label color
+                        },
+                        '& .MuiInputBase-input': {
+                            color: '#FFFFFF',             // Text color
+                        },
+                    }}
                 />
                 <TextField
                     fullWidth
@@ -112,12 +154,49 @@ const Register = () => {
                     })}
                     error={!!errors.password}
                     helperText={errors.password ? errors.password.message : ''}
+                    sx={{
+                        '& .MuiInputBase-root': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)', // Background color
+                            borderRadius: '4px',       // Rounded corners
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#FFFFFF',    // Border color
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#FFFFFF',    // Hover border color
+                        },
+                        '& .MuiFormLabel-root': {
+                            color: '#FFFFFF',          // Label color
+                        },
+                        '& .MuiFormLabel-root.Mui-focused': {
+                            color: '#FFFFFF',          // Focused label color
+                        },
+                        '& .MuiInputBase-input': {
+                            color: '#FFFFFF',             // Text color
+                        },
+                    }}
                 />
-                <Button type="submit" variant="contained" color="primary" fullWidth>
+                <Button type="submit" variant="contained" color="primary" fullWidth
+                sx={{
+                    width: '100%', // 90% width of the container
+                    backgroundColor: '#FDCA40', // Button color
+                    color: '#3772FF', // Text color
+                    margin: '10px auto', // Margin to center the button horizontally and spacing on top
+                    display: 'block', // Ensures the button is treated as a block element for centering
+                    '&:hover': {
+                        backgroundColor: '#FDCA40', // Slightly lighter black on hover
+                    },
+                }}
+                >
                     Register
                 </Button>
-                <Typography variant="body2" align="center" style={{ marginTop: '1rem' }}>
-                    Already have an account? <a href="/login" onClick={() => window.location.href = '/login'}>Login</a>
+                <Typography
+                    variant="body1"
+                    component="p"
+                    onClick={() => window.location.href = '/login'}
+                    style={{ cursor: 'pointer', color: 'white', textDecoration: 'underline', marginTop: '1rem' }}
+                    >
+                    Already have an account? Login
                 </Typography>
             </form>
         </Container>
