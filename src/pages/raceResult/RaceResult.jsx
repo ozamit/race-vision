@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { host } from '../../utils/host';
 import { unknownProfileIMG } from '../../utils/img';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
 import {
     Table,
@@ -41,7 +42,7 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
     const [loading, setLoading] = useState(false);
     const [raceSessions, setRaceSessions] = useState([]);
     const [selectedSession, setSelectedSession] = useState('');
-    const [year, setYear] = useState(); // Default year is 2024
+    const [year, setYear] = useState(2024); // Default year is 2024
 
     useEffect(() => {
         const fetchRaceSessions = async () => {
@@ -102,97 +103,110 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
 
     return (
         <div>
-            {/* Year Selector */}
-            <div style={{ margin: '20px 20px' }}>
-                <FormControl fullWidth color='white'>
-                    <InputLabel sx={{ color: 'white' }} >Year</InputLabel>
-                    <Select
-                        value={year}
-                        onChange={handleYearChange}
-                        label="Year"
-                        sx={{
-                            '& .MuiInputBase-root': {
-                                backgroundColor: 'rgba(255, 255, 255, 0.1)', // Background color
-                                borderRadius: '4px',       // Rounded corners
-                            },
-                            '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: '#FFFFFF',    // Border color
-                            },
-                            '&:hover .MuiOutlinedInput-notchedOutline': {
-                                borderColor: '#FFFFFF',    // Hover border color
-                            },
-                            '& .MuiFormLabel-root': {
-                                color: '#FFFFFF',          // Label color
-                            },
-                            '& .MuiFormLabel-root.Mui-focused': {
-                                color: '#FFFFFF',          // Focused label color
-                            },
-                            '& .MuiInputBase-input': {
-                                color: '#FFFFFF',             // Text color
-                            },
-                        }}
-                    >
-                        <MenuItem value={2024}>2024</MenuItem>
-                        <MenuItem value={2025}>2025</MenuItem>
-                    </Select>
-                </FormControl>
-            </div>
+<div style={{ display: 'flex', margin: '20px' }}>
+    {/* Year Selector */}
+    <div style={{ flex: 0.3, marginRight: '20px' }}>
+        <FormControl fullWidth color='white'>
+            <InputLabel sx={{ color: 'white' }}>Select Year</InputLabel>
+            <Select
+                value={year}
+                onChange={handleYearChange}
+                label="Year"
+                sx={{
+                    '& .MuiInputBase-root': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)', // Background color
+                        borderRadius: '4px',       // Rounded corners
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#FFFFFF',    // Border color
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#FFFFFF',    // Hover border color
+                    },
+                    '& .MuiFormLabel-root': {
+                        color: '#FFFFFF',          // Label color
+                    },
+                    '& .MuiFormLabel-root.Mui-focused': {
+                        color: '#FFFFFF',          // Focused label color
+                    },
+                    '& .MuiInputBase-input': {
+                        color: '#FFFFFF',             // Text color
+                    },
+                    '& .MuiSelect-icon': {
+                        color: '#FFFFFF', // Color the dropdown arrow white
+                    },
+                }}
+            >
+                <MenuItem value={2024}>2024</MenuItem>
+                <MenuItem value={2025}>2025</MenuItem>
+            </Select>
+        </FormControl>
+    </div>
 
-            {/* Race Selector */}
-            <div style={{ margin: '20px 20px' }}>
-                <FormControl fullWidth >
-                    <InputLabel sx={{ color: 'white' }}>Select Race</InputLabel>
-                    <Select
-                        value={selectedSession}
-                        onChange={handleSessionChange}
-                        label="Choose Race"
-                        sx={{
-                            '& .MuiInputBase-root': {
-                                backgroundColor: 'rgba(255, 255, 255, 0.1)', // Background color
-                                borderRadius: '4px',       // Rounded corners
-                            },
-                            '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: '#FFFFFF',    // Border color
-                            },
-                            '&:hover .MuiOutlinedInput-notchedOutline': {
-                                borderColor: '#FFFFFF',    // Hover border color
-                            },
-                            '& .MuiFormLabel-root': {
-                                color: '#FFFFFF',          // Label color
-                            },
-                            '& .MuiFormLabel-root.Mui-focused': {
-                                color: '#FFFFFF',          // Focused label color
-                            },
-                            '& .MuiInputBase-input': {
-                                color: '#FFFFFF',             // Text color
-                            },
-                        }}
-                    >
-                        {raceSessions.map((session) => (
-                            <MenuItem key={session.session_key} value={session.session_key}>
-                                {session.circuit_short_name} - {session.country_name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </div>
+    {/* Race Selector */}
+    <div style={{ flex: 0.7 }}>
+        <FormControl fullWidth>
+            <InputLabel sx={{ color: 'white' }}>Select Race</InputLabel>
+            <Select
+                value={selectedSession}
+                onChange={handleSessionChange}
+                label="Choose Race"
+                sx={{
+                    '& .MuiInputBase-root': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)', // Background color
+                        borderRadius: '4px',       // Rounded corners
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#FFFFFF',    // Border color
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#FFFFFF',    // Hover border color
+                    },
+                    '& .MuiFormLabel-root': {
+                        color: '#FFFFFF',          // Label color
+                    },
+                    '& .MuiFormLabel-root.Mui-focused': {
+                        color: '#FFFFFF',          // Focused label color
+                    },
+                    '& .MuiInputBase-input': {
+                        color: '#FFFFFF',             // Text color
+                    },
+                    '& .MuiSelect-icon': {
+                        color: '#FFFFFF', // Color the dropdown arrow white
+                    },
+                }}
+            >
+                {raceSessions.map((session) => (
+                    <MenuItem key={session.session_key} value={session.session_key}>
+                        {session.circuit_short_name} - {session.country_name}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl>
+    </div>
+</div>
 
-            <Button
-        variant="contained"
-        onClick={handleFetchDrivers}
-        sx={{
+
+
+<Button
+    variant="contained"
+    onClick={handleFetchDrivers}
+    sx={{
         width: '90%', // 90% width of the container
         backgroundColor: '#FDCA40', // Button color
         color: '#3772FF', // Text color
         margin: '10px auto', // Margin to center the button horizontally and spacing on top
-        display: 'block', // Ensures the button is treated as a block element for centering
+        display: 'flex', // Use flexbox to align text and icon
+        alignItems: 'center', // Vertically center the text and icon
+        justifyContent: 'center', // Horizontally center the text and icon
         '&:hover': {
             backgroundColor: '#FDCA40', // Slightly lighter black on hover
         },
     }}
 >
-    Get Selected Race Results
+    See Race Results <ArrowCircleRightIcon sx={{ marginLeft: '8px' }} />
 </Button>
+
 
 
             {loading && (
@@ -310,8 +324,8 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
     </Box>
 ) : (
     !loading && (
-        <Typography sx={{ color: 'white', marginTop: '15px' }}>
-            To view the race results, please select a race
+        <Typography sx={{ color: 'white', margin: '15px 15px 15px 15px', fontSize: '20px' }}>
+            To view results select a race and click the yellow button 
         </Typography>
     )
 )}

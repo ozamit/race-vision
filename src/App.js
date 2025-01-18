@@ -33,10 +33,30 @@ function App() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [nextRaceSession, setNextRaceSession] = useState([]);
   const [raceSessions, setRaceSessions] = useState([]);
-
-  
+  const [simplifiedDate, setSimplifiedDate] = useState('');
   const menuOpen = Boolean(anchorEl);
   const year = 2024;
+
+    // Function to simplify the date format
+    const formatDate = (isoDate) => {
+      const date = new Date(isoDate);
+      const simplifiedDate = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
+      const simplifiedTime = date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      return `${simplifiedDate} ${simplifiedTime}`; // Example: 12/08/2024 01:00 PM
+    };
+
+      useEffect(() => {
+        if (nextRaceSession?.date_start) {
+          setSimplifiedDate(formatDate(nextRaceSession.date_start));
+        }
+      }, [nextRaceSession]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -293,7 +313,7 @@ sx={{
   </Box>
 </Box>
         <Routes>
-          <Route path="/" element={<Home userInfo={userInfo} />} />
+          <Route path="/" element={<Home userInfo={userInfo} nextRaceSession={nextRaceSession} simplifiedDate={simplifiedDate} />} />
           <Route path="/play" element={<Play userInfo={userInfo} nextRaceSession={nextRaceSession} drivers={drivers} fetchStatus={fetchStatus} />} />
           <Route path="/raceresult" element={<RaceResult drivers={drivers} driversLocalDB={driversLocalDB} fetchStatus={fetchStatus} />} />
           <Route path="/mypredictions" element={<MyPredictions userInfo={userInfo} raceSessions={raceSessions} drivers={drivers} nextRaceSession={nextRaceSession}/>} />

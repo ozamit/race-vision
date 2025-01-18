@@ -1,3 +1,13 @@
+/* App.css */
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300;400;500;600;700;800&display=swap');
+
+html, body {
+  font-family: 'Funnel Display', sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 .App {
   text-align: center;
 }

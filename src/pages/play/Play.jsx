@@ -9,16 +9,38 @@ import { Reorder } from 'framer-motion';
 import { host } from '../../utils/host';
 import { unknownProfileIMG } from '../../utils/img';
 
-
 const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
   const [localDrivers, setLocalDrivers] = useState(drivers);
   const [savedOrder, setSavedOrder] = useState([]);
+  const [simplifiedDate, setSimplifiedDate] = useState('');
   const [scrollOffset, setScrollOffset] = useState(0);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
+  // Function to simplify the date format
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    const simplifiedDate = date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+    const simplifiedTime = date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    return `${simplifiedDate} ${simplifiedTime}`; // Example: 12/08/2024 01:00 PM
+  };
+
 
   useEffect(() => {
     setLocalDrivers(drivers);
   }, [drivers]);
+
+  useEffect(() => {
+    if (nextRaceSession?.date_start) {
+      setSimplifiedDate(formatDate(nextRaceSession.date_start));
+    }
+  }, [nextRaceSession]);
 
   const handleSaveOrder = async () => {
     console.log('Saving order:', localDrivers);
@@ -31,7 +53,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
         meetingKey: nextRaceSession?.meeting_key,
         predictedOrder: localDrivers,
       };
-      
+
       // Check for missing properties in the body
       Object.entries(body).forEach(([key, value]) => {
         if (value === undefined || value === null) {
@@ -52,7 +74,6 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
         },
         body: JSON.stringify(body),
       });
-      
 
       if (response.ok) {
         const result = await response.json();
@@ -81,31 +102,43 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
   useEffect(() => {
     console.log('userInfo:', userInfo);
     console.log('nextRaceSession:', nextRaceSession);
-    
+
     const handleScroll = () => {
       setScrollOffset(window.scrollY);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-
-    
   }, []);
 
   return (
     <div style={{ marginTop: '0px', overflow: 'auto' }}>
-      <div style={{ margin: '20px 40px' }}>
-        <Button variant="contained" color="primary" onClick={handleSaveOrder}>
-          Save Order <i style={{ marginLeft: '15px' }} class="bi bi-floppy"></i>
+      <Typography color="white" style={{ fontWeight: 'bold' , marginTop: '10px' }}>Next race: {simplifiedDate}, {nextRaceSession.country_code} Time</Typography>
+      <div style={{ margin: '10px 40px' }}>
+        <Button
+          onClick={handleSaveOrder}
+          sx={{
+            width: '100%',
+            backgroundColor: '#FDCA40',
+            color: '#3772FF',
+            display: 'block',
+            '&:hover': {
+              backgroundColor: '#FDCA40',
+            },
+          }}
+        >
+          Save Order <i style={{ marginLeft: '15px' }} className="bi bi-floppy"></i>
         </Button>
       </div>
-      <Typography color="white">Reorder drivers by dragging them up or down to create your predicted race results</Typography>
+      
+      <Typography color="white">
+        Reorder drivers by dragging them up or down to create your predicted race results
+      </Typography>
 
       <div>
-        {/* <div>{fetchStatus}</div> */}
         <Reorder.Group
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.2)', // Semi-transparent background
+            backgroundColor: 'rgba(255, 255, 255, 0.2)',
             marginBottom: '1000px',
             listStyle: 'none',
             display: 'flex',
@@ -113,7 +146,6 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
             justifyContent: 'center',
             marginLeft: '40px',
             marginRight: '40px',
-            // border: '1px solid #ccc',
             borderRadius: '15px',
             padding: '0px',
             position: 'relative',
@@ -127,7 +159,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
               <Card
                 style={{
                   display: 'flex',
-                  backgroundColor: 'rgba(255, 255, 255, 0)', // Semi-transparent background
+                  backgroundColor: 'rgba(255, 255, 255, 0)',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   boxShadow: 'none',
@@ -147,32 +179,29 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
                     position: 'relative',
                   }}
                 >
-<Typography
-    variant="h7"
-    sx={{
-        width: '40px', // Diameter of the circle
-        height: '40px', // Diameter of the circle
-        borderRadius: '50%', // Makes it a perfect circle
-        backgroundColor: 'rgba(255, 255, 255, 0)', // Background color of the circle
-        color: 'white', // Text color
-        display: 'flex', // Enables flexbox
-        alignItems: 'center', // Vertically centers the text
-        justifyContent: 'center', // Horizontally centers the text
-        marginLeft: '10px', // Spacing from other elements
-        marginBottom: '10px', // Spacing from other elements
-        fontSize: '16px', // Text size
-        fontWeight: 'bold', // Text weight
-        border: '1px solid #ccc', // Border around the circle
-    }}
->
-    {index + 1}
-</Typography>
+                  <Typography
+                    variant="h7"
+                    sx={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(255, 255, 255, 0)',
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginLeft: '10px',
+                      marginBottom: '10px',
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      border: '1px solid #ccc',
+                    }}
+                  >
+                    {index + 1}
+                  </Typography>
 
                   <img
-                    src={
-                      driver.headshot_url ||
-                      `${unknownProfileIMG}`
-                    }
+                    src={driver.headshot_url || `${unknownProfileIMG}`}
                     alt={`${driver.name_acronym} driver`}
                     style={{
                       width: '50px',
@@ -180,10 +209,15 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
                       padding: '0px 0px 0px 10px',
                     }}
                   />
-                  <Typography color='white' style={{
-                    marginBottom: '10px',
-                    marginLeft: '10px',
-                  }}>{driver.full_name}</Typography>
+                  <Typography
+                    color="white"
+                    style={{
+                      marginBottom: '10px',
+                      marginLeft: '10px',
+                    }}
+                  >
+                    {driver.full_name}
+                  </Typography>
                 </CardActions>
               </Card>
             </Reorder.Item>
