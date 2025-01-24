@@ -6,14 +6,15 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
+  Card,
+  CardActions,
   CircularProgress,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import { unknownProfileIMG } from '../../utils/img';
+
 
 const MyPredictions = ({ userInfo, raceSessions }) => {
   const [userPredictions, setUserPredictions] = useState([]);
@@ -99,15 +100,14 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
 
   return (
     <div style={{ marginBottom: '60px', overflow: 'auto' }}>
-      <Box sx={{ padding: 2 }}>
-        <Typography sx={{color: 'white', margin: '15px', fontSize: '24px'}} >
+      <Box sx={{ padding: 1 }}>
+        <Typography sx={{ color: 'white', margin: '15px', fontSize: '24px' }}>
           My Predictions
         </Typography>
         {loading ? (
-        //   <Typography>Loading...</Typography>
-          <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '20px' }}> 
-                                      <CircularProgress />
-                                  </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+            <CircularProgress />
+          </Box>
         ) : userPredictions.length > 0 ? (
           <Box>
             {userPredictions.map((userPrediction, index) => {
@@ -155,67 +155,194 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                       {getCircuitShortName(userPrediction.sessionKey)} | Score: {totalPoints}
                     </Typography>
                   </AccordionSummary>
-                  <AccordionDetails>
-                    <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell sx={{ color: 'white' }}><strong>My Prediction</strong></TableCell>
-                        <TableCell sx={{ color: 'white' }}><strong>Actual</strong></TableCell>
-                        <TableCell sx={{ color: 'white' }}><strong>Points</strong></TableCell>
-                      </TableRow>
-                    </TableHead>
-                      <TableBody>
-                        {userPrediction.predictedOrder.length > 0 ? (
-                          userPrediction.predictedOrder.map((driver, positionIndex) => {
-                            const actualDriver = raceResult ? raceResult.raceResultOrder.find(d => d.driver_number === driver.driver_number) : null;
-                            const actualPosition = actualDriver ? actualDriver.position : 'N/A';
+                  <AccordionDetails
+                    sx={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                      borderRadius: '15px',
+                      margin: '20px 10px 20px 10px',
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      listStyle: 'none',
+                      flexDirection: 'column',
+                      padding: '0px',
+                      position: 'relative',
+                    }}>
+                    {userPrediction.predictedOrder.length > 0 ? (
+                      userPrediction.predictedOrder.map((driver, positionIndex) => {
+                        const actualDriver = raceResult ? raceResult.raceResultOrder.find(d => d.driver_number === driver.driver_number) : null;
+                        const actualPosition = actualDriver ? actualDriver.position : 'N/A';
 
-                            // Calculate gap and points
-                            const predictedPosition = positionIndex + 1;
-                            const gap = actualPosition !== 'N/A' ? Math.abs(predictedPosition - actualPosition) : 'N/A';
-                            const points = gap !== 'N/A' ? 20 - gap : 'N/A';
+                        // Calculate gap and points
+                        const predictedPosition = positionIndex + 1;
+                        const gap = actualPosition !== 'N/A' ? Math.abs(predictedPosition - actualPosition) : 'N/A';
+                        const points = gap !== 'N/A' ? 20 - gap : 'N/A';
 
-                            return (
-                              <TableRow key={driver._id}>
-                                <TableCell sx={{ color: 'white', display: 'flex', alignItems: 'center' }}>
-                                  <Typography sx={{
-                                      width: '40px', // Diameter of the circle
-                                      height: '40px', // Diameter of the circle
-                                      borderRadius: '50%', // Makes it a perfect circle
-                                      backgroundColor: 'rgba(255, 255, 255, 0)', // Background color of the circle
-                                      color: 'white', // Text color
-                                      display: 'flex', // Enables flexbox
-                                      alignItems: 'center', // Vertically centers the text
-                                      justifyContent: 'center', // Horizontally centers the text
-                                      marginRight: '10px', // Spacing from other elements
-                                      marginLeft: '-10px', // Spacing from other elements
-                                      marginBottom: '-10px', // Spacing from other elements
-                                      marginTop: '-10px', // Spacing from other elements
-                                      fontSize: '16px', // Text size
-                                      fontWeight: 'bold', // Text weight
-                                      border: '1px solid #ccc', // Border around the circle
-                                  }}>
-                                  {predictedPosition}
-                                  </Typography>
-                                  <Typography sx={{fontSize: '12px'}}>{driver.broadcast_name}</Typography>
-                                </TableCell>
-                                <TableCell sx={{ color: 'white' }}>{actualPosition}</TableCell>
-                                <TableCell sx={{ color: 'white' }}>{points}</TableCell>
-                              </TableRow>
-                            );
-                          })
-                        ) : (
-                          <TableRow>
-                            <TableCell colSpan={3}>No drivers predicted for this session.</TableCell>
-                          </TableRow>
-                        )}
-                      </TableBody>
-                    </Table>
+                  return (
+
+                        <Card key={driver._id}
+                        style={{
+                          display: 'flex',
+                          width: '100%',
+                          height: 70, // Ensure the Card has a fixed or dynamic height
+                          backgroundColor: 'transparent',
+                          alignItems: 'stretch', // Allows children to stretch and fill the height
+                          boxShadow: 'none',
+                          borderBottom: '1px solid #ccc',
+                          marginLeft: '0px',
+                          marginTop: '0px',
+                          position: 'relative',
+                          padding: '0px',
+                        }}
+                        >
+                      <img
+                        src={driver.headshot_url || `${unknownProfileIMG}`}
+                        alt={`${driver.name_acronym} driver`}
+                        style={{
+                          width: '65px',
+                          height: '65px',
+                          padding: '5px 10px 0px 0px',
+                        }}
+                      />
+                      
+                      {/* <Typography color="white" sx={{ fontSize: '12px' }}>{driver.last_name}</Typography> */}
+
+                      <Typography sx={{display: 'flex', flexDirection: 'column' ,alignItems: 'center', justifyContent: 'center', lineHeight: '0.5'}}>
+                      <Typography sx={{display: 'flex', flexDirection: 'row' ,alignItems: 'center', justifyContent: 'center'}}>
+                        <Typography sx={{ fontSize:'12px', color: 'white', display: 'flex'}}>Prediction</Typography>
+                        {/* <SwapHorizIcon style={{ fontSize:'36px', color: 'white', padding: '0px 10px'}}/> */}
+                        <i class="bi bi-arrows-expand-vertical" style={{ fontSize:'26px', color: 'white', padding: '0px 10px'}}></i>
+                        <Typography sx={{fontSize:'12px',color: 'white', display: 'flex'}}>Actual</Typography>
+                      </Typography>
+                      <Typography sx={{display: 'flex', flexDirection: 'row' ,alignItems: 'center', justifyContent: 'center', paddingLeft: '20px'}}>
+                      <Typography //prediction positon
+                                sx={{
+                                  width: '25px',
+                                  height: '25px',
+                                  borderRadius: '50%',
+                                  backgroundColor: '#3772FF',
+                                  color: 'white',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  fontSize: '14px',
+                                  fontWeight: 'bold',
+                                  border: '1px solid #3772FF',
+                                  marginRight: '10px',
+                                }}
+                              >
+                                {predictedPosition}
+                              </Typography>
+                              <Typography //prediction positon
+                                sx={{
+                                  width: '25px',
+                                  height: '25px',
+                                  borderRadius: '50%',
+                                  backgroundColor: '#FDCA40',
+                                  color: 'black',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  fontSize: '14px',
+                                  fontWeight: 'bold',
+                                  border: '1px solid #FDCA40',
+                                  marginLeft: '10px',
+                                }}
+                              >
+                                {actualPosition}
+                              </Typography>
+                      </Typography>
+                      </Typography>
+
+                          {/* <Typography sx={{display: 'flex', flexDirection: 'column' ,alignItems: 'center', justifyContent: 'center'}}> */}
+                          {/* <Typography sx={{ fontSize:'12px', color: 'white', display: 'flex', margin: '5px'}}>Prediction</Typography> */}
+                          {/* <Typography //prediction positon
+                                sx={{
+                                  width: '25px',
+                                  height: '25px',
+                                  borderRadius: '50%',
+                                  backgroundColor: 'rgba(255, 255, 255, 0)',
+                                  color: 'white',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  marginLeft: '0px',
+                                  marginBottom: '10px',
+                                  fontSize: '12px',
+                                  fontWeight: 'bold',
+                                  border: '1px solid #ccc',
+                                }}
+                              >
+                                {predictedPosition}
+                              </Typography> */}
+                              {/* </Typography> */}
+                          {/* <i class="bi bi-arrows-expand-vertical" style={{ fontSize:'26px', color: 'white', margin: '5px' }}></i> */}
+                          {/* <Typography sx={{display: 'flex', flexDirection: 'column' ,alignItems: 'center', justifyContent: 'center'}}> */}
+                          {/* <Typography sx={{fontSize:'12px',color: 'white', display: 'flex', margin: '5px'}}>Actual</Typography> */}
+                          {/* <Typography //prediction positon
+                                sx={{
+                                  width: '25px',
+                                  height: '25px',
+                                  borderRadius: '50%',
+                                  backgroundColor: 'rgba(255, 255, 255, 0)',
+                                  color: 'white',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  marginLeft: '0px',
+                                  marginBottom: '10px',
+                                  fontSize: '12px',
+                                  fontWeight: 'bold',
+                                  border: '1px solid #ccc',
+                                }}
+                              >
+                                {actualPosition}
+                              </Typography> */}
+                              {/* </Typography> */}
+                            {/* <Typography //Actual positon
+                                          sx={{
+                                            width: '25px',
+                                            height: '25px',
+                                            borderRadius: '50%',
+                                            backgroundColor: 'rgba(255, 255, 255, 0)',
+                                            color: 'white',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            marginLeft: '0px',
+                                            marginBottom: '10px',
+                                            fontSize: '12px',
+                                            fontWeight: 'bold',
+                                            border: '1px solid #ccc',
+                                          }}
+                                        >
+                                          {actualPosition}
+                                        </Typography> */}
+                              {/* <Typography color="white">Actual: {actualPosition}</Typography> */}
+                              <Typography color="white"
+                                style={{
+                                  margin: '0px 0px 0px 30px',
+                                  height: '100%', // Take full height of the Card
+                                  width: '100%', // Optionally make it take full width
+                                  display: 'flex', // Ensure content alignment works properly
+                                  alignItems: 'center', // Center content vertically
+                                  backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                                  padding: '0px 10px 0px 20px', // Optional padding
+                                }}                             
+                              >Points: {points}</Typography>
+                          </Card>
+                        );
+                      })
+                    ) : (
+                      <Typography>No drivers predicted for this session.</Typography>
+                    )}
                   </AccordionDetails>
                 </Accordion>
               );
             })}
-
           </Box>
         ) : (
           <Typography>No predictions found.</Typography>
