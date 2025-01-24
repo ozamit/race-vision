@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, Divider } from '@mui/material';
+import { Box, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const HowToPlay = () => {
@@ -12,6 +12,14 @@ const HowToPlay = () => {
 
       {/* Common Accordion Styles */}
       {[
+        {
+          title: 'Objective of the game',
+          details: (
+          <>
+            <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>Predict the finishing positions of the drivers in an upcoming race as accurately as possible.</Typography>
+          </>
+        ),
+        },
         {
           title: 'How to Submit Predictions',
           details: (
@@ -28,9 +36,9 @@ const HowToPlay = () => {
               <Typography variant="body1" paragraph sx={{ color: 'white' }}>
                 You can reorder the drivers again and click the "Save" button. Your latest prediction will be the one that counts, and any previous predictions will be deleted.
               </Typography>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>One Prediction Per Race</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>"Verifying Your Prediction</Typography>
               <Typography variant="body1" paragraph sx={{ color: 'white' }}>
-                You are allowed only one prediction per race. Make sure to finalize your prediction before the deadline.
+                Once you have submitted your prediction, you can view it in the "My Predictions" page. This serves as confirmation that your prediction has been successfully saved.
               </Typography>
             </>
           ),
@@ -47,16 +55,9 @@ const HowToPlay = () => {
               <Typography variant="body1" paragraph sx={{ color: 'white' }}>
                 You must submit your prediction at least 1 hour before the scheduled start of the race.
               </Typography>
-            </>
-          ),
-        },
-        {
-          title: 'Verifying Your Prediction',
-          details: (
-            <>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>"My Predictions" Page</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>One Prediction Per Race</Typography>
               <Typography variant="body1" paragraph sx={{ color: 'white' }}>
-                Once you have submitted your prediction, you can view it in the "My Predictions" page. This serves as confirmation that your prediction has been successfully saved.
+                You are allowed only one prediction per race. Make sure to finalize your prediction before the deadline.
               </Typography>
             </>
           ),
@@ -86,24 +87,18 @@ const HowToPlay = () => {
             <>
               <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>Viewing Your Results</Typography>
               <Typography variant="body1" paragraph sx={{ color: 'white' }}>
-                After the race, we will compute the results and display them in the "My Predictions" page.
+                After the race, the results will be calculated and displayed on the "My Predictions" page.
               </Typography>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>Race Prediction Score</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>"My Predictions" page</Typography>
               <Typography variant="body1" paragraph sx={{ color: 'white' }}>
                 In the "My Predictions" page, you will find a section for each race where you submitted a prediction. This section will display your prediction score.
               </Typography>
               <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>Driver's Position and Score</Typography>
               <Typography variant="body1" paragraph sx={{ color: 'white' }}>
-                Beside each driver, you will find:
-              </Typography>
-              <Typography variant="body1" paragraph sx={{ color: 'white' }}>
-                The position you predicted for them to finish.
-              </Typography>
-              <Typography variant="body1" paragraph sx={{ color: 'white' }}>
-                Their actual finish position in the race.
-              </Typography>
-              <Typography variant="body1" paragraph sx={{ color: 'white' }}>
-                The score you earned for that driver based on the accuracy of your prediction.
+                For each race, you will find your fredicted results and beside each driver you will see:
+                The position you predicted for them to finish, 
+                their actual finish position in the race, 
+                and The score you earned for that driver based on the accuracy of your prediction.
               </Typography>
             </>
           ),
@@ -130,7 +125,7 @@ const HowToPlay = () => {
             },
           }}
         >
-            <Typography variant="h6">{accordion.title}</Typography>
+          <Typography variant="h6">{accordion.title}</Typography>
           </AccordionSummary>
           <AccordionDetails>{accordion.details}</AccordionDetails>
         </Accordion>
