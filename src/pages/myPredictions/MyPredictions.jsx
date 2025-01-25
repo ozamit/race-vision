@@ -9,6 +9,7 @@ import {
   Card,
   CardActions,
   CircularProgress,
+  Chip,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
@@ -151,7 +152,7 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                       },
                     }}
                   >
-                    <Typography variant="h6">
+                    <Typography sx={{fontSize: '18px'}} >
                       {getCircuitShortName(userPrediction.sessionKey)} | Score: {totalPoints}
                     </Typography>
                   </AccordionSummary>
@@ -171,6 +172,45 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                       padding: '0px',
                       position: 'relative',
                     }}>
+                      <Card
+                        style={{
+                          display: 'flex',
+                          width: '100%',
+                          height: 50, // Ensure the Card has a fixed or dynamic height
+                          backgroundColor: 'transparent',
+                          alignItems: 'stretch', // Allows children to stretch and fill the height
+                          boxShadow: 'none',
+                          marginRight: '30px',
+                          marginTop: '0px',
+                          position: 'relative',
+                          padding: '0px',
+                          justifyContent: 'center',
+                        }}
+                      >
+                      <Typography sx={{display: 'flex', flexDirection: 'row' ,alignItems: 'center', justifyContent: 'center'}}>
+                      <Chip 
+                        label="Prediction" 
+                        sx={{
+                          fontSize: '12px',
+                          backgroundColor: '#3772FF',
+                          color: 'white',
+                          display: 'flex'
+                        }} 
+                      />
+                        {/* <SwapHorizIcon style={{ fontSize:'36px', color: 'white', padding: '0px 10px'}}/> */}
+                        <i class="bi bi-arrows-expand-vertical" style={{ fontSize:'26px', color: 'white', padding: '0px 10px'}}></i>
+                        <Chip 
+                        label="Actual" 
+                        sx={{
+                          fontSize: '12px',
+                          backgroundColor: '#FDCA40',
+                          color: 'black',
+                          display: 'flex'
+                        }} 
+                      />
+                      </Typography>                  
+
+                      </Card>
                     {userPrediction.predictedOrder.length > 0 ? (
                       userPrediction.predictedOrder.map((driver, positionIndex) => {
                         const actualDriver = raceResult ? raceResult.raceResultOrder.find(d => d.driver_number === driver.driver_number) : null;
@@ -190,45 +230,56 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                           height: 70, // Ensure the Card has a fixed or dynamic height
                           backgroundColor: 'transparent',
                           alignItems: 'stretch', // Allows children to stretch and fill the height
+                          justifyContent: 'space-between',
                           boxShadow: 'none',
                           borderBottom: '1px solid #ccc',
-                          marginLeft: '0px',
-                          marginTop: '0px',
+                          borderTop: '1px solid #ccc',
                           position: 'relative',
                           padding: '0px',
                         }}
                         >
-                      <img
-                        src={driver.headshot_url || `${unknownProfileIMG}`}
-                        alt={`${driver.name_acronym} driver`}
-                        style={{
-                          width: '65px',
-                          height: '65px',
-                          padding: '5px 10px 0px 0px',
-                        }}
-                      />
-                      
-                      {/* <Typography color="white" sx={{ fontSize: '12px' }}>{driver.last_name}</Typography> */}
+                        <Typography sx={{display: 'flex', flexDirection: 'row' ,alignItems: 'center', justifyContent: 'center', height: 70}}>
+                              <Typography 
+                                sx={{
+                                  color: 'black',
+                                  transform: 'rotate(270deg)', // Rotate 90 degrees
+                                  transformOrigin: 'center', // Rotate around the center
+                                  backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                                  height: '30px', // Take full height of the Card
+                                  width: '70px', // Optionally make it take full width
+                                  display: 'flex', // Ensure content alignment works properly
+                                  alignItems: 'center', // Center content vertically
+                                  justifyContent: 'center', // Center content horizontally
+                                  margin: '0px 0px 0px -20px', // Optional margin
+                                  padding: '0px 0px 0px 0px', // Optional padding
+                                }}>{driver.name_acronym}
+                              </Typography>
+                            <img
+                              src={driver.headshot_url || `${unknownProfileIMG}`}
+                              alt={`${driver.name_acronym} driver`}
+                              style={{
+                                width: '65px',
+                                height: '65px',
+                                padding: '0px 0px 0px 0px',
+                                margin: '0px 0px 0px -10px', // Optional margin
+                              }}
+                            />            
+                        </Typography>
 
                       <Typography sx={{display: 'flex', flexDirection: 'column' ,alignItems: 'center', justifyContent: 'center', lineHeight: '0.5'}}>
-                      <Typography sx={{display: 'flex', flexDirection: 'row' ,alignItems: 'center', justifyContent: 'center'}}>
-                        <Typography sx={{ fontSize:'12px', color: 'white', display: 'flex'}}>Prediction</Typography>
-                        {/* <SwapHorizIcon style={{ fontSize:'36px', color: 'white', padding: '0px 10px'}}/> */}
-                        <i class="bi bi-arrows-expand-vertical" style={{ fontSize:'26px', color: 'white', padding: '0px 10px'}}></i>
-                        <Typography sx={{fontSize:'12px',color: 'white', display: 'flex'}}>Actual</Typography>
-                      </Typography>
-                      <Typography sx={{display: 'flex', flexDirection: 'row' ,alignItems: 'center', justifyContent: 'center', paddingLeft: '20px'}}>
+                      <Typography sx={{display: 'flex', flexDirection: 'row' ,alignItems: 'center', justifyContent: 'center', paddingLeft: '20px', margin: '0px 0px 0px -30px', // Optional margin
+}}>
                       <Typography //prediction positon
                                 sx={{
-                                  width: '25px',
-                                  height: '25px',
+                                  width: '40px',
+                                  height: '40px',
                                   borderRadius: '50%',
                                   backgroundColor: '#3772FF',
                                   color: 'white',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
-                                  fontSize: '14px',
+                                  fontSize: '18px',
                                   fontWeight: 'bold',
                                   border: '1px solid #3772FF',
                                   marginRight: '10px',
@@ -236,17 +287,19 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                               >
                                 {predictedPosition}
                               </Typography>
+                        <i class="bi bi-arrows-expand-vertical" style={{ fontSize:'14px', color: 'white', padding: '0px 0px'}}></i>
+
                               <Typography //prediction positon
                                 sx={{
-                                  width: '25px',
-                                  height: '25px',
+                                  width: '40px',
+                                  height: '40px',
                                   borderRadius: '50%',
                                   backgroundColor: '#FDCA40',
                                   color: 'black',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'center',
-                                  fontSize: '14px',
+                                  fontSize: '18px',
                                   fontWeight: 'bold',
                                   border: '1px solid #FDCA40',
                                   marginLeft: '10px',
@@ -256,83 +309,18 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                               </Typography>
                       </Typography>
                       </Typography>
-
-                          {/* <Typography sx={{display: 'flex', flexDirection: 'column' ,alignItems: 'center', justifyContent: 'center'}}> */}
-                          {/* <Typography sx={{ fontSize:'12px', color: 'white', display: 'flex', margin: '5px'}}>Prediction</Typography> */}
-                          {/* <Typography //prediction positon
-                                sx={{
-                                  width: '25px',
-                                  height: '25px',
-                                  borderRadius: '50%',
-                                  backgroundColor: 'rgba(255, 255, 255, 0)',
-                                  color: 'white',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  marginLeft: '0px',
-                                  marginBottom: '10px',
-                                  fontSize: '12px',
-                                  fontWeight: 'bold',
-                                  border: '1px solid #ccc',
-                                }}
-                              >
-                                {predictedPosition}
-                              </Typography> */}
-                              {/* </Typography> */}
-                          {/* <i class="bi bi-arrows-expand-vertical" style={{ fontSize:'26px', color: 'white', margin: '5px' }}></i> */}
-                          {/* <Typography sx={{display: 'flex', flexDirection: 'column' ,alignItems: 'center', justifyContent: 'center'}}> */}
-                          {/* <Typography sx={{fontSize:'12px',color: 'white', display: 'flex', margin: '5px'}}>Actual</Typography> */}
-                          {/* <Typography //prediction positon
-                                sx={{
-                                  width: '25px',
-                                  height: '25px',
-                                  borderRadius: '50%',
-                                  backgroundColor: 'rgba(255, 255, 255, 0)',
-                                  color: 'white',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  marginLeft: '0px',
-                                  marginBottom: '10px',
-                                  fontSize: '12px',
-                                  fontWeight: 'bold',
-                                  border: '1px solid #ccc',
-                                }}
-                              >
-                                {actualPosition}
-                              </Typography> */}
-                              {/* </Typography> */}
-                            {/* <Typography //Actual positon
-                                          sx={{
-                                            width: '25px',
-                                            height: '25px',
-                                            borderRadius: '50%',
-                                            backgroundColor: 'rgba(255, 255, 255, 0)',
-                                            color: 'white',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            marginLeft: '0px',
-                                            marginBottom: '10px',
-                                            fontSize: '12px',
-                                            fontWeight: 'bold',
-                                            border: '1px solid #ccc',
-                                          }}
-                                        >
-                                          {actualPosition}
-                                        </Typography> */}
-                              {/* <Typography color="white">Actual: {actualPosition}</Typography> */}
-                              <Typography color="white"
+                              <Typography color="black"
                                 style={{
-                                  margin: '0px 0px 0px 30px',
+                                  margin: '0px 0px 0px 0px',
                                   height: '100%', // Take full height of the Card
-                                  width: '100%', // Optionally make it take full width
+                                  width: '100px', // Optionally make it take full width
                                   display: 'flex', // Ensure content alignment works properly
                                   alignItems: 'center', // Center content vertically
                                   backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                                  padding: '0px 10px 0px 20px', // Optional padding
+                                  padding: '0px 0px 0px 0px', // Optional padding
+                                  justifyContent: 'center', // Center content horizontally
                                 }}                             
-                              >Points: {points}</Typography>
+                              >Score: {points}</Typography>
                           </Card>
                         );
                       })
