@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Box, BottomNavigation, BottomNavigationAction } from '@mui/material';
+import { Box, BottomNavigation, BottomNavigationAction, Typography } from '@mui/material';
 
 const BottomNav = ({ userInfo }) => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ const BottomNav = ({ userInfo }) => {
   // Map routes to BottomNavigation indexes
   const routeToIndexMap = {
     '/': 0,
-    '/howtoplay': 1,
+    '/league': 1,
     '/play': 2,
     '/raceresult': 3,
     '/mypredictions': 4,
@@ -82,7 +82,7 @@ const BottomNav = ({ userInfo }) => {
         >
         {[
           { icon: <i className="bi bi-house" style={{ fontSize: '24px' }}></i> },
-          { icon: <i className="bi bi-info-circle" style={{ fontSize: '24px' }}></i> },
+          { icon: <i className="bi bi-trophy" style={{ fontSize: '24px' }}></i> },
           { icon: <i className="bi bi-controller" style={{ fontSize: '24px' }}></i> },
           { icon: <i className="bi bi-flag" style={{ fontSize: '24px' }}></i> },
           { icon: <i className="bi bi-ui-checks" style={{ fontSize: '24px' }}></i> },

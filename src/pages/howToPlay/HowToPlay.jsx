@@ -119,7 +119,7 @@ const HowToPlay = () => {
           sx={{
             backgroundColor: 'rgba(255, 255, 255, 0.2)', // Semi-transparent
             color: 'white',
-            borderRadius: '50px',
+            borderRadius: '10px',
             '& .MuiSvgIcon-root': {
               color: 'white', // Change icon color to white
             },

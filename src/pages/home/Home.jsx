@@ -1,8 +1,15 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 import { Box, Typography } from '@mui/material';
 import InsightsIcon from '@mui/icons-material/Insights';
 
 const Home = ({ userInfo, simplifiedDate, nextRaceSession }) => {
+
+  const navigate = useNavigate();
+
+  const handleClickGoToRules = () => {
+    navigate("/howtoplay");
+  };
   return (
     <div>
       {/* Welcome Message */}
@@ -52,6 +59,27 @@ const Home = ({ userInfo, simplifiedDate, nextRaceSession }) => {
           sx={{
             width: '70%',
             borderRadius: '20px',
+            // border: '1px solid rgba(255, 255, 255, 0.4)',
+            padding: '20px',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)', // Background color
+            textAlign: 'center',
+            display: 'flex', // Flexbox container
+            justifyContent: 'center', // Center horizontally
+            alignItems: 'center', // Center vertically
+            height: '30px', // Set a height for the box to center content vertically
+          }}
+          onClick={handleClickGoToRules}
+        >
+          <Typography color="white" style={{ fontSize: '18px', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            How To Play <i className="bi bi-info-circle" style={{ fontSize: '20px', marginLeft: '10px' }}></i>
+            {/* How To Play <SportsIcon style={{ fontSize: '40px', marginLeft: '10px' }}/> */}
+          </Typography>
+        </Box>
+
+        <Box
+          sx={{
+            width: '70%',
+            borderRadius: '20px',
             // border: '1px solid #FDCA40',
             padding: '20px',
             backgroundColor: 'rgba(255, 255, 255, 0.1)', // Background color
@@ -59,10 +87,10 @@ const Home = ({ userInfo, simplifiedDate, nextRaceSession }) => {
             display: 'flex', // Flexbox container
             justifyContent: 'center', // Center horizontally
             alignItems: 'center', // Center vertically
-            height: '100px', // Set a height for the box to center content vertically
+            height: '50px', // Set a height for the box to center content vertically
           }}
         >
-          <Typography color="white" style={{ fontSize: '18px' }}>
+          <Typography color="white" style={{ fontSize: '14px' }}>
             {/* <i className="bi bi-graph-up" style={{ fontSize: '20px' }}></i> */}
             Exciting updates are coming soon! <i class="bi bi-hourglass-split"></i>
           </Typography>
@@ -123,6 +151,7 @@ const Home = ({ userInfo, simplifiedDate, nextRaceSession }) => {
           </Typography>
           </Box>
         </Box>
+
       </Box>
 
     </div>

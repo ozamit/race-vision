@@ -10,6 +10,7 @@ import Register from './pages/register/Register';
 import HowToPlay from './pages/howToPlay/HowToPlay';
 import BottomNav from './components/BottomNav/BottomNav';
 import Admin from './pages/admin/Admin';
+import League from './pages/league/League';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import {
   Avatar,
@@ -103,7 +104,7 @@ function App() {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        console.log('Drivers:', data);
+        // console.log('Drivers:', data);
         setDrivers(data);
         setFetchStatus('Drivers fetched successfully!');
       } catch (error) {
@@ -139,7 +140,8 @@ function App() {
     const fetchNextRaceSession = async () => {
       try {
           // Construct the API endpoint URL
-          const response = await fetch(`${host}sessions/getNextRaceSession`);
+          // const response = await fetch(`${host}sessions/getNextRaceSession`);
+          const response = await fetch(`${host}sessions/getNextRaceSessionFromDB`);
           
           // Check if the response is successful
           if (!response.ok) {
@@ -162,7 +164,7 @@ function App() {
 
           const fetchRaceSessions = async () => {
               try {
-                  const response = await fetch(`${host}sessions/getracesessionsforyear?year=${year}`);
+                  const response = await fetch(`${host}sessions/getRaceSessionsForYearFromDB`);
                   if (!response.ok) {
                       throw new Error(`HTTP error! Status: ${response.status}`);
                   }
@@ -234,15 +236,19 @@ sx={{
       flexGrow: 1, // Take up the available space on the left
     }}
   >
-    <Chip
-      label={nextRaceSession ? `Next Race: ${nextRaceSession.country_name}` : 'Welcome to Race Vision App'}
-      sx={{
-        backgroundColor: 'rgb(235, 235, 235)',
-        cursor: 'pointer',
-        fontWeight: 'bold',
-        boxShadow: '1px 1px 6px rgba(0, 0, 0, 0.25), -1px -1px 6px rgba(255, 255, 255, 0.06)',
-      }}
-    />
+        <Chip
+          avatar={
+            <Avatar>?</Avatar>
+          }
+          label='How to play'
+          onClick={handleAvatarClick}
+          sx={{
+            backgroundColor: 'rgb(235, 235, 235)',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            boxShadow: '1px 1px 6px rgba(0, 0, 0, 0.25), -1px -1px 6px rgba(255, 255, 255, 0.06)', // Add box shadow
+          }}
+        />
   </Box> */}
 
   {/* Right Chip */}
@@ -288,8 +294,6 @@ sx={{
     Admin
   </MenuItem>
 )}
-
-
 </Menu>
 
       </>
@@ -321,6 +325,7 @@ sx={{
           <Route path="/register" element={<Register />} />
           <Route path="/howtoplay" element={<HowToPlay />} />         
           <Route path="/admin" element={<Admin userInfo={userInfo} />} /> 
+          <Route path="/league" element={<League userInfo={userInfo} raceSessions={raceSessions} />} /> 
         </Routes>
 
         {/* BottomNav is a different component */}
