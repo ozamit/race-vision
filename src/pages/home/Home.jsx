@@ -41,7 +41,7 @@ const Home = ({ userInfo, simplifiedDate, nextRaceSession }) => {
             // display: 'flex', // Flexbox container
             justifyContent: 'center', // Center horizontally
             alignItems: 'center', // Center vertically
-            height: '120px', // Set a height for the box to center content vertically
+            height: '110px', // Set a height for the box to center content vertically
           }}
         >
           <Typography color="white" style={{ fontSize: '18px', marginBottom: '10px' }}>

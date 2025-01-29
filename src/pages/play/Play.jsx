@@ -138,7 +138,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
       <div>
         <Reorder.Group
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+            backgroundColor: 'rgba(255, 255, 255, 0)',
             marginBottom: '1000px',
             listStyle: 'none',
             display: 'flex',
@@ -159,13 +159,14 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
               <Card
                 style={{
                   display: 'flex',
-                  backgroundColor: 'rgba(255, 255, 255, 0)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  borderRadius: '8px',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   boxShadow: 'none',
-                  borderBottom: '1px solid #ccc',
+                  // borderBottom: '1px solid #ccc',
                   marginLeft: '0px',
-                  marginTop: '10px',
+                  marginTop: '5px',
                   position: 'relative',
                   padding: ' 0px 0px 0px 10px',
                 }}
@@ -190,8 +191,9 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      marginLeft: '10px',
-                      marginBottom: '10px',
+                      // marginLeft: '10px',
+                      // marginBottom: '10px',
+                      margin: '5px 0px 5px 0px',
                       fontSize: '16px',
                       fontWeight: 'bold',
                       border: '1px solid #ccc',
