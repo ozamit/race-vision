@@ -277,19 +277,20 @@ sx={{
           }}
         />
 <Menu
+  sx={{padding: '0px', marginTop: '10px'}}
   anchorEl={anchorEl}
   open={menuOpen}
   onClose={handleMenuClose}
   transformOrigin={{ horizontal: 'right', vertical: 'top' }}
   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
 >
-  <MenuItem onClick={handleLogout}>
-    <BottomNavigationAction label="Predictions" icon={<i className="bi bi-box-arrow-right" style={{ fontSize: '24px' }}></i>} />
+  <MenuItem sx={{padding: '0px 30px 0px 10px'}} onClick={handleLogout}>
+    <BottomNavigationAction sx={{paddingRight: '0px'}} label="Predictions" icon={<i className="bi bi-box-arrow-right" style={{ fontSize: '24px' }}></i>} />
     Logout
   </MenuItem>
   {/* Conditionally render the Admin MenuItem based on userInfo.admin */}
   {userInfo && userInfo.admin === true && (
-  <MenuItem onClick={handleAdmin}>
+  <MenuItem sx={{padding: '0px 30px 0px 10px'}} onClick={handleAdmin}>
     <BottomNavigationAction label="Predictions" icon={<i className="bi bi-person-gear" style={{ fontSize: '24px' }}></i>} />
     Admin
   </MenuItem>

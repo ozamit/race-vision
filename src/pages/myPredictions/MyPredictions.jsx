@@ -146,7 +146,7 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                     sx={{
                       backgroundColor: 'rgba(255, 255, 255, 0.2)', // Semi-transparent background
                       color: 'white', // Text color
-                      borderRadius: '50px', // Rounded corners for the summary
+                      borderRadius: '10px', // Rounded corners for the summary
                       '& .MuiSvgIcon-root': {
                         color: 'white', // Change icon color to white
                       },
@@ -158,9 +158,9 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                   </AccordionSummary>
                   <AccordionDetails
                     sx={{
-                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                      borderRadius: '15px',
-                      margin: '20px 10px 20px 10px',
+                      backgroundColor: 'transparent',
+                      borderRadius: '10px',
+                      margin: '20px 10px',
                       color: 'white',
                       display: 'flex',
                       alignItems: 'center',
@@ -170,24 +170,30 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                       listStyle: 'none',
                       flexDirection: 'column',
                       padding: '0px',
-                      position: 'relative',
-                    }}>
-                      <Card
-                        style={{
-                          display: 'flex',
-                          width: '100%',
-                          height: 50, // Ensure the Card has a fixed or dynamic height
-                          backgroundColor: 'transparent',
-                          alignItems: 'stretch', // Allows children to stretch and fill the height
-                          boxShadow: 'none',
-                          marginRight: '30px',
-                          marginTop: '0px',
-                          position: 'relative',
-                          padding: '0px',
-                          justifyContent: 'center',
-                        }}
-                      >
-                      <Typography sx={{display: 'flex', flexDirection: 'row' ,alignItems: 'center', justifyContent: 'center'}}>
+                      overflow: 'auto',
+                    }}
+                  >
+        <Card
+          style={{
+            display: 'flex',
+            width: '100%',
+            height: 50,
+            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+            borderRadius: '5px',
+            alignItems: 'stretch',
+            boxShadow: 'none',
+            marginTop: '0px',
+            padding: '0px',
+            justifyContent: 'center',
+            position: 'sticky',
+            top: 0,
+            zIndex: 1,
+            backdropFilter: 'blur(30px)',
+          }}
+        >
+
+
+                      <Typography sx={{display: 'flex', flexDirection: 'row' ,alignItems: 'center', justifyContent: 'center', padding: '0px 30px 0px 0px'}}>
                       <Chip 
                         label="Prediction" 
                         sx={{
@@ -225,15 +231,17 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
 
                         <Card key={driver._id}
                         style={{
+                          backgroundColor: 'rgba(255, 255, 255, 0.2)',
                           display: 'flex',
                           width: '100%',
+                          margin: '3px 0px',
                           height: 70, // Ensure the Card has a fixed or dynamic height
-                          backgroundColor: 'transparent',
+                          // backgroundColor: 'transparent',
                           alignItems: 'stretch', // Allows children to stretch and fill the height
                           justifyContent: 'space-between',
                           boxShadow: 'none',
-                          borderBottom: '1px solid #ccc',
-                          borderTop: '1px solid #ccc',
+                          // borderBottom: '1px solid #ccc',
+                          // borderTop: '1px solid #ccc',
                           position: 'relative',
                           padding: '0px',
                         }}
@@ -309,18 +317,25 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                               </Typography>
                       </Typography>
                       </Typography>
-                              <Typography color="black"
-                                style={{
-                                  margin: '0px 0px 0px 0px',
-                                  height: '100%', // Take full height of the Card
-                                  width: '100px', // Optionally make it take full width
-                                  display: 'flex', // Ensure content alignment works properly
-                                  alignItems: 'center', // Center content vertically
-                                  backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                                  padding: '0px 0px 0px 0px', // Optional padding
-                                  justifyContent: 'center', // Center content horizontally
-                                }}                             
-                              >Score: {points}</Typography>
+                      <Typography color="black"
+                        style={{
+                          margin: '0px',
+                          height: '100%', // Take full height of the Card
+                          width: '100px', // Optionally make it take full width
+                          display: 'flex', // Ensure content alignment works properly
+                          flexDirection: 'column', // Stack items vertically
+                          alignItems: 'center', // Center content horizontally
+                          justifyContent: 'center', // Center content vertically
+                          backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                          padding: '0px', // Optional padding
+                          textAlign: 'center' // Ensure text is centered
+                        }}                             
+                      >
+                        <div>Score: {points}</div>
+                        {points > 17 && <div style={{ fontSize: '20px', marginTop: '-5px' }}>🔥</div>}
+                        {points < 5 && <div style={{ fontSize: '20px', marginTop: '-5px' }}>🥶</div>}
+
+                      </Typography>
                           </Card>
                         );
                       })
