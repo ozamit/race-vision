@@ -117,31 +117,37 @@ const League = ({ raceSessions }) => {
         >
           <Table>
             <TableHead>
-              <TableRow>
-              <TableCell
-                  sx={{
-                    color: "white",
-                    backgroundColor: "rgba(255, 255, 255, 0.3)",
+              <TableRow sx={{display: "flex"}}>
+                <Typography
+                style={{
                     position: "sticky",
-                    width: 40,
+                    width: 180,
                     left: 0,
                     zIndex: 2,
                     backdropFilter: "blur(30px)",
                     border: "none",
-                  }}
-                >
-                  #
-                </TableCell>
+                  }}>
+                  <TableCell
+                    style={{
+                      color: "white",
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      padding: '10px 10px 15px 10px', // (top, right, bottom, left)
+                      zIndex: 2,
+                      backdropFilter: "blur(30px)",
+                      border: "none",
+                    }}
+                  >
+                    #
+                  </TableCell>
+
                 <TableCell
                   sx={{
                     color: "white",
-                    backgroundColor: "rgba(255, 255, 255, 0.3)",
-                    position: "sticky",
-                    left: 32,
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
                     width: 70,
-                    zIndex: 2,
                     backdropFilter: "blur(30px)",
                     border: "none",
+                    padding: '10px 10px 5px 25px', // (top, right, bottom, left)
                   }}
                 >
                   Name
@@ -149,37 +155,47 @@ const League = ({ raceSessions }) => {
                 <TableCell
                   sx={{
                     color: "white",
-                    backgroundColor: "rgba(255, 255, 255, 0.2)",
-                    position: "sticky",
-                    left: 120,
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
                     zIndex: 2,
                     backdropFilter: "blur(30px)",
                     border: "none",
+                    padding: '15px 20px 15px 20px', // (top, right, bottom, left)
                   }}
                 >
                   Total
                 </TableCell>
+                </Typography>
+                <Typography sx={{ marginLeft: '0px' }}>
                 {sortedRaceSessions.map((race) => (
                   <TableCell
-                    sx={{ color: "white", border: "none" }}
+                    sx={{ color: "white", border: "none",backgroundColor: "rgba(255, 255, 255, 0.2)", padding: '15px 10px 15px 10px', // (top, right, bottom, left)
+                    }}
                     key={race.sessionKey}
                   >
                     {race.country_code}
                   </TableCell>
                 ))}
+                </Typography>
               </TableRow>
             </TableHead>
             <TableBody>
+
+              
                 {users.map((user, index) => (
-                    <TableRow key={user._id}>
+                  <TableRow sx={{display: "flex"}} key={user._id}>
+                      <Typography sx={{display: "flex",
+                      justifyContent: "space-between",
+                      position: "sticky",
+                      width: 180,
+                      // backgroundColor: "rgba(255, 255, 255, 0.2)",
+                    left: 0,
+                    zIndex: 2,
+                    backdropFilter: "blur(30px)",
+                    border: "none",}}>
                     <TableCell
                         sx={{
                         color: "white",
-                        backgroundColor: "rgba(255, 255, 255, 0.3)",
-                        position: "sticky",
-                        width: 40,
-                        left: 0,
-                        zIndex: 2,
+                        padding: '15px 10px 10px 10px', // (top, right, bottom, left)
                         backdropFilter: "blur(15px)",
                         border: "none",
                         }}
@@ -189,11 +205,7 @@ const League = ({ raceSessions }) => {
                     <TableCell
                         sx={{
                         color: "white",
-                        backgroundColor: "rgba(255, 255, 255, 0.3)",
-                        position: "sticky",
-                        width: 70,
-                        left: 32,
-                        zIndex: 2,
+                        padding: '10px 0px 5px 0px', // (top, right, bottom, left)
                         backdropFilter: "blur(15px)",
                         border: "none",
                         display: "flex", // To align the icon and text together
@@ -208,16 +220,15 @@ const League = ({ raceSessions }) => {
                     <TableCell
                         sx={{
                         color: "white",
-                        backgroundColor: "rgba(255, 255, 255, 0.2)",
-                        position: "sticky",
-                        left: 120,
-                        zIndex: 2,
+                        padding: '15px 20px 15px 20px', // (top, right, bottom, left)
                         backdropFilter: "blur(15px)",
                         border: "none",
                         }}
                     >
                         {user.totalScore}
                     </TableCell>
+              </Typography>
+              <Typography sx={{ marginLeft: '0px' }}>
                     {sortedRaceSessions.map((race) => {
                         const racePrediction = predictions[user._id]?.[race.session_key];
                         return (
@@ -231,6 +242,7 @@ const League = ({ raceSessions }) => {
                         </TableCell>
                         );
                     })}
+              </Typography>
                     </TableRow>
                 ))}
                 </TableBody>
