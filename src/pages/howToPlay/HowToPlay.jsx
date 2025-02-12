@@ -1,10 +1,46 @@
 import React from 'react';
-import { Box, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import { useNavigate } from "react-router-dom";
+import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+
 
 const HowToPlay = () => {
+  
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    console.log('Back button clicked');
+    // navigate('/');
+  }
+  
   return (
     <Box sx={{ marginBottom: '80px', padding: 3 }}>
+      {/* <Typography sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '-50px 0 40px 0' }}> */}
+      <Button 
+  variant="contained" 
+  startIcon={<ArrowBackIosIcon />} 
+  sx={{ 
+    backgroundColor: '#FDCA40', 
+    color: '#3a86ff', 
+    position: 'relative', 
+    left: '-120px',  
+    top: '-50px',  
+    marginBottom: '40px', 
+    // padding: '10px 16px',  // Ensure good spacing
+    minWidth: '80px', // Avoids shrinking
+    display: 'inline-flex', // Ensures proper alignment
+    alignItems: 'center', // Ensures icon + text align properly
+    justifyContent: 'center', // Centers the content
+    zIndex: 10 // Ensures it's above overlapping elements
+  }} 
+  onClick={() => navigate(-1)}
+>
+  Back
+</Button>
+
+
+      {/* </Typography> */}
       {/* Title */}
       <Typography variant="h4" gutterBottom align="center" sx={{ fontSize: 24 }} color="white">
         How to Play
