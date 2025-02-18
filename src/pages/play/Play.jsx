@@ -9,7 +9,7 @@ import { Reorder } from 'framer-motion';
 import { host } from '../../utils/host';
 import { unknownProfileIMG } from '../../utils/img';
 
-const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
+const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession, userLocalTime }) => {
   const [localDrivers, setLocalDrivers] = useState(drivers);
   const [savedOrder, setSavedOrder] = useState([]);
   const [simplifiedDate, setSimplifiedDate] = useState('');
@@ -113,7 +113,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession }) => {
 
   return (
     <div style={{ marginTop: '0px', overflow: 'auto' }}>
-      <Typography color="white" style={{ fontWeight: 'bold' , marginTop: '10px' }}>Next race: {simplifiedDate}, {nextRaceSession.country_code} Time</Typography>
+      <Typography color="white" style={{ fontWeight: 'bold' , marginTop: '10px' }}>Next race: {userLocalTime}</Typography>
       <div style={{ margin: '10px 40px' }}>
         <Button
           onClick={handleSaveOrder}

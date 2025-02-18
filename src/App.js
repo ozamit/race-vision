@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 import { Person as PersonIcon } from '@mui/icons-material';
 import { host } from './utils/host';
-import { backgroundImg1 } from './utils/img';
+// import { backgroundImg1 } from './utils/img';
 
 function App() {
   const [drivers, setDrivers] = useState([]);
@@ -35,33 +35,92 @@ function App() {
   const [nextRaceSession, setNextRaceSession] = useState([]);
   const [raceSessions, setRaceSessions] = useState([]);
   const [simplifiedDate, setSimplifiedDate] = useState('');
+  const [userLocalTime, setUserLocalTime] = useState('');
   const menuOpen = Boolean(anchorEl);
-  const year = 2024;
+  // const year = 2024;
 
-    // Function to simplify the date format
-    const formatDate = (isoDate) => {
-      const date = new Date(isoDate);
-      const simplifiedDate = date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      });
-      const simplifiedTime = date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-      return `${simplifiedDate} ${simplifiedTime}`; // Example: 12/08/2024 01:00 PM
-    };
+  const formatDate = (isoDate) => {
+    console.log('Original isoDate:', isoDate);
+  
+    // Remove the "Z" if it exists
+    const cleanIsoDate = isoDate.replace('Z', '');
+    console.log('Clean isoDate (without Z):', cleanIsoDate);
+  
+    // Create Date object (now correctly interpreted as local time)
+    const date = new Date(cleanIsoDate);
+    console.log('Parsed Date:', date);
+  
+    // Format date and time in local timezone
+    const simplifiedDate = date.toLocaleDateString('en-GB', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+  
+    const simplifiedTime = date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  
+    console.log('Simplified Date:', simplifiedDate);
+    console.log('Simplified Time:', simplifiedTime);
+  
+    return `${simplifiedDate} ${simplifiedTime}`; // Example: dd/mm/yyyy 01:00 PM
+  };
+  
 
-      useEffect(() => {
-        if (nextRaceSession?.date_start) {
-          setSimplifiedDate(formatDate(nextRaceSession.date_start));
-        }
-      }, [nextRaceSession]);
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const storedUserId = localStorage.getItem('userId');
+  const convertToUserLocalTime = (isoDate, gmtOffset) => {
+    // Parse event date as if it is in the provided GMT offset timezone
+    const eventDate = new Date(isoDate);
+  
+    // Extract hours and minutes from the gmtOffset string (e.g., "11:00:00")
+    const [hours, minutes] = gmtOffset.split(':').map(Number);
+  
+    // Convert offset to total minutes
+    const totalOffsetMinutes = hours * 60 + minutes;
+  
+    // Convert event time to UTC (by subtracting the offset)
+    eventDate.setMinutes(eventDate.getMinutes() - totalOffsetMinutes);
+  
+    // Get the day, month, year, hours, and minutes
+    const day = String(eventDate.getDate()).padStart(2, '0'); // Ensure two digits
+    const month = String(eventDate.getMonth() + 1).padStart(2, '0'); // Ensure two digits
+    const year = eventDate.getFullYear();
+    const hour = String(eventDate.getHours()).padStart(2, '0'); // Ensure two digits for hour
+    const minute = String(eventDate.getMinutes()).padStart(2, '0'); // Ensure two digits for minute
+  
+    // Format the date and time as dd/mm/yyyy HH:mm
+    const formattedDateTime = `${day}/${month}/${year} ${hour}:${minute}`;
+  
+    return formattedDateTime;
+  };
+  
+  
+    
+    
+    useEffect(() => {
+      if (nextRaceSession?.date_start && nextRaceSession?.gmt_offset) {
+        setSimplifiedDate(formatDate(nextRaceSession.date_start));
+    
+        const localTime = convertToUserLocalTime(nextRaceSession.date_start, nextRaceSession.gmt_offset);
+        setUserLocalTime(localTime);
+    
+        console.log('Event Time in User Local Time:', localTime);
+      }
+    }, [nextRaceSession]);
+
+
+    // useEffect(() => {
+    //     if (nextRaceSession?.date_start) {
+    //       setSimplifiedDate(formatDate(nextRaceSession.date_start));
+    //     }
+    //   }, [nextRaceSession]);
+
+
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+      const storedUserId = localStorage.getItem('userId');
 
     if (token && storedUserId) {
       setIsLoggedIn(true);
@@ -318,8 +377,8 @@ sx={{
   </Box>
 </Box>
         <Routes>
-          <Route path="/" element={<Home userInfo={userInfo} nextRaceSession={nextRaceSession} simplifiedDate={simplifiedDate} />} />
-          <Route path="/play" element={<Play userInfo={userInfo} nextRaceSession={nextRaceSession} drivers={drivers} fetchStatus={fetchStatus} />} />
+          <Route path="/" element={<Home userInfo={userInfo} nextRaceSession={nextRaceSession} userLocalTime={userLocalTime} simplifiedDate={simplifiedDate} />} />
+          <Route path="/play" element={<Play userInfo={userInfo} nextRaceSession={nextRaceSession} userLocalTime={userLocalTime} drivers={drivers} fetchStatus={fetchStatus} />} />
           <Route path="/raceresult" element={<RaceResult drivers={drivers} driversLocalDB={driversLocalDB} fetchStatus={fetchStatus} />} />
           <Route path="/mypredictions" element={<MyPredictions userInfo={userInfo} raceSessions={raceSessions} drivers={drivers} nextRaceSession={nextRaceSession}/>} />
           <Route path="/login" element={<Login />} />
