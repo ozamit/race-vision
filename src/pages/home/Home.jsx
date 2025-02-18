@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Typography } from '@mui/material';
 import InsightsIcon from '@mui/icons-material/Insights';
 
-const Home = ({ userInfo, simplifiedDate, nextRaceSession }) => {
+const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
 
   const navigate = useNavigate();
 
@@ -50,9 +50,14 @@ const Home = ({ userInfo, simplifiedDate, nextRaceSession }) => {
           <Typography color="white" style={{ fontSize: '18px', marginBottom: '10px' }}>
           <i class="bi bi-globe-americas"></i> {nextRaceSession.country_name}
           </Typography>
-          <Typography color="white" style={{ fontSize: '18px' }}>
+          {/* <Typography color="white" style={{ fontSize: '18px' }}>
           <i class="bi bi-calendar-date"></i> {simplifiedDate}
+          </Typography> */}
+          <Typography color="white" style={{ fontSize: '18px' }}>
+          <i class="bi bi-calendar-date"></i> {userLocalTime}
           </Typography>
+
+          
         </Box>
 
         <Box
