@@ -69,10 +69,10 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
   };
 
   return (
-    <div>
-      <div style={{ display: 'flex', margin: '20px' }}>
+    <Typography>
+      <Typography style={{ display: 'flex', margin: '20px' }}>
         {/* Year Selector */}
-        <div style={{ flex: 0.3, marginRight: '20px' }}>
+        <Typography style={{ flex: 0.3, marginRight: '20px' }}>
           <FormControl fullWidth color="white">
             <InputLabel sx={{ color: 'white' }}>Select Year</InputLabel>
             <Select
@@ -93,10 +93,10 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
               <MenuItem value={2025}>2025</MenuItem>
             </Select>
           </FormControl>
-        </div>
+        </Typography>
 
         {/* Race Selector */}
-        <div style={{ flex: 0.7 }}>
+        <Typography style={{ flex: 0.7 }}>
           <FormControl fullWidth>
             <InputLabel sx={{ color: 'white' }}>Select Race</InputLabel>
             <Select
@@ -120,8 +120,8 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
               ))}
             </Select>
           </FormControl>
-        </div>
-      </div>
+        </Typography>
+      </Typography>
 
       <Button
         variant="contained"
@@ -201,7 +201,7 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
           </Typography>
         )
       )}
-    </div>
+    </Typography>
   );
 };
 

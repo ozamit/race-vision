@@ -37,7 +37,6 @@ function App() {
   const [simplifiedDate, setSimplifiedDate] = useState('');
   const [userLocalTime, setUserLocalTime] = useState('');
   const menuOpen = Boolean(anchorEl);
-  // const year = 2024;
 
   const formatDate = (isoDate) => {
     console.log('Original isoDate:', isoDate);

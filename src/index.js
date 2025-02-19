@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client"; // ✅ Import createRoot
 import App from "./App";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -32,13 +32,13 @@ if (!isMobile) {
   link.rel = "stylesheet";
   document.head.appendChild(link);
 } else {
-  // If the user is on a mobile device, render the app
-  ReactDOM.render(
+  // If the user is on a mobile device, render the app using createRoot
+  const root = ReactDOM.createRoot(document.getElementById("root")); // ✅ Use createRoot
+  root.render(
     <React.StrictMode>
       <ThemeProvider theme={theme}>
         <App />
       </ThemeProvider>
-    </React.StrictMode>,
-    document.getElementById("root")
+    </React.StrictMode>
   );
 }

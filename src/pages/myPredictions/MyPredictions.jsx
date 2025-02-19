@@ -100,7 +100,7 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
   }
 
   return (
-    <div style={{ marginBottom: '60px', overflow: 'auto' }}>
+    <Typography style={{ marginBottom: '60px', overflow: 'auto' }}>
       <Box sx={{ padding: 1 }}>
         <Typography sx={{ color: 'white', margin: '15px', fontSize: '24px' }}>
           My Predictions
@@ -331,9 +331,9 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                           textAlign: 'center' // Ensure text is centered
                         }}                             
                       >
-                        <div>Score: {points}</div>
-                        {points > 17 && <div style={{ fontSize: '20px', marginTop: '-5px' }}>🔥</div>}
-                        {points < 5 && <div style={{ fontSize: '20px', marginTop: '-5px' }}>🥶</div>}
+                        <Typography>Score: {points}</Typography>
+                        {points > 17 && <Typography style={{ fontSize: '20px', marginTop: '-5px' }}>🔥</Typography>}
+                        {points < 5 && <Typography style={{ fontSize: '20px', marginTop: '-5px' }}>🥶</Typography>}
 
                       </Typography>
                           </Card>
@@ -351,7 +351,7 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
           <Typography>No predictions found.</Typography>
         )}
       </Box>
-    </div>
+    </Typography>
   );
 };
 

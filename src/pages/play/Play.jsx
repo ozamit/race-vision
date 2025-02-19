@@ -31,6 +31,47 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession, userLocalTime }
     return `${simplifiedDate} ${simplifiedTime}`; // Example: 12/08/2024 01:00 PM
   };
 
+    // State to store the countdown time
+    const [countdown, setCountdown] = useState("");
+  
+    useEffect(() => {
+      if (!userLocalTime) return;
+  
+      // Convert userLocalTime (formatted as dd/mm/yyyy HH:mm) to a Date object
+      const [datePart, timePart] = userLocalTime.split(" ");
+      const [day, month, year] = datePart.split("/").map(Number);
+      const [hours, minutes] = timePart.split(":").map(Number);
+      
+      const raceTime = new Date(year, month - 1, day, hours, minutes); // Month is zero-based in JS Dates
+  
+      const updateCountdown = () => {
+        const now = new Date();
+        const tenMinutesBeforeRace = new Date(raceTime.getTime() - 10 * 60 * 1000); // Subtract 10 minutes
+      
+        const diffMs = tenMinutesBeforeRace - now;
+      
+        if (diffMs <= 0) {
+          setCountdown("Predictions are closed!");
+          return;
+        }
+      
+        const daysLeft = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        const hoursLeft = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutesLeft = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        const secondsLeft = Math.floor((diffMs % (1000 * 60)) / 1000);
+      
+        setCountdown(`${daysLeft}d ${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`);
+      };    
+      
+      // Initial call
+      updateCountdown();
+  
+      // Update countdown every second
+      const interval = setInterval(updateCountdown, 1000);
+  
+      return () => clearInterval(interval);
+    }, [userLocalTime]);
+
 
   useEffect(() => {
     setLocalDrivers(drivers);
@@ -112,11 +153,28 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession, userLocalTime }
   }, []);
 
   return (
-    <div style={{ marginTop: '0px', overflow: 'auto' }}>
-      <Typography color="white" style={{ fontWeight: 'bold' , marginTop: '10px' }}>Next race: {userLocalTime}</Typography>
-      <div style={{ margin: '10px 40px' }}>
+    <Typography style={{ marginTop: '0px', overflow: 'auto' }}>
+{nextRaceSession.session_key === 0 ? (
+  <Typography color="white" style={{ fontWeight: 'bold', margin: '15px' }}>
+    We're experiencing a technical issue retrieving the next race. Please check back later.
+  </Typography>
+) : (
+  <Typography>
+    <Typography color="white" style={{ fontWeight: 'bold', marginTop: '20px' }}>
+    Submit your prediction before the deadline:
+    </Typography>
+    <Typography color="white" style={{ fontWeight: 'bold' }}>
+      {countdown}
+    </Typography>
+
+
+  </Typography>
+  
+)}
+      <Typography style={{ margin: '10px 40px' }}>
         <Button
           onClick={handleSaveOrder}
+          disabled={nextRaceSession.session_key === 0 || countdown === "Predictions are closed!"} // Disable if session_key is 0 OR countdown has ended
           sx={{
             width: '100%',
             backgroundColor: '#FDCA40',
@@ -125,17 +183,20 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession, userLocalTime }
             '&:hover': {
               backgroundColor: '#FDCA40',
             },
+            ...(nextRaceSession.session_key === 0 || countdown === "Predictions are closed!" 
+              ? { opacity: 0.5, cursor: 'not-allowed' } 
+              : {}),
           }}
         >
-          Save Order <i style={{ marginLeft: '15px' }} className="bi bi-floppy"></i>
+          Save Order <i style={{ marginLeft: '5px' }} className="bi bi-floppy"></i>
         </Button>
-      </div>
+      </Typography>
       
-      <Typography color="white">
+      <Typography color="white" style={{ margin: '15px' }}>
         Reorder drivers by dragging them up or down to create your predicted race results
       </Typography>
 
-      <div>
+      <Typography>
         <Reorder.Group
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0)',
@@ -225,7 +286,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession, userLocalTime }
             </Reorder.Item>
           ))}
         </Reorder.Group>
-      </div>
+      </Typography>
 
       <Snackbar
         open={snackbar.open}
@@ -237,7 +298,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession, userLocalTime }
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </div>
+    </Typography>
   );
 };
 
