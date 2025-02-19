@@ -149,7 +149,7 @@ const Admin = ({ userInfo }) => {
 
 
     return (
-        <div>
+        <Typography>
             <Typography
                 sx={{color: 'white', padding: '0px 0px 200px 0px'}}>
             <Typography>Admin</Typography>
@@ -213,12 +213,12 @@ const Admin = ({ userInfo }) => {
                     </AccordionSummary>
                     <AccordionDetails>
                         {raceSessions.map((session, index) => (
-                            <div key={index}>
+                            <Typography key={index}>
                                 <Typography variant="body2">
                                     <strong>Country:</strong> {session.country_name} <br />
                                     <strong>Session Key:</strong> {session.session_key}
                                 </Typography>
-                            </div>
+                            </Typography>
                         ))}
                     </AccordionDetails>
                 </Accordion>
@@ -294,7 +294,7 @@ const Admin = ({ userInfo }) => {
             <Divider sx={{ margin: '10px 0', color: 'white', border: '2px solid'}} />
 
             </Typography>
-        </div>
+        </Typography>
     );
 };
 
