@@ -7,13 +7,10 @@ import {
   AccordionSummary,
   AccordionDetails,
   Card,
-  CardActions,
   CircularProgress,
   Chip,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import SwapHorizontalCircleIcon from '@mui/icons-material/SwapHorizontalCircle';
-import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import { unknownProfileIMG } from '../../utils/img';
 
 

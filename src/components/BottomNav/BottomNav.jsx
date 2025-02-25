@@ -48,17 +48,17 @@ const BottomNav = ({ userInfo }) => {
   
 
   return (
-  <Box
-  sx={{    }}>
+  <Box>
     <Box
     sx={{
       width: '90%',
       position: 'fixed',
-      height: 65,
+      height: 80,
       bottom: 0,
       marginBottom: '0px',
       padding: '0px',
       display: 'flex',
+      flexDirection: 'column',
       left: '49%',
       transform: 'translateX(-50%)', // Center horizontally
       }}
@@ -94,6 +94,8 @@ const BottomNav = ({ userInfo }) => {
           />
         ))}
       </BottomNavigation>
+      {/* <Typography style={{backgroundColor:'black', padingTop: '10px'}} color='white'>text</Typography> */}
+      
     </Box>
   </Box>
   );

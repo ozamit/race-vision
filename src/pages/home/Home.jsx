@@ -2,8 +2,65 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Box, Typography } from '@mui/material';
 import InsightsIcon from '@mui/icons-material/Insights';
+// import { CircularProgress } from '@mui/material';
+import Skeleton from '@mui/material/Skeleton';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
+
+  // const [nextRaceSession, setNextRaceSession] = useState([]); // for testing CircularProgress
+
+  const [progress, setProgress] = useState(0);
+  const [cycle, setCycle] = useState(0);
+
+  // Different durations for each cycle (in milliseconds)
+  const cycleDurations = [4000, 99, 7000, 99, 3000, 99, 4000, 99, 9000, 99, 3000]; // Adjust as needed
+  const totalCycles = cycleDurations.length;
+
+  // Step texts to be shown for each cycle
+  const stepTexts = [
+    "Initializing...🏎️",
+    "Initializing...", // Code skip this text
+    "Connecting to F1 data center...", 
+    "Connecting to F1 data center...", // Code skip this text
+    "Loading Drivers...",
+    "Loading Drivers...", // Code skip this text
+    "Processing Race control data...",
+    "Almost done...", // Code skip this text
+    "Finalizing...", 
+    "Finalizing...", // Code skip this text
+    "🏁 Lights Out and Away We Go! 🏁", 
+  ];
+
+  const [currentStepText, setCurrentStepText] = useState(stepTexts[cycle]); // Track current step text
+
+  useEffect(() => {
+    if (cycle >= totalCycles) {
+      setProgress(100); // Ensure it stays at 100% after the last cycle
+      return;
+    }
+
+    const cycleDuration = cycleDurations[cycle]; // Get current cycle duration
+    const step = 100 / (cycleDuration / 100); // Number of updates to reach 100%
+
+    // Update current step text based on cycle
+    setCurrentStepText(stepTexts[cycle]);
+
+    let interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          setCycle((prevCycle) => prevCycle + 1); // Move to the next cycle
+          return 0; // Reset progress for next run
+        }
+        return prev + step; // Increase progress dynamically
+      });
+    }, 100); // Update every 100ms for smooth progress
+
+    return () => {
+      clearInterval(interval); // Clear the interval properly when the cycle changes
+    };
+  }, [cycle]); // Runs when cycle changes
+
   const navigate = useNavigate();
 
   const handleClickGoToRules = () => {
@@ -20,28 +77,28 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
     const [datePart, timePart] = userLocalTime.split(" ");
     const [day, month, year] = datePart.split("/").map(Number);
     const [hours, minutes] = timePart.split(":").map(Number);
-    
+
     const raceTime = new Date(year, month - 1, day, hours, minutes); // Month is zero-based in JS Dates
 
     const updateCountdown = () => {
       const now = new Date();
       const tenMinutesBeforeRace = new Date(raceTime.getTime() - 10 * 60 * 1000); // Subtract 10 minutes
-    
+
       const diffMs = tenMinutesBeforeRace - now;
-    
+
       if (diffMs <= 0) {
         setCountdown("Predictions are closed!");
         return;
       }
-    
+
       const daysLeft = Math.floor(diffMs / (1000 * 60 * 60 * 24));
       const hoursLeft = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutesLeft = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
       const secondsLeft = Math.floor((diffMs % (1000 * 60)) / 1000);
-    
+
       setCountdown(`${daysLeft}d ${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`);
-    };    
-    
+    };
+
     // Initial call
     updateCountdown();
 
@@ -52,28 +109,51 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
   }, [userLocalTime]);
 
   return (
-    <Typography >
+    <Typography>
       {/* Welcome Message */}
       <Box sx={{ marginTop: '30px', margin: '20px', textAlign: 'center' }}>
-        <Typography component="span"sx={{ fontSize: 34 }} color="white">
+        <Typography component="span" sx={{ fontSize: 34 }} color="white">
           {userInfo?.name ? `${userInfo.name}, Welcome to Race-vision` : 'Welcome to Race-vision'}
         </Typography>
       </Box>
 
       {/* Main Content Boxes */}
       <Box sx={{ marginTop: '30px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
-        
+
         {/* Next Race Details */}
-        <Box sx={{ width: '70%', borderRadius: '20px', padding: '20px', backgroundColor: 'rgba(255, 255, 255, 0.1)', textAlign: 'center', height: '110px' }}>
-          <Typography color="white" style={{ fontSize: '18px', marginBottom: '10px' }}>
-            <i className="bi bi-geo-fill" style={{ marginRight: '10px' }}></i> {nextRaceSession.circuit_short_name}
-          </Typography>
-          <Typography color="white" style={{ fontSize: '18px', marginBottom: '10px' }}>
-            <i className="bi bi-globe-americas" style={{ marginRight: '10px' }}></i> {nextRaceSession.country_name}
-          </Typography>
-          <Typography color="white" style={{ fontSize: '18px' }}>
-          <i className="bi bi-calendar-date" style={{ marginRight: '10px' }}></i> {userLocalTime}
-          </Typography>
+        <Box
+          sx={{
+            width: '70%',
+            borderRadius: '20px',
+            padding: '20px',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            textAlign: 'center',
+            height: '110px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          {Object.keys(nextRaceSession).length === 0 ? (
+            <Box sx={{ width: "100%", textAlign: "center", marginTop: 2 }}>
+              <Typography sx={{ marginBottom: 1, color: "white" }}>
+                {currentStepText || "🏁 Lights Out and Away We Go! 🏁"}
+              </Typography>
+              <LinearProgress variant="determinate" value={progress} />
+            </Box>
+          ) : (
+            <Box >
+              <Typography color="white" style={{ fontSize: '18px', marginBottom: '10px' }}>
+                <i className="bi bi-geo-fill" style={{ marginRight: '10px' }}></i> {nextRaceSession.circuit_short_name}
+              </Typography>
+              <Typography color="white" style={{ fontSize: '18px', marginBottom: '10px' }}>
+                <i className="bi bi-globe-americas" style={{ marginRight: '10px' }}></i> {nextRaceSession.country_name}
+              </Typography>
+              <Typography color="white" style={{ fontSize: '18px' }}>
+                <i className="bi bi-calendar-date" style={{ marginRight: '10px' }}></i> {userLocalTime}
+              </Typography>
+            </Box>
+          )}
         </Box>
 
         {/* Countdown Box */}
@@ -91,13 +171,22 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
             height: '50px',
           }}
         >
-            <Typography color="white" style={{ fontSize: '12px', display: 'flex', alignItems: 'center' }}>
-              Time to submit prediction for the next race
-              <i className="bi bi-hourglass-split" style={{ fontSize: '20px', marginLeft: '10px' }}></i>
-            </Typography>
-            <Typography color="white" style={{ fontSize: '18px', display: 'flex', alignItems: 'center' }}>
-              {countdown}
-            </Typography> 
+          {Object.keys(nextRaceSession).length === 0 ? (
+            <Box sx={{ width: '90%' }}>
+              <Skeleton sx={{ bgcolor: 'grey.800' }} />
+              <Skeleton sx={{ bgcolor: 'grey.800' }} />
+            </Box>
+          ) : (
+            <Box>
+              <Typography color="white" style={{ fontSize: '12px', display: 'flex', alignItems: 'center' }}>
+                Time to submit prediction for the next race
+                <i className="bi bi-hourglass-split" style={{ fontSize: '20px', marginLeft: '10px' }}></i>
+              </Typography>
+              <Typography color="white" style={{ fontSize: '18px', display: 'flex', alignItems: 'center' }}>
+                {countdown}
+              </Typography>
+            </Box>
+          )}
         </Box>
 
         {/* How To Play Box */}

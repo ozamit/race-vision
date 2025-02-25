@@ -94,8 +94,7 @@ function App() {
   
     return formattedDateTime;
   };
-  
-  
+   
     
     
     useEffect(() => {
@@ -108,13 +107,6 @@ function App() {
         console.log('Event Time in User Local Time:', localTime);
       }
     }, [nextRaceSession]);
-
-
-    // useEffect(() => {
-    //     if (nextRaceSession?.date_start) {
-    //       setSimplifiedDate(formatDate(nextRaceSession.date_start));
-    //     }
-    //   }, [nextRaceSession]);
 
 
     useEffect(() => {
@@ -280,34 +272,8 @@ sx={{
   alignItems: 'right',
   flexDirection: 'row-reverse',
   width: '100%',
-  // background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0))', // Gradient for transparency
-  // backdropFilter: 'blur(10px)', // Blur effect
-  // WebkitBackdropFilter: 'blur(10px)', // Safari support
 }}
 >
-  {/* Left Chip */}
-  {/* <Box
-    sx={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexGrow: 1, // Take up the available space on the left
-    }}
-  >
-        <Chip
-          avatar={
-            <Avatar>?</Avatar>
-          }
-          label='How to play'
-          onClick={handleAvatarClick}
-          sx={{
-            backgroundColor: 'rgb(235, 235, 235)',
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            boxShadow: '1px 1px 6px rgba(0, 0, 0, 0.25), -1px -1px 6px rgba(255, 255, 255, 0.06)', // Add box shadow
-          }}
-        />
-  </Box> */}
 
   {/* Right Chip */}
   <Box
@@ -371,8 +337,8 @@ sx={{
           fontWeight: 'bold',
           boxShadow: '1px 1px 6px rgba(0, 0, 0, 0.25), -1px -1px 6px rgba(255, 255, 255, 0.06)',
         }}
-      />
-    )}
+        />
+      )}
   </Box>
 </Box>
         <Routes>

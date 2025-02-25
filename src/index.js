@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client"; // ✅ Import createRoot
 import App from "./App";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme, ThemeProvider, } from "@mui/material/styles";
+import Typography from '@mui/material/Typography';
 
 // Define a custom MUI theme with the "Funnel Display" font
 const theme = createTheme({
