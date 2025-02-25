@@ -177,7 +177,14 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
               <Skeleton sx={{ bgcolor: 'grey.800' }} />
             </Box>
           ) : (
-            <Box>
+            <Box sx={{
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '50px',
+            }}>
               <Typography color="white" style={{ fontSize: '12px', display: 'flex', alignItems: 'center' }}>
                 Time to submit prediction for the next race
                 <i className="bi bi-hourglass-split" style={{ fontSize: '20px', marginLeft: '10px' }}></i>
