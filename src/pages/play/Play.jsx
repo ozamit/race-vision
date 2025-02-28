@@ -141,7 +141,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession, userLocalTime }
   };
 
   useEffect(() => {
-    console.log('userInfo:', userInfo);
+    // console.log('userInfo:', userInfo);
     console.log('nextRaceSession:', nextRaceSession);
 
     const handleScroll = () => {
@@ -275,12 +275,14 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession, userLocalTime }
                   <Typography
                     color="white"
                     style={{
+                      fontSize: driver.full_name.length > 20 ? '14px' : '16px',
                       marginBottom: '10px',
                       marginLeft: '10px',
                     }}
                   >
                     {driver.full_name}
                   </Typography>
+
                 </CardActions>
               </Card>
             </Reorder.Item>

@@ -112,10 +112,18 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
     <Typography>
       {/* Welcome Message */}
       <Box sx={{ marginTop: '30px', margin: '20px', textAlign: 'center' }}>
-        <Typography component="span" sx={{ fontSize: 34 }} color="white">
-          {userInfo?.name ? `${userInfo.name}, Welcome to Race-vision` : 'Welcome to Race-vision'}
-        </Typography>
-      </Box>
+  <Typography component="span" sx={{ fontSize: 30 }} color="white">
+    {userInfo?.name ? `Hi ${userInfo.name}!` : ''}
+  </Typography>
+  <br /> {/* This adds a line break */}
+  <Typography component="span" sx={{ fontSize: 26 }} color="white">
+    Welcome to{' '}
+    <Typography component="span" sx={{ color: "#FDCA40", fontSize: 26 }}>
+      Race-vision
+    </Typography>
+  </Typography>
+</Box>
+
 
       {/* Main Content Boxes */}
       <Box sx={{ marginTop: '30px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
@@ -123,7 +131,7 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
         {/* Next Race Details */}
         <Box
           sx={{
-            width: '70%',
+            width: '80%',
             borderRadius: '20px',
             padding: '20px',
             backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -159,7 +167,7 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
         {/* Countdown Box */}
         <Box
           sx={{
-            width: '70%',
+            width: '80%',
             borderRadius: '20px',
             padding: '20px',
             backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -186,8 +194,8 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
               height: '50px',
             }}>
               <Typography color="white" style={{ fontSize: '12px', display: 'flex', alignItems: 'center' }}>
-                Time to submit prediction for the next race
-                <i className="bi bi-hourglass-split" style={{ fontSize: '20px', marginLeft: '10px' }}></i>
+                <i className="bi bi-hourglass-split" style={{ fontSize: '20px', marginRight: '10px' }}></i>
+                 Time to submit prediction for the next race
               </Typography>
               <Typography color="white" style={{ fontSize: '18px', display: 'flex', alignItems: 'center' }}>
                 {countdown}
@@ -199,7 +207,7 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
         {/* How To Play Box */}
         <Box
           sx={{
-            width: '70%',
+            width: '80%',
             borderRadius: '20px',
             padding: '20px',
             backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -217,11 +225,11 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
         </Box>
 
         {/* Two Side-by-Side Boxes */}
-        <Box sx={{ display: 'flex', width: '80%', justifyContent: 'space-between', gap: '20px' }}>
+        <Box sx={{ display: 'flex', width: '90%', justifyContent: 'space-between', gap: '20px' }}>
           {/* Insights Box */}
           <Box
             sx={{
-              width: '40%',
+              width: '45%',
               borderRadius: '20px',
               padding: '20px',
               backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -243,7 +251,7 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
           {/* Video Collection Box */}
           <Box
             sx={{
-              width: '40%',
+              width: '45%',
               borderRadius: '20px',
               padding: '20px',
               backgroundColor: 'rgba(255, 255, 255, 0.1)',

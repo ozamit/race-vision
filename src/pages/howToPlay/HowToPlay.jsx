@@ -15,7 +15,7 @@ const HowToPlay = () => {
   }
   
   return (
-    <Box sx={{ marginBottom: '80px', padding: 3 }}>
+    <Box sx={{ marginBottom: '80px', padding: "25px 30px 100px 30px" }}>
       {/* <Typography sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '-50px 0 40px 0' }}> */}
       <Button 
   variant="contained" 
@@ -52,7 +52,13 @@ const HowToPlay = () => {
           title: 'Objective of the game',
           details: (
           <>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'white' }}>Predict the finishing positions of the drivers in an upcoming race as accurately as possible.</Typography>
+            <Typography variant="h6"       sx={{
+        fontWeight: 'bold',
+        color: 'white',
+        boxShadow: 'none', // Remove any shadow
+        border: 'none', // Remove any border
+        background: 'transparent' // Ensures no background effect
+      }}>Predict the finishing positions of the drivers in an upcoming race as accurately as possible.</Typography>
           </>
         ),
         },
@@ -150,6 +156,8 @@ const HowToPlay = () => {
             marginBottom: '5px',
             backgroundColor: 'rgba(255, 255, 255, 0)', // Transparent
             borderRadius: '10px',
+            boxShadow: 'none', // Remove any shadow
+            border: 'none', // Remove any border
           }}
         >
         <AccordionSummary

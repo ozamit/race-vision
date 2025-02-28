@@ -39,15 +39,15 @@ function App() {
   const menuOpen = Boolean(anchorEl);
 
   const formatDate = (isoDate) => {
-    console.log('Original isoDate:', isoDate);
+    // console.log('Original isoDate:', isoDate);
   
     // Remove the "Z" if it exists
     const cleanIsoDate = isoDate.replace('Z', '');
-    console.log('Clean isoDate (without Z):', cleanIsoDate);
+    // console.log('Clean isoDate (without Z):', cleanIsoDate);
   
     // Create Date object (now correctly interpreted as local time)
     const date = new Date(cleanIsoDate);
-    console.log('Parsed Date:', date);
+    // console.log('Parsed Date:', date);
   
     // Format date and time in local timezone
     const simplifiedDate = date.toLocaleDateString('en-GB', {
@@ -61,8 +61,8 @@ function App() {
       minute: '2-digit',
     });
   
-    console.log('Simplified Date:', simplifiedDate);
-    console.log('Simplified Time:', simplifiedTime);
+    // console.log('Simplified Date:', simplifiedDate);
+    // console.log('Simplified Time:', simplifiedTime);
   
     return `${simplifiedDate} ${simplifiedTime}`; // Example: dd/mm/yyyy 01:00 PM
   };
@@ -154,7 +154,7 @@ function App() {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        // console.log('Drivers:', data);
+        console.log('Drivers:', data);
         setDrivers(data);
         setFetchStatus('Drivers fetched successfully!');
       } catch (error) {
