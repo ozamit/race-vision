@@ -10,7 +10,7 @@ const Admin = ({ userInfo }) => {
     useEffect(() => {
         const fetchRaceSessions = async () => {
             try {
-                const response = await fetch(`${host}sessions/getracesessionsforyear?year=2024`);
+                const response = await fetch(`${host}sessions/getracesessionsforyear?year=2025`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -129,7 +129,7 @@ const Admin = ({ userInfo }) => {
 
     const handleUpdateFinalScoreforPrediction = async () => {
         try {
-            const response = await fetch(`${host}predictions/updateFinalScoreforPrediction?sessionKey=9655`, {
+            const response = await fetch(`${host}predictions/updateFinalScoreforPrediction?sessionKey=9693`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
