@@ -181,7 +181,7 @@ function App() {
     
           const data = await response.json();
           setDriversLocalDB(data); // Update the state with fetched drivers
-          console.log('Drivers from Local DB:', data); // Print the state to the console
+          // console.log('Drivers from Local DB:', data); // Print the state to the console
         } catch (error) {
           console.error('Error fetching drivers from local DB:', error);
         }

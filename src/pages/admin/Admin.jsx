@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Typography, Divider, Accordion, AccordionSummary, AccordionDetails, TextField, Card, CardActions, Snackbar, Alert } from '@mui/material';
 import { host } from '../../utils/host';
 import { Reorder } from 'framer-motion';
@@ -9,13 +9,14 @@ const Admin = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
     const [driversLocalDB, setDriversLocalDB] = useState([]); // State to store drivers from DB
     const [raceSessions, setRaceSessions] = useState([]);
     const [sessionKey, setSessionKey] = useState(''); // State to store the inputted session key
+    const [sessionKeyForScoring, setSessionKeyForScoring] = useState(''); // State to store the inputted session key
     const [localDrivers, setLocalDrivers] = useState(drivers);
     const [savedOrder, setSavedOrder] = useState([]);
     const [simplifiedDate, setSimplifiedDate] = useState('');
     const [scrollOffset, setScrollOffset] = useState(0);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-    const sessionKeyRef = useRef();
+    
 
     useEffect(() => {
     setLocalDrivers(drivers);
@@ -141,7 +142,8 @@ const Admin = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
         }
     };
 
-    const handleUpdateFinalScoreforPrediction = async (sessionKeyForScoring) => {
+    const handleUpdateFinalScoreforPrediction = async () => {
+        console.log('sessionKeyForScoring:', sessionKeyForScoring);
         if (!sessionKeyForScoring || sessionKeyForScoring.length !== 4) {
           console.warn("Invalid session key");
           return;
@@ -394,7 +396,7 @@ const Admin = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
         After saving the race results, calculate points for all users by entering the desired session key and clicking the button.
         </Typography>
         <TextField
-          inputRef={sessionKeyRef}
+          value={sessionKeyForScoring}
           label="Session Key"
           variant="outlined"
           sx={{
@@ -408,6 +410,8 @@ const Admin = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
             },
           }}
           inputProps={{ maxLength: 4 }}
+        //   onChange={(e) => console.log(e.target.value)}
+          onChange={(e) => setSessionKeyForScoring(e.target.value)}
         />
         <Button
           onClick={handleUpdateFinalScoreforPrediction}

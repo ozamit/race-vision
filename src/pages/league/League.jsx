@@ -26,16 +26,16 @@ const League = ({ raceSessions }) => {
         body: JSON.stringify({ userId }),
       });
       const data = await response.json();
-      if (!response.ok) {
-        console.error(
-          `Error fetching predictions for user ${userId}:`,
-          data.message || response.statusText
-        );
-        return [];
-      }
+      // if (!response.ok) {
+      //   console.error(
+      //     `Error fetching predictions for user ${userId}:`,
+      //     data.message || response.statusText
+      //   );
+      //   return [];
+      // }
       return data.predictions || []; // Ensure predictions are always an array
     } catch (error) {
-      console.error(`Error fetching predictions for user ${userId}:`, error);
+      console.log(`Error fetching predictions for user ${userId}:`, error);
       return [];
     }
   };
@@ -94,9 +94,10 @@ const League = ({ raceSessions }) => {
     loadData();
   }, [raceSessions]);
 
-  const sortedRaceSessions = [...raceSessions].sort(
-    (a, b) => new Date(b.date_start) - new Date(a.date_start)
-  );
+  const sortedRaceSessions = [...raceSessions]
+  .filter((race) => new Date(race.date_start) < new Date()) // Only include past races
+  .sort((a, b) => new Date(b.date_start) - new Date(a.date_start)); // Sort by most recent
+
 
   return (
     <Box sx={{ padding: 2, color: "white" }}>
@@ -165,17 +166,15 @@ const League = ({ raceSessions }) => {
                   Total
                 </TableCell>
                 </Typography>
-                <Typography sx={{ marginLeft: '0px' }}>
                 {sortedRaceSessions.map((race) => (
                   <TableCell
-                    sx={{ color: "white", border: "none",backgroundColor: "rgba(255, 255, 255, 0.2)", padding: '15px 10px 15px 10px', // (top, right, bottom, left)
-                    }}
+                    sx={{ color: "white", border: "none", backgroundColor: "rgba(255, 255, 255, 0.2)", padding: '15px 13px 15px 13px' }}
                     key={race.sessionKey}
                   >
                     {race.country_code}
                   </TableCell>
                 ))}
-                </Typography>
+
               </TableRow>
             </TableHead>
             <TableBody>
@@ -228,21 +227,20 @@ const League = ({ raceSessions }) => {
                         {user.totalScore}
                     </TableCell>
               </Typography>
-              <Typography sx={{ marginLeft: '0px' }}>
-                    {sortedRaceSessions.map((race) => {
-                        const racePrediction = predictions[user._id]?.[race.session_key];
-                        return (
-                        <TableCell
-                            sx={{ color: "white", border: "none" }}
-                            key={race.sessionKey}
-                        >
-                            {racePrediction && racePrediction.finalScore !== undefined
-                            ? racePrediction.finalScore
-                            : "-"}
-                        </TableCell>
-                        );
-                    })}
-              </Typography>
+              {sortedRaceSessions.map((race) => {
+                const racePrediction = predictions[user._id]?.[race.session_key];
+                return (
+                  <TableCell
+                    sx={{ color: "white", border: "none" }}
+                    key={race.sessionKey}
+                  >
+                    {racePrediction && racePrediction.finalScore !== undefined
+                      ? racePrediction.finalScore
+                      : "***"}
+                  </TableCell>
+                );
+              })}
+
                     </TableRow>
                 ))}
                 </TableBody>
