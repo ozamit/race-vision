@@ -116,17 +116,22 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                 totalPoints = userPrediction.predictedOrder.reduce((sum, driver, positionIndex) => {
                   const actualDriver = raceResult.raceResultOrder.find(d => d.driver_number === driver.driver_number);
                   const actualPosition = actualDriver ? actualDriver.position : null;
-
+              
                   if (actualPosition !== null) {
+                    if (actualPosition === 0) {
+                      return sum + 0; // No points for position 0
+                    }
+              
                     const predictedPosition = positionIndex + 1;
                     const gap = Math.abs(predictedPosition - actualPosition);
                     const points = 20 - gap;
                     return sum + points;
                   }
-
+              
                   return sum;
                 }, 0);
               }
+              
 
               return (
                 <Accordion
@@ -170,24 +175,24 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                       overflow: 'auto',
                     }}
                   >
-        <Card
-          style={{
-            display: 'flex',
-            width: '100%',
-            height: 50,
-            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-            borderRadius: '5px',
-            alignItems: 'stretch',
-            boxShadow: 'none',
-            marginTop: '0px',
-            padding: '0px',
-            justifyContent: 'center',
-            position: 'sticky',
-            top: 0,
-            zIndex: 1,
-            backdropFilter: 'blur(30px)',
-          }}
-        >
+                  <Card
+                    style={{
+                      display: 'flex',
+                      width: '100%',
+                      height: 50,
+                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                      borderRadius: '5px',
+                      alignItems: 'stretch',
+                      boxShadow: 'none',
+                      marginTop: '0px',
+                      padding: '0px',
+                      justifyContent: 'center',
+                      position: 'sticky',
+                      top: 0,
+                      zIndex: 1,
+                      backdropFilter: 'blur(30px)',
+                    }}
+                  >
 
 
                       <Typography sx={{display: 'flex', flexDirection: 'row' ,alignItems: 'center', justifyContent: 'center', padding: '0px 30px 0px 0px'}}>
@@ -219,12 +224,18 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                         const actualDriver = raceResult ? raceResult.raceResultOrder.find(d => d.driver_number === driver.driver_number) : null;
                         const actualPosition = actualDriver ? actualDriver.position : 'N/A';
 
-                        // Calculate gap and points
-                        const predictedPosition = positionIndex + 1;
-                        const gap = actualPosition !== 'N/A' ? Math.abs(predictedPosition - actualPosition) : 'N/A';
-                        const points = gap !== 'N/A' ? 20 - gap : 'N/A';
+                      // Calculate gap and points
+                      const predictedPosition = positionIndex + 1;
+                      const gap = actualPosition !== 'N/A' ? Math.abs(predictedPosition - actualPosition) : 'N/A';
 
-                  return (
+                      let points;
+                      if (actualPosition === 0) {
+                        points = 0;
+                      } else {
+                        points = gap !== 'N/A' ? 20 - gap : 'N/A';
+                      }
+
+                      return (
 
                         <Card key={driver._id}
                         style={{
@@ -330,7 +341,7 @@ const MyPredictions = ({ userInfo, raceSessions }) => {
                       >
                         <Typography>Score: {points}</Typography>
                         {points > 17 && <Typography style={{ fontSize: '20px', marginTop: '-5px' }}>🔥</Typography>}
-                        {points < 5 && <Typography style={{ fontSize: '20px', marginTop: '-5px' }}>🥶</Typography>}
+                        {points >= 1 && points <= 4 && (<Typography style={{ fontSize: '20px', marginTop: '-5px' }}>🥶</Typography>)}
 
                       </Typography>
                           </Card>

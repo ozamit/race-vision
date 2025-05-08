@@ -9,7 +9,7 @@ import { Reorder } from 'framer-motion';
 import { host } from '../../utils/host';
 import { unknownProfileIMG } from '../../utils/img';
 
-const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession, userLocalTime }) => {
+const Play = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
   const [localDrivers, setLocalDrivers] = useState(drivers);
   const [savedOrder, setSavedOrder] = useState([]);
   const [simplifiedDate, setSimplifiedDate] = useState('');
@@ -80,6 +80,7 @@ const Play = ({ drivers, fetchStatus, userInfo, nextRaceSession, userLocalTime }
   useEffect(() => {
     if (nextRaceSession?.date_start) {
       setSimplifiedDate(formatDate(nextRaceSession.date_start));
+      console.log(simplifiedDate)
     }
   }, [nextRaceSession]);
 

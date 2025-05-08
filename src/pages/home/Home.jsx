@@ -6,7 +6,7 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import Skeleton from '@mui/material/Skeleton';
 import LinearProgress from '@mui/material/LinearProgress';
 
-const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
+const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startNextRaceSession }) => {
 
   // const [nextRaceSession, setNextRaceSession] = useState([]); // for testing CircularProgress
 
@@ -195,7 +195,7 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession }) => {
             }}>
               <Typography color="white" style={{ fontSize: '12px', display: 'flex', alignItems: 'center' }}>
                 <i className="bi bi-hourglass-split" style={{ fontSize: '20px', marginRight: '10px' }}></i>
-                 Time to submit prediction for the next race
+                 Time to submit prediction for the next race {startNextRaceSession.date_start}
               </Typography>
               <Typography color="white" style={{ fontSize: '18px', display: 'flex', alignItems: 'center' }}>
                 {countdown}

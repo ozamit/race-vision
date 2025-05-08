@@ -4,17 +4,17 @@ import { unknownProfileIMG } from '../../utils/img';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { Box, Button, CircularProgress, Typography, Card, CardActions,FormControl,InputLabel,Select,MenuItem } from '@mui/material';
 
-const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
+const RaceResult = ({ driversLocalDB }) => {
   const [driversForPositions, setDriversForPositions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [raceSessions, setRaceSessions] = useState([]);
   const [selectedSession, setSelectedSession] = useState('');
-  const [year, setYear] = useState(2024); // Default year is 2024
+  const [year, setYear] = useState(2025); // Default year is 2024
 
   useEffect(() => {
     const fetchRaceSessions = async () => {
       try {
-        const response = await fetch(`${host}sessions/getracesessionsforyear?year=${year}`);
+        const response = await fetch(`${host}sessions/getRaceSessionsForYearFromDB?year=${year}`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -89,7 +89,7 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
                 '& .MuiSelect-icon': { color: '#FFFFFF' },
               }}
             >
-              <MenuItem value={2024}>2024</MenuItem>
+              {/* <MenuItem value={2024}>2024</MenuItem> */}
               <MenuItem value={2025}>2025</MenuItem>
             </Select>
           </FormControl>
@@ -115,7 +115,7 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
             >
               {raceSessions.map((session) => (
                 <MenuItem key={session.session_key} value={session.session_key}>
-                  {session.circuit_short_name} - {session.country_name}
+                  {session.circuit_short_name}
                 </MenuItem>
               ))}
             </Select>
@@ -204,5 +204,7 @@ const RaceResult = ({ drivers, driversLocalDB, fetchStatus }) => {
     </Typography>
   );
 };
+
+
 
 export default RaceResult;

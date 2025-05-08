@@ -33,6 +33,7 @@ function App() {
   const [userInfo, setUserInfo] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [nextRaceSession, setNextRaceSession] = useState([]);
+  const [startNextRaceSession, setStartNextRaceSession] = useState([]);
   const [raceSessions, setRaceSessions] = useState([]);
   const [simplifiedDate, setSimplifiedDate] = useState('');
   const [userLocalTime, setUserLocalTime] = useState('');
@@ -198,6 +199,7 @@ function App() {
               throw new Error(`HTTP error! Status: ${response.status}`);
           }
 
+
           // Parse the response JSON
           const data = await response.json();
           
@@ -211,6 +213,31 @@ function App() {
   };
   // Call the function to fetch the next race session
   fetchNextRaceSession();
+
+  const fetchStartNextRaceSessionFromDB = async () => {
+    try {
+        // Construct the API endpoint URL
+        const response = await fetch(`${host}sessions/getNextRaceSessionFromDB`);
+        
+        // Check if the response is successful
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        
+        // Parse the response JSON
+        const data = await response.json();
+        
+        // Log the fetched data to the console
+        // console.log('Next Race Session:', data);
+        setStartNextRaceSession(data);
+    } catch (error) {
+        // Log any errors that occur during the fetch
+        console.error('Error fetching the next race session:', error);
+    }
+};
+// Call the function to fetch the next race session
+fetchStartNextRaceSessionFromDB();
 
           const fetchRaceSessions = async () => {
               try {
@@ -342,14 +369,14 @@ sx={{
   </Box>
 </Box>
         <Routes>
-          <Route path="/" element={<Home userInfo={userInfo} nextRaceSession={nextRaceSession} userLocalTime={userLocalTime} simplifiedDate={simplifiedDate} />} />
+          <Route path="/" element={<Home userInfo={userInfo} nextRaceSession={nextRaceSession} startNextRaceSession={startNextRaceSession} userLocalTime={userLocalTime} simplifiedDate={simplifiedDate} />} />
           <Route path="/play" element={<Play userInfo={userInfo} nextRaceSession={nextRaceSession} userLocalTime={userLocalTime} drivers={drivers} fetchStatus={fetchStatus} />} />
-          <Route path="/raceresult" element={<RaceResult drivers={drivers} driversLocalDB={driversLocalDB} fetchStatus={fetchStatus} />} />
-          <Route path="/mypredictions" element={<MyPredictions userInfo={userInfo} raceSessions={raceSessions} drivers={drivers} nextRaceSession={nextRaceSession}/>} />
+          <Route path="/raceresult" element={<RaceResult driversLocalDB={driversLocalDB} />} />
+          <Route path="/mypredictions" element={<MyPredictions userInfo={userInfo} raceSessions={raceSessions} nextRaceSession={nextRaceSession}/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/howtoplay" element={<HowToPlay />} />         
-          <Route path="/admin" element={<Admin userInfo={userInfo} />} /> 
+          <Route path="/admin" element={<Admin userInfo={userInfo} nextRaceSession={nextRaceSession} userLocalTime={userLocalTime} drivers={drivers} />} /> 
           <Route path="/league" element={<League userInfo={userInfo} raceSessions={raceSessions} />} /> 
         </Routes>
 
