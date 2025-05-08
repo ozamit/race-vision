@@ -95,7 +95,7 @@ const HowToPlay = () => {
               </Typography>
               <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#FDCA40' }}>Deadline for Predictions</Typography>
               <Typography variant="body1" paragraph sx={{ color: 'white' }}>
-                You must submit your prediction at least 1 hour before the scheduled start of the race.
+                You must submit your prediction at least 10 minutes before the scheduled start of the race.
               </Typography>
               <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#FDCA40' }}>One Prediction Per Race</Typography>
               <Typography variant="body1" paragraph sx={{ color: 'white' }}>

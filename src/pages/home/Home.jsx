@@ -195,7 +195,7 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
             }}>
               <Typography color="white" style={{ fontSize: '12px', display: 'flex', alignItems: 'center' }}>
                 <i className="bi bi-hourglass-split" style={{ fontSize: '20px', marginRight: '10px' }}></i>
-                 Time to submit prediction for the next race {startNextRaceSession.date_start}
+                 Time left to submit prediction for the next race
               </Typography>
               <Typography color="white" style={{ fontSize: '18px', display: 'flex', alignItems: 'center' }}>
                 {countdown}
@@ -205,7 +205,7 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
         </Box>
 
         {/* How To Play Box */}
-        <Box
+        {/* <Box
           sx={{
             width: '80%',
             borderRadius: '20px',
@@ -222,14 +222,13 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
           <Typography color="white" style={{ fontSize: '18px', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             How To Play <i className="bi bi-info-circle" style={{ fontSize: '20px', marginLeft: '10px' }}></i>
           </Typography>
-        </Box>
+        </Box> */}
 
-        {/* Two Side-by-Side Boxes */}
-        <Box sx={{ display: 'flex', width: '90%', justifyContent: 'space-between', gap: '20px' }}>
-          {/* Insights Box */}
+{/* Two Side-by-Side Boxes */}
+<Box sx={{ display: 'flex', width: '90%', justifyContent: 'space-between', gap: '20px' }}>
           <Box
             sx={{
-              width: '45%',
+              width: '80%',
               borderRadius: '20px',
               padding: '20px',
               backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -239,12 +238,12 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
               alignItems: 'center',
               height: '100px',
             }}
-          >
-            <Typography color="white">
-              <Typography style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <InsightsIcon style={{ fontSize: '40px' }} />
-                <span style={{ marginTop: '8px' }}>(soon)</span>
-              </Typography>
+            onClick={handleClickGoToRules}
+            >
+            <Typography color="white" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+               <i className="bi bi-info-circle" style={{ fontSize: '40px', marginLeft: '10px' }}></i>
+              <span style={{ fontSize: '20px',marginTop: '8px' }}>How To Play</span>
+
             </Typography>
           </Box>
 
@@ -271,7 +270,32 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
           </Box>
         </Box>
 
+        <Box sx={{ display: 'flex', width: '90%', justifyContent: 'space-between', gap: '20px', marginBottom: '120px' }}>
+          {/* Insights Box */}
+          <Box
+            sx={{
+              width: '90%',
+              borderRadius: '20px',
+              padding: '20px',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              textAlign: 'center',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '150px',
+            }}
+          >
+            <Typography color="white">
+              <Typography style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {/* <InsightsIcon style={{ fontSize: '40px' }} /> */}
+                <span style={{ fontSize: '20px', fontWeight: 'bold' }}>Meet AI Racer 🏎️ ✨ </span>
+                <span style={{ marginTop: '8px' }}>Our AI buddy using AI analysis to predict results and try to beat you. Check its scores in the league table</span>
+              </Typography>
+            </Typography>
+          </Box>
+        </Box>
       </Box>
+
     </Typography>
   );
 };
