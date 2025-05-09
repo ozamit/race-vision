@@ -217,7 +217,15 @@ const Play = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
           dragConstraints={{ top: 0, bottom: scrollOffset }}
         >
           {localDrivers.map((driver, index) => (
-            <Reorder.Item style={{ marginLeft: '0px' }} value={driver} key={driver.name_acronym}>
+            <Reorder.Item
+            value={driver}
+            key={driver.name_acronym}
+            style={{ marginLeft: '0px' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.05 }}
+          >
+          
               <Card
                 style={{
                   display: 'flex',

@@ -155,7 +155,7 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
                 <i className="bi bi-geo-fill" style={{ marginRight: '10px' }}></i> {nextRaceSession.circuit_short_name}
               </Typography>
               <Typography color="white" style={{ fontSize: '18px', marginBottom: '10px' }}>
-                <i className="bi bi-globe-americas" style={{ marginRight: '10px' }}></i> {nextRaceSession.country_name}
+                <i className="bi bi-globe-americas" style={{ marginRight: '10px' }}></i> {nextRaceSession.country_name} {nextRaceSession.location}
               </Typography>
               <Typography color="white" style={{ fontSize: '18px' }}>
                 <i className="bi bi-calendar-date" style={{ marginRight: '10px' }}></i> {userLocalTime}

@@ -101,10 +101,9 @@ const HowToPlay = () => {
               <Typography variant="body1" paragraph sx={{ color: 'white' }}>
                 You are allowed only one prediction per race. Make sure to finalize your prediction before the deadline.
               </Typography>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#FDCA40' }}>No Points for Replaced Drivers</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#FDCA40' }}>Points for Replaced Drivers</Typography>
               <Typography variant="body1" paragraph sx={{ color: 'white' }}>
-              If you predict a position for a driver who did not participate in the race (and was replaced by another driver), no points will be awarded for that prediction.
-              </Typography>
+                If you predict a position for a driver who did not participate in the race (and was replaced by another driver), the substitute driver will inherit the prediction, and points will be awarded based on the substitute driver's result.              </Typography>
             </>
           ),
         },
@@ -135,7 +134,7 @@ const HowToPlay = () => {
               <Typography variant="body1" paragraph sx={{ color: 'white' }}>
                 After the race, the results will be calculated and displayed on the "My Predictions" page.
               </Typography>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#FDCA40' }}>"My Predictions" page</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#FDCA40' }}>"My Predictions" Page</Typography>
               <Typography variant="body1" paragraph sx={{ color: 'white' }}>
                 In the "My Predictions" page, you will find a section for each race where you submitted a prediction. This section will display your prediction score.
               </Typography>

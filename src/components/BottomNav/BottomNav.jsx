@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, BottomNavigation, BottomNavigationAction, Typography } from '@mui/material';
 
 const BottomNav = ({ userInfo }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
-  // Map routes to BottomNavigation indexes
   const routeToIndexMap = {
     '/': 0,
     '/league': 1,
@@ -22,82 +21,100 @@ const BottomNav = ({ userInfo }) => {
     {}
   );
 
-  // Sync the value with the current route
   useEffect(() => {
     const currentPath = location.pathname;
     setValue(routeToIndexMap[currentPath] || 0);
   }, [location.pathname]);
 
-  // Styling logic
-  const getActionStyles = (isSelected) => ({
-    backgroundColor: isSelected ? '#FDCA40' : 'transparent', // Custom background color
-    borderRadius: '50%', // Circle shape
-    color: isSelected ? 'white' : 'white', // Change text/icon color based on selection
-    width: '56px', // Ensures circular shape
-    height: '56px', // Ensures circular shape
-    minWidth: '56px', // Prevents resizing
+  const actions = [
+    { icon: <i className="bi bi-house" style={{ fontSize: '24px' }}></i> },
+    { icon: <i className="bi bi-trophy" style={{ fontSize: '24px' }}></i> },
+    { icon: <i className="bi bi-controller" style={{ fontSize: '24px' }}></i> },
+    { icon: <i className="bi bi-flag" style={{ fontSize: '24px' }}></i> },
+    { icon: <i className="bi bi-ui-checks" style={{ fontSize: '24px' }}></i> },
+  ];
+
+  const itemWidth = 70; // Approximate width of each item (56px icon + margin/padding)
+  const totalItems = actions.length;
+  const navWidth = itemWidth * totalItems;
+
+  return (
+    <Box
+      sx={{
+        position: 'fixed',
+        bottom: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: `${navWidth}px`,
+        zIndex: 0, // Ensure nav is above other elements
+      }}
+    >
+      <Box
+        sx={{
+          position: 'relative',
+          height: '70px', // Set the height of the nav bar
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        {/* Animated yellow circle with the icon inside */}
+        <Box
+  sx={{
+    position: 'absolute',
+    top: 7, // Position the circle so it's above the nav bar and not overlapping the icons
+    left: `${value * itemWidth + (itemWidth - 56) / 2}px`, // Position it based on the selected index
+    width: 56,
+    height: 56,
+    backgroundColor: '#FDCA40',
+    borderRadius: '20%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '10px', // Adjust padding
-    margin: '0px 10px', // Adjust margin
-    '& .MuiSvgIcon-root': { // Override the icon color if it's an SVG icon
-      color: 'white', // Icon color based on selection
-    },
-  });
-  
+    transition: 'left 0.7s ease', // Smooth transition for the circle movement
+    zIndex: 3, // Ensure the circle is above the background but below the icons
+  }}
+>
+  {/* <Typography>{action.index}</Typography> */}
+  {actions[value]?.icon && React.cloneElement(actions[value].icon, { style: { color: '#2167f3', fontSize: '25px' } })} {/* Dynamically display the icon inside the circle and set its color to blue */}
+</Box>
 
-  return (
-  <Box>
-    <Box
-    sx={{
-      width: '90%',
-      position: 'fixed',
-      height: 80,
-      bottom: 0,
-      marginBottom: '0px',
-      padding: '0px',
-      display: 'flex',
-      flexDirection: 'column',
-      left: '49%',
-      transform: 'translateX(-50%)', // Center horizontally
-      }}
-    >
-      <BottomNavigation
+
+        <BottomNavigation
           sx={{
-            width: '100%', // Stretch to fill the parent container
-            backgroundColor: 'rgba(255, 255, 255, 0.3)', // Semi-transparent background
-            borderRadius: 10,
-            margin: '0px',
-            // padding: '5px',
-            backdropFilter: 'blur(4px)', // Apply blur effect to the background
+            width: '100%',
+            backgroundColor: 'rgba(255, 255, 255, 0.3)',
+            borderRadius: 3,
+            backdropFilter: 'blur(4px)',
+            height: 58,
+            zIndex: 2, // Ensure nav items are above the circle
           }}
-
-        showLabels
-        value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-          navigate(indexToRouteMap[newValue] || '/');
-        }}
+          showLabels
+          value={value}
+          onChange={(event, newValue) => {
+            setValue(newValue);
+            navigate(indexToRouteMap[newValue] || '/');
+          }}
         >
-        {[
-          { icon: <i className="bi bi-house" style={{ fontSize: '24px' }}></i> },
-          { icon: <i className="bi bi-trophy" style={{ fontSize: '24px' }}></i> },
-          { icon: <i className="bi bi-controller" style={{ fontSize: '24px' }}></i> },
-          { icon: <i className="bi bi-flag" style={{ fontSize: '24px' }}></i> },
-          { icon: <i className="bi bi-ui-checks" style={{ fontSize: '24px' }}></i> },
-        ].map((action, index) => (
-          <BottomNavigationAction
-          key={index}
-          icon={action.icon}
-          sx={getActionStyles(value === index)}
-          />
-        ))}
-      </BottomNavigation>
-      {/* <Typography style={{backgroundColor:'black', padingTop: '10px'}} color='white'>text</Typography> */}
-      
+          {actions.map((action, index) => (
+            <BottomNavigationAction
+              key={index}
+              icon={action.icon}
+              sx={{
+                color: 'white',
+                width: 56,
+                height: 56,
+                minWidth: 56,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 0, // Ensure icons are above the yellow circle
+                opacity: value === index ? 0 : 1, // Make the selected icon transparent
+              }}
+            />
+          ))}
+        </BottomNavigation>
+      </Box>
     </Box>
-  </Box>
   );
 };
 
