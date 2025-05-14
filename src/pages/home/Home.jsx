@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Snackbar, Alert } from '@mui/material';
 import InsightsIcon from '@mui/icons-material/Insights';
-// import { CircularProgress } from '@mui/material';
+import AssistantIcon from '@mui/icons-material/Assistant';// import { CircularProgress } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 import LinearProgress from '@mui/material/LinearProgress';
+import { host } from '../../utils/host';
 
 const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startNextRaceSession }) => {
 
@@ -12,6 +13,13 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
 
   const [progress, setProgress] = useState(0);
   const [cycle, setCycle] = useState(0);
+  const [trackInsight, setTrackInsighr] = useState("Click to generate an AI track insight");
+  const [aitatistic, setaitatistic] = useState("Click to generate an AI track insight");
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+
 
   // Different durations for each cycle (in milliseconds)
   const cycleDurations = [4000, 99, 7000, 99, 3000, 99, 4000, 99, 9000, 99, 3000]; // Adjust as needed
@@ -67,6 +75,91 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
     navigate("/howtoplay");
   };
 
+  const handleAiTrackInsight = () => {
+    console.log("handleAiTrackInsight");
+    const prompt = "The next F1 race is in Emilia-Romagna. Share one short (max 20 words) insight about the track focus on what typs of cars/teams will have advantage this weekand."; // Define prompt here
+    const fetchAiTrackInsight = async () => {
+        try {
+            const response = await fetch(`${host}ai/trackInsight`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt: prompt }), // Send the prompt in the request body
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                let errorMessage = `HTTP error! Status: ${response.status}`;
+                if (errorData && errorData.message) {
+                    errorMessage += ` - ${errorData.message}`;
+                }
+                throw new Error(errorMessage);
+            }
+
+            const data = await response.json();
+            console.log('trackInsight:', data);
+            if (data.success) {
+                console.log("AI response: ", data.data);
+                setTrackInsighr(data.data);
+            } else {
+                console.error("Error from backend: ", data.message);
+            }
+
+        } catch (error) {
+            console.error('Error fetching AI insight:', error);
+        }
+    };
+    fetchAiTrackInsight();
+};
+
+const handleAiStatistic = () => {
+  console.log("handleAiTrackInsight");
+  const prompt = "please provide one interesting statistic insight from this F1 season (2025), keep your answer short - max 20 words.";
+
+  const fetchAiTrackInsight = async () => {
+    try {
+      const response = await fetch(`${host}ai/trackInsight`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        let errorMessage = `HTTP error! Status: ${response.status}`;
+        if (errorData?.message) {
+          errorMessage += ` - ${errorData.message}`;
+        }
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      console.log('AI statistic:', data);
+
+      if (data.success) {
+        console.log("AI response: ", data.data);
+        setaitatistic(data.data); // Keep your existing state update if needed
+        setSnackbarMessage(data.data);
+        setSnackbarOpen(true);
+      } else {
+        console.error("Error from backend: ", data.message);
+        setSnackbarMessage("Failed to fetch insight.");
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      console.error('Error fetching AI insight:', error);
+      setSnackbarMessage("Something went wrong.");
+      setSnackbarOpen(true);
+    }
+  };
+
+  fetchAiTrackInsight();
+};
+
+
   // State to store the countdown time
   const [countdown, setCountdown] = useState("");
 
@@ -110,8 +203,21 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
 
   return (
     <Typography>
+            <Snackbar
+        open={snackbarOpen}
+        // autoHideDuration={15000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)}
+          severity="info"
+          icon={<InsightsIcon fontSize="inherit" />}
+          sx={{ width: '100%' }}> {snackbarMessage}
+        </Alert>
+      </Snackbar>
+
       {/* Welcome Message */}
-      <Box sx={{ marginTop: '30px', margin: '20px', textAlign: 'center' }}>
+      <Box sx={{ margin: '10px', textAlign: 'center' }}>
   <Typography component="span" sx={{ fontSize: 30 }} color="white">
     {userInfo?.name ? `Hi ${userInfo.name}!` : ''}
   </Typography>
@@ -238,7 +344,7 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
               alignItems: 'center',
               height: '100px',
             }}
-            onClick={handleClickGoToRules}
+            
             >
             <Typography color="white" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                <i className="bi bi-info-circle" style={{ fontSize: '40px', marginLeft: '10px' }}></i>
@@ -260,20 +366,23 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
               alignItems: 'center',
               height: '100px',
             }}
+            onClick={handleAiStatistic}
           >
             <Typography color="white" align="center">
               <Typography style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <i className="bi bi-collection-play-fill" style={{ fontSize: '40px' }}></i>
-                <span style={{ marginTop: '8px' }}>(soon)</span>
+                {/* <i className="bi bi-stars" style={{ fontSize: '40px' }}></i> */}
+                <InsightsIcon style={{ fontSize: '40px', marginLeft: '10px' }} />
+                <span style={{ fontSize: '14px' }}>Quick Stat (click)</span>
               </Typography>
             </Typography>
           </Box>
         </Box>
 
-        <Box sx={{ display: 'flex', width: '90%', justifyContent: 'space-between', gap: '20px', marginBottom: '120px' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '90%', justifyContent: 'space-between', gap: '20px', marginBottom: '120px' }}>
           {/* Insights Box */}
           <Box
             sx={{
+              display: 'flex', flexDirection: 'column',
               width: '90%',
               borderRadius: '20px',
               padding: '20px',
@@ -282,19 +391,45 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              height: '150px',
+              height: '300px',
             }}
           >
             <Typography color="white">
               <Typography style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 {/* <InsightsIcon style={{ fontSize: '40px' }} /> */}
                 <span style={{ fontSize: '20px', fontWeight: 'bold' }}>Meet AI Racer 🏎️ ✨ </span>
-                <span style={{ marginTop: '8px' }}>Our AI buddy using AI analysis to predict results and try to beat you. Check its scores in the league table</span>
+                <span style={{ marginTop: '8px' }}>Our AI buddy using AI analysis to predict results and try to beat you. Check its scores in the league table.</span>
               </Typography>
             </Typography>
+
+            <Box sx={{ marginTop: '10px',
+                       alignItems: 'center',
+                       backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                       width: '100%',
+                       borderRadius: '20px',
+                       padding: '10px',
+                       backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                       textAlign: 'center',
+                       display: 'flex',
+                       justifyContent: 'center',
+                       alignItems: 'center',
+                        }}
+                      onClick={handleAiTrackInsight}
+            >
+            <Typography color="white">
+              <Typography style={{ display: 'flex', flexDirection: 'column' ,alignItems: 'center' }}>
+                <AssistantIcon style={{ fontSize: '30px', margin: '5px 0px' }} />
+                <span style={{ margin: '4px 0px', fontSize: '16px' }}>{trackInsight}</span>
+              </Typography>
+            </Typography>
+              
+
+            </Box>
           </Box>
         </Box>
       </Box>
+
+
 
     </Typography>
   );
