@@ -42,7 +42,7 @@ const BottomNav = ({ userInfo }) => {
     <Box
       sx={{
         position: 'fixed',
-        bottom: 0,
+        bottom: 10,
         left: '50%',
         transform: 'translateX(-50%)',
         width: `${navWidth}px`,
