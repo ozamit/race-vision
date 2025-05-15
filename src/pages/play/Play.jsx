@@ -8,6 +8,8 @@ import Alert from '@mui/material/Alert';
 import { Reorder } from 'framer-motion';
 import { host } from '../../utils/host';
 import { unknownProfileIMG } from '../../utils/img';
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 const Play = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
   const [localDrivers, setLocalDrivers] = useState(drivers);
@@ -15,6 +17,9 @@ const Play = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
   const [simplifiedDate, setSimplifiedDate] = useState('');
   const [scrollOffset, setScrollOffset] = useState(0);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [existingPrediction, setExistingPrediction] = useState(null);
+  const [isReadyToRender, setIsReadyToRender] = useState(false);
+
 
   // Function to simplify the date format
   const formatDate = (isoDate) => {
@@ -72,10 +77,53 @@ const Play = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
       return () => clearInterval(interval);
     }, [userLocalTime]);
 
+    const fetchUserPrediction = async () => {
+      if (!userInfo?._id || !nextRaceSession?.session_key) return;
+    
+      try {
+        const response = await fetch(`${host}predictions/getPredictionsByUserId`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: userInfo._id }),
+        });
+    
+        if (!response.ok) throw new Error('Failed to fetch prediction');
+    
+        const result = await response.json();
+    
+        if (Array.isArray(result.predictions)) {
+          const nextRacePrediction = result.predictions.find(
+            (p) => Number(p.sessionKey) === Number(nextRaceSession.session_key)
+          );
+    
+          if (nextRacePrediction) {
+            setExistingPrediction(nextRacePrediction.predictedOrder);
+            setLocalDrivers(nextRacePrediction.predictedOrder);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching existing prediction:', error);
+      } finally {
+        // Wait 1 second before showing the cards
+        setTimeout(() => {
+          setIsReadyToRender(true);
+        }, 1000);
+      }
+    };
+    
+    
 
-  useEffect(() => {
-    setLocalDrivers(drivers);
-  }, [drivers]);
+    useEffect(() => {
+      if (userInfo && nextRaceSession?.session_key) {
+        fetchUserPrediction();
+      }
+    }, [userInfo, nextRaceSession]);
+  
+
+
+  // useEffect(() => {
+  //   setLocalDrivers(drivers);
+  // }, [drivers]);
 
   useEffect(() => {
     if (nextRaceSession?.date_start) {
@@ -198,6 +246,7 @@ const Play = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
       </Typography>
 
       <Typography>
+      {isReadyToRender ? (
         <Reorder.Group
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0)',
@@ -297,6 +346,14 @@ const Play = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
             </Reorder.Item>
           ))}
         </Reorder.Group>
+       ) : (
+          <div style={{ textAlign: 'center', marginTop: '30px' }}>
+              <CircularProgress style={{ color: '#FDCA40' }} />
+              <Typography color="white" style={{ marginTop: '10px' }}>
+                Loading predictions...
+              </Typography>
+            </div>
+      )} 
       </Typography>
 
       <Snackbar
