@@ -134,6 +134,7 @@ const RaceResult = ({ driversLocalDB }) => {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     borderRadius: '8px',
+                    backdropFilter: 'blur(3px)',
                     marginBottom: '5px',
                   }}
                 >

@@ -287,6 +287,7 @@ const Play = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
                   marginLeft: '0px',
                   marginTop: '5px',
                   position: 'relative',
+                  backdropFilter: 'blur(3px)',
                   padding: ' 0px 0px 0px 10px',
                 }}
               >

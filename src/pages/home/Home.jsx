@@ -77,7 +77,7 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
 
   const handleAiTrackInsight = () => {
     console.log("handleAiTrackInsight");
-    const prompt = "The next F1 race is in Emilia-Romagna. Share one short (max 20 words) insight about the track focus on what typs of cars/teams will have advantage this weekand."; // Define prompt here
+    const prompt = `The next F1 race is in ${nextRaceSession.circuit_short_name}. Share one short (max 20 words) insight about the track focus on what typs of cars/teams will have advantage this weekand.`; // Define prompt here
     const fetchAiTrackInsight = async () => {
         try {
             const response = await fetch(`${host}ai/trackInsight`, {
@@ -115,7 +115,7 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
 
 const handleAiStatistic = () => {
   console.log("handleAiTrackInsight");
-  const prompt = "please provide one interesting statistic insight from this F1 season (2025), keep your answer short - max 20 words.";
+  const prompt = "please provide one interesting statistic insight about F1, keep your answer short - max 20 words.";
 
   const fetchAiTrackInsight = async () => {
     try {
@@ -245,6 +245,7 @@ const handleAiStatistic = () => {
             height: '110px',
             display: 'flex',
             justifyContent: 'center',
+            backdropFilter: 'blur(4px)',
             alignItems: 'center',
           }}
         >
@@ -282,6 +283,7 @@ const handleAiStatistic = () => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
+            backdropFilter: 'blur(4px)',
             height: '50px',
           }}
         >
@@ -342,6 +344,7 @@ const handleAiStatistic = () => {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
+              backdropFilter: 'blur(4px)',
               height: '100px',
             }}
             onClick={handleClickGoToRules}
@@ -364,6 +367,7 @@ const handleAiStatistic = () => {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
+              backdropFilter: 'blur(4px)',
               height: '100px',
             }}
             onClick={handleAiStatistic}
@@ -391,6 +395,7 @@ const handleAiStatistic = () => {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
+              backdropFilter: 'blur(4px)',
               height: '300px',
             }}
           >

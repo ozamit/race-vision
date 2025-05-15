@@ -295,29 +295,37 @@ fetchStartNextRaceSessionFromDB();
   return (
     <Router>
       <div className="App">
-      <Box
-        sx={{
-          minHeight: '100vh',
-          backgroundImage: `url(https://i.ibb.co/PgYfCpx/Untitled-design-1.png)`,
-          // backgroundColor: `black`,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover', // Ensures the image covers the whole background
-          backgroundPosition: 'center', // Centers the image
-        }}>
-      <Box
-sx={{
-  position: 'sticky',
-  top: 0,
-  left: 0,
-  right: 0,
-  zIndex: 10,
-  paddingTop: '15px',
-  display: 'flex',
-  alignItems: 'right',
-  flexDirection: 'row-reverse',
-  width: '100%',
-}}
->
+          {/* Background layer: fixed and behind everything */}
+          <Box
+            sx={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              backgroundImage: `url(https://i.ibb.co/6cgKRDdw/Untitled-design-4.jpg)`,
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              zIndex: -1, // Ensure it stays in the background
+            }}
+          />
+            {/* Foreground scrollable content */}
+            <Box sx={{ position: 'relative', zIndex: 1, minHeight: '100vh', overflowX: 'hidden' }}>
+                <Box
+                  sx={{
+                    position: 'sticky',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    zIndex: 10,
+                    paddingTop: '15px',
+                    display: 'flex',
+                    alignItems: 'right',
+                    flexDirection: 'row-reverse',
+                    width: '100%',
+                  }}
+                >
 
   {/* Right Chip */}
   <Box
