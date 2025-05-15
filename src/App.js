@@ -148,14 +148,31 @@ function App() {
   }, [isLoggedIn, userId]);
 
   useEffect(() => {
-    const fetchDrivers = async () => {
+    // const fetchDrivers = async () => {
+    //   try {
+    //     const response = await fetch(`${host}drivers/getdrivers`);
+    //     if (!response.ok) {
+    //       throw new Error(`HTTP error! Status: ${response.status}`);
+    //     }
+    //     const data = await response.json();
+    //     console.log('Drivers:', data);
+    //     setDrivers(data);
+    //     setFetchStatus('Drivers fetched successfully!');
+    //   } catch (error) {
+    //     console.error('Error fetching drivers:', error);
+    //     setFetchStatus('Failed to fetch drivers. Please try again later.');
+    //   }
+    // };
+    // fetchDrivers();
+
+    const fetchGridDrivers = async () => {
       try {
-        const response = await fetch(`${host}drivers/getdrivers`);
+        const response = await fetch(`${host}drivers/getGridDriversLocalDB`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        console.log('Drivers:', data);
+        console.log('GridDrivers:', data);
         setDrivers(data);
         setFetchStatus('Drivers fetched successfully!');
       } catch (error) {
@@ -163,7 +180,7 @@ function App() {
         setFetchStatus('Failed to fetch drivers. Please try again later.');
       }
     };
-    fetchDrivers();
+    fetchGridDrivers();
 
     // Fetch the drivers from DB
       const handleGetDriversFromDB = async () => {

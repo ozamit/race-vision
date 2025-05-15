@@ -344,7 +344,7 @@ const handleAiStatistic = () => {
               alignItems: 'center',
               height: '100px',
             }}
-            
+            onClick={handleClickGoToRules}
             >
             <Typography color="white" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                <i className="bi bi-info-circle" style={{ fontSize: '40px', marginLeft: '10px' }}></i>
