@@ -306,7 +306,7 @@ fetchStartNextRaceSessionFromDB();
               backgroundImage: `url(https://i.ibb.co/6cgKRDdw/Untitled-design-4.jpg)`,
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'cover',
-              backgroundPosition: 'center',
+              backgroundPosition: 'top',
               zIndex: -1, // Ensure it stays in the background
             }}
           />
