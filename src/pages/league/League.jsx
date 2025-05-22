@@ -114,12 +114,14 @@ const League = ({ raceSessions }) => {
           sx={{
             backgroundColor: "rgba(255, 255, 255, 0.2)",
             borderRadius: "5px",
+            overflowX: "auto", // <-- allows horizontal scroll
+            maxWidth: "100%", // optional, limit table width
           }}
         >
           <Table>
             <TableHead>
-              <TableRow sx={{display: "flex"}}>
-                <Typography
+              <TableRow sx={{display: "flex", width: "max-content"}}>
+                {/* <Typography
                 style={{
                     position: "sticky",
                     width: 210,
@@ -128,16 +130,21 @@ const League = ({ raceSessions }) => {
                     backdropFilter: "blur(30px)",
                     border: "none",
                   }}
-                  >
+                  > */}
                   <TableCell
                     style={{
                       color: "white",
-                      width: 10,
-                      backgroundColor: "rgba(255, 255, 255, 0.1)",
-                      padding: '10px 10px 10px 10px', // (top, right, bottom, left)
-                      zIndex: 2,
-                      backdropFilter: "blur(30px)",
+                      display: "flex",
+                      alignItems: "center",
+                      padding: '10px 15px 10px 10px', // (top, right, bottom, left)
+                      backdropFilter: "blur(15px)",
                       border: "none",
+                      width: 10,
+                      position: "sticky",
+                      left: 0,
+                      zIndex: 2,
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+
                     }}
                   >
                     #
@@ -146,16 +153,16 @@ const League = ({ raceSessions }) => {
                   <TableCell
                     sx={{
                       color: "white",
-                      backgroundColor: "rgba(255, 255, 255, 0.1)",
-                      width: 120,
-                      // minWidth: 100,
-                      // maxWidth: 100,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                      backdropFilter: "blur(30px)",
+                      display: "flex",
+                      alignItems: "center",
+                      padding: '10px 15px 10px 10px', // (top, right, bottom, left)
+                      backdropFilter: "blur(15px)",
                       border: "none",
-                      padding: '10px 10px 5px 25px',
+                      width: 120,
+                      position: "sticky",
+                      left: 30,
+                      zIndex: 2,
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
                     }}
                   >
                     Name
@@ -164,20 +171,30 @@ const League = ({ raceSessions }) => {
                 <TableCell
                   sx={{
                     color: "white",
-                    width: 30,
-                    backgroundColor: "rgba(255, 255, 255, 0.1)",
-                    zIndex: 2,
-                    backdropFilter: "blur(30px)",
+                    display: "flex",
+                    alignItems: "center",
+                    padding: '10px 15px 10px 10px', // (top, right, bottom, left)
+                    backdropFilter: "blur(15px)",
                     border: "none",
-                    padding: '15px 20px 15px 20px', // (top, right, bottom, left)
+                    width: 40,
+                    position: "sticky",
+                    left: 160,
+                    zIndex: 2,
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
                   }}
                 >
                   Total
                 </TableCell>
-                </Typography>
+                {/* </Typography> */}
                 {sortedRaceSessions.map((race) => (
                   <TableCell
-                    sx={{ color: "white",
+                    sx={{
+                      color: "white",
+                      display: "flex",
+                      alignItems: "center",
+                      fontFamily: "monospace",
+                      fontVariantNumeric: "tabular-nums", // optional, improves alignment
+                      letterSpacing: "normal", // ensures no extra spacing
                       border: "none",
                       width: 30,
                       backgroundColor: "rgba(255, 255, 255, 0.2)",
@@ -195,8 +212,8 @@ const League = ({ raceSessions }) => {
 
             <TableBody>
                 {users.map((user, index) => (
-                  <TableRow sx={{ display: "flex" }} key={user._id}>
-                    <Typography
+                  <TableRow sx={{ display: "flex", width: "max-content" }} key={user._id}>
+              {/* <Typography
                 style={{
                   display: "flex",
                     position: "sticky",
@@ -206,7 +223,7 @@ const League = ({ raceSessions }) => {
                     backdropFilter: "blur(30px)",
                     border: "none",
                   }}
-                  >
+                  > */}
 
                   <TableCell
                     sx={{
@@ -229,14 +246,14 @@ const League = ({ raceSessions }) => {
                   <TableCell
                     sx={{
                       color: "white",
-                      padding: '10px 0px 5px 0px',
+                      display: "flex",
+                      alignItems: "center",
+                      padding: '10px 15px 10px 10px', // (top, right, bottom, left)
                       backdropFilter: "blur(15px)",
                       border: "none",
-                      width: 125,
-                      minWidth: 125,
-                      maxWidth: 125,
+                      width: 120,
                       position: "sticky",
-                      // left: 40, // after rank column
+                      left: 30,
                       zIndex: 2,
                       backgroundColor: "rgba(0,0,0,0.4)",
                     }}
@@ -247,7 +264,7 @@ const League = ({ raceSessions }) => {
                         overflowY: "auto",
                         overflowX: "auto",
                         whiteSpace: "normal",
-                        maxWidth: 125, // Adjust as needed for visible height
+                        maxWidth: 115, // Adjust as needed for visible height
                         // wordBreak: "break-word",
                         pr: 1,
                       }}
@@ -260,39 +277,51 @@ const League = ({ raceSessions }) => {
 
                 
                   <TableCell
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "right",
-                      color: "white",
-                      padding: '15px 20px 15px 20px',
-                      backdropFilter: "blur(15px)",
-                      border: "none",
-                      position: "sticky",
-                      left: 170, // 50 (rank) + 120 (name)
-                      zIndex: 2,
-                      backgroundColor: "rgba(0,0,0,0.4)",
-                      width: 30,
-                    }}
-                  >
-                    {user.totalScore}
-                  </TableCell>
-                  </Typography>
+                      sx={{
+                        fontFamily: "monospace", // Ensures consistent digit width
+                        fontVariantNumeric: "tabular-nums", // Aligns numbers nicely (optional extra step)
+                        color: "white",
+                        display: "flex",
+                        alignItems: "center",
+                        padding: '10px 15px 10px 10px', // (top, right, bottom, left)
+                        backdropFilter: "blur(15px)",
+                        border: "none",
+                        width: 10,
+                        position: "sticky",
+                        left: 160,
+                        zIndex: 2,
+                        backgroundColor: "rgba(0,0,0,0.4)",
+                        width: 40, // Fixed width to ensure alignment
+
+                        textAlign: "right"
+                      }}
+                    >
+                      {user.totalScore}
+                    </TableCell>
+
+                  {/* </Typography> */}
                 
                   {sortedRaceSessions.map((race) => {
                     const racePrediction = predictions[user._id]?.[race.session_key];
                     return (
                       <TableCell
-                        sx={{ color: "white",
+                        sx={{ 
+                          color: "white",
+                          display: "flex",
+                          alignItems: "center",
+                          fontFamily: "monospace",
+                          fontVariantNumeric: "tabular-nums", // optional, improves alignment
+                          letterSpacing: "normal", // ensures no extra spacing
                           border: "none",
-                          Width: 30,
+                          width: 30,
+                          backgroundColor: "rgba(255, 255, 255, 0.1)",
                           padding: '15px 13px 15px 13px'
                         }}
                         key={race.sessionKey}
                       >
                         {racePrediction?.finalScore !== undefined
                           ? racePrediction.finalScore
-                          : "* * *"}
+                          : "---"}
                       </TableCell>
                     );
                   })}
