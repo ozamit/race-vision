@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { formatDate, convertToUserLocalTime } from './utils/dateUtils';
 import './App.css';
 import Play from './pages/play/Play';
 import MyPredictions from './pages/myPredictions/MyPredictions';
@@ -11,6 +12,7 @@ import HowToPlay from './pages/howToPlay/HowToPlay';
 import BottomNav from './components/BottomNav/BottomNav';
 import Admin from './pages/admin/Admin';
 import League from './pages/league/League';
+import UserPredictions from './pages/userPredictions/userPredictions';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import {
   Avatar,
@@ -22,7 +24,6 @@ import {
 } from '@mui/material';
 import { Person as PersonIcon } from '@mui/icons-material';
 import { host } from './utils/host';
-// import { backgroundImg1 } from './utils/img';
 
 function App() {
   const [drivers, setDrivers] = useState([]);
@@ -39,64 +40,7 @@ function App() {
   const [userLocalTime, setUserLocalTime] = useState('');
   const menuOpen = Boolean(anchorEl);
 
-  const formatDate = (isoDate) => {
-    // console.log('Original isoDate:', isoDate);
-  
-    // Remove the "Z" if it exists
-    const cleanIsoDate = isoDate.replace('Z', '');
-    // console.log('Clean isoDate (without Z):', cleanIsoDate);
-  
-    // Create Date object (now correctly interpreted as local time)
-    const date = new Date(cleanIsoDate);
-    // console.log('Parsed Date:', date);
-  
-    // Format date and time in local timezone
-    const simplifiedDate = date.toLocaleDateString('en-GB', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-  
-    const simplifiedTime = date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  
-    // console.log('Simplified Date:', simplifiedDate);
-    // console.log('Simplified Time:', simplifiedTime);
-  
-    return `${simplifiedDate} ${simplifiedTime}`; // Example: dd/mm/yyyy 01:00 PM
-  };
-  
-
-
-  const convertToUserLocalTime = (isoDate, gmtOffset) => {
-    // Parse event date as if it is in the provided GMT offset timezone
-    const eventDate = new Date(isoDate);
-  
-    // Extract hours and minutes from the gmtOffset string (e.g., "11:00:00")
-    const [hours, minutes] = gmtOffset.split(':').map(Number);
-  
-    // Convert offset to total minutes
-    const totalOffsetMinutes = hours * 60 + minutes;
-  
-    // Convert event time to UTC (by subtracting the offset)
-    eventDate.setMinutes(eventDate.getMinutes() - totalOffsetMinutes);
-  
-    // Get the day, month, year, hours, and minutes
-    const day = String(eventDate.getDate()).padStart(2, '0'); // Ensure two digits
-    const month = String(eventDate.getMonth() + 1).padStart(2, '0'); // Ensure two digits
-    const year = eventDate.getFullYear();
-    const hour = String(eventDate.getHours()).padStart(2, '0'); // Ensure two digits for hour
-    const minute = String(eventDate.getMinutes()).padStart(2, '0'); // Ensure two digits for minute
-  
-    // Format the date and time as dd/mm/yyyy HH:mm
-    const formattedDateTime = `${day}/${month}/${year} ${hour}:${minute}`;
-  
-    return formattedDateTime;
-  };
-   
-    
+  // Functions formatDate and convertToUserLocalTime were moved to utils/dateUtils.js
     
     useEffect(() => {
       if (nextRaceSession?.date_start && nextRaceSession?.gmt_offset) {
@@ -148,22 +92,6 @@ function App() {
   }, [isLoggedIn, userId]);
 
   useEffect(() => {
-    // const fetchDrivers = async () => {
-    //   try {
-    //     const response = await fetch(`${host}drivers/getdrivers`);
-    //     if (!response.ok) {
-    //       throw new Error(`HTTP error! Status: ${response.status}`);
-    //     }
-    //     const data = await response.json();
-    //     console.log('Drivers:', data);
-    //     setDrivers(data);
-    //     setFetchStatus('Drivers fetched successfully!');
-    //   } catch (error) {
-    //     console.error('Error fetching drivers:', error);
-    //     setFetchStatus('Failed to fetch drivers. Please try again later.');
-    //   }
-    // };
-    // fetchDrivers();
 
     const fetchGridDrivers = async () => {
       try {
@@ -205,56 +133,34 @@ function App() {
       };
       handleGetDriversFromDB();
 
-    const fetchNextRaceSession = async () => {
-      try {
-          // Construct the API endpoint URL
-          // const response = await fetch(`${host}sessions/getNextRaceSession`);
-          const response = await fetch(`${host}sessions/getNextRaceSessionFromDB`);
-          
-          // Check if the response is successful
-          if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-
-
-          // Parse the response JSON
-          const data = await response.json();
-          
-          // Log the fetched data to the console
-          console.log('Next Race Session:', data);
-          setNextRaceSession(data);
-      } catch (error) {
-          // Log any errors that occur during the fetch
-          console.error('Error fetching the next race session:', error);
-      }
-  };
-  // Call the function to fetch the next race session
-  fetchNextRaceSession();
-
-  const fetchStartNextRaceSessionFromDB = async () => {
-    try {
-        // Construct the API endpoint URL
-        const response = await fetch(`${host}sessions/getNextRaceSessionFromDB`);
-        
-        // Check if the response is successful
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        
-        // Parse the response JSON
-        const data = await response.json();
-        
-        // Log the fetched data to the console
-        // console.log('Next Race Session:', data);
-        setStartNextRaceSession(data);
-    } catch (error) {
-        // Log any errors that occur during the fetch
-        console.error('Error fetching the next race session:', error);
+// Fetch the next race session once and update both session states
+const fetchNextRaceSessionCombined = async () => {
+  try {
+    // Fetch session data from DB (used in multiple components)
+    const response = await fetch(`${host}sessions/getNextRaceSessionFromDB`);
+    
+    // Handle failed response
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
+
+    const data = await response.json();
+
+    // Log for debugging; shows fetched session in console
+    console.log('Next Race Session:', data);
+
+    // Sync both states with same data source
+    setNextRaceSession(data);        // Primary race session
+    setStartNextRaceSession(data);  // Secondary use, reused same data
+  } catch (error) {
+    // Keep visibility into API issues
+    console.error('Error fetching the next race session:', error);
+  }
 };
-// Call the function to fetch the next race session
-fetchStartNextRaceSessionFromDB();
+
+// Call it once, instead of twice with duplicate fetches
+fetchNextRaceSessionCombined();
+
 
           const fetchRaceSessions = async () => {
               try {
@@ -397,7 +303,8 @@ fetchStartNextRaceSessionFromDB();
           <Route path="/" element={<Home userInfo={userInfo} nextRaceSession={nextRaceSession} startNextRaceSession={startNextRaceSession} userLocalTime={userLocalTime} simplifiedDate={simplifiedDate} />} />
           <Route path="/play" element={<Play userInfo={userInfo} nextRaceSession={nextRaceSession} userLocalTime={userLocalTime} drivers={drivers} fetchStatus={fetchStatus} />} />
           <Route path="/raceresult" element={<RaceResult driversLocalDB={driversLocalDB} />} />
-          <Route path="/mypredictions" element={<MyPredictions userInfo={userInfo} raceSessions={raceSessions} nextRaceSession={nextRaceSession}/>} />
+          <Route path="/mypredictions" element={<MyPredictions userInfo={userInfo} raceSessions={raceSessions} />} />
+          <Route path="/UserPredictions" element={<UserPredictions raceSessions={raceSessions} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/howtoplay" element={<HowToPlay />} />         

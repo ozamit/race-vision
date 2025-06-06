@@ -13,7 +13,7 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
 
   const [progress, setProgress] = useState(0);
   const [cycle, setCycle] = useState(0);
-  const [trackInsight, setTrackInsighr] = useState("Click to generate an AI track insight");
+  const [trackInsight, setTrackInsight] = useState("Click to generate an AI track insight");
   const [aitatistic, setaitatistic] = useState("Click to generate an AI track insight");
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -101,7 +101,7 @@ const Home = ({ userInfo, simplifiedDate, userLocalTime, nextRaceSession, startN
             console.log('trackInsight:', data);
             if (data.success) {
                 console.log("AI response: ", data.data);
-                setTrackInsighr(data.data);
+                setTrackInsight(data.data);
             } else {
                 console.error("Error from backend: ", data.message);
             }

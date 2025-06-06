@@ -13,7 +13,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 const Play = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
   const [localDrivers, setLocalDrivers] = useState(drivers);
-  const [savedOrder, setSavedOrder] = useState([]);
   const [simplifiedDate, setSimplifiedDate] = useState('');
   const [scrollOffset, setScrollOffset] = useState(0);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -120,11 +119,6 @@ const Play = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
     }, [userInfo, nextRaceSession]);
   
 
-
-  // useEffect(() => {
-  //   setLocalDrivers(drivers);
-  // }, [drivers]);
-
   useEffect(() => {
     if (nextRaceSession?.date_start) {
       setSimplifiedDate(formatDate(nextRaceSession.date_start));
@@ -134,7 +128,7 @@ const Play = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
 
   const handleSaveOrder = async () => {
     console.log('Saving order:', localDrivers);
-    console.log('URL:', `${host}predictions/savePredictions`);
+    // console.log('URL:', `${host}predictions/savePredictions`);
 
     try {
       const body = {
@@ -169,7 +163,6 @@ const Play = ({ drivers, userInfo, nextRaceSession, userLocalTime }) => {
         const result = await response.json();
         console.log('Saved Order:', localDrivers);
         showNotification(result.message || 'Driver order saved successfully!', 'success');
-        setSavedOrder(localDrivers);
       } else {
         const errorData = await response.json();
         console.log('Error saving order:', errorData);
