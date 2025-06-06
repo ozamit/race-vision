@@ -18,6 +18,7 @@ const RaceResult = ({ driversLocalDB }) => {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
         setRaceSessions(data);
+        console.log("RaceSessions: ", data);
       } catch (error) {
         console.error('Error fetching race sessions:', error);
       }
@@ -94,6 +95,7 @@ const RaceResult = ({ driversLocalDB }) => {
             >
               {raceSessions
                 .filter((session) => new Date(session.date_start) < new Date())
+                .sort((a, b) => new Date(a.date_start) - new Date(b.date_start)) // 👈 Sort by date ascending
                 .map((session) => (
                   <MenuItem key={session.session_key} value={session.session_key}>
                     {session.circuit_short_name}

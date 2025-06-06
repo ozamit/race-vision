@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+
 import {
   Typography,
   CircularProgress,
@@ -18,6 +20,13 @@ const League = ({ raceSessions }) => {
   const [predictions, setPredictions] = useState({});
   const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate();
+
+  const handleUserClick = (userId) => {
+    console.log("User clicked: ", userId);
+    navigate('/userpredictions', { state: { userId, raceSessions } });
+    }
+
   const fetchPredictionsByUserId = async (userId) => {
     try {
       const response = await fetch(`${host}predictions/getPredictionsByUserId`, {
@@ -26,13 +35,6 @@ const League = ({ raceSessions }) => {
         body: JSON.stringify({ userId }),
       });
       const data = await response.json();
-      // if (!response.ok) {
-      //   console.error(
-      //     `Error fetching predictions for user ${userId}:`,
-      //     data.message || response.statusText
-      //   );
-      //   return [];
-      // }
       return data.predictions || []; // Ensure predictions are always an array
     } catch (error) {
       console.log(`Error fetching predictions for user ${userId}:`, error);
@@ -104,6 +106,10 @@ const League = ({ raceSessions }) => {
       <Typography variant="h4" gutterBottom>
       Friends League
       </Typography>
+      <Typography
+        sx={{fontSize: 12, marginBottom: "10px", color: "white"}}>
+          New: Tap on a friend's name to view their predictions.
+      </Typography>
 
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -121,16 +127,6 @@ const League = ({ raceSessions }) => {
           <Table>
             <TableHead>
               <TableRow sx={{display: "flex", width: "max-content"}}>
-                {/* <Typography
-                style={{
-                    position: "sticky",
-                    width: 210,
-                    left: 0,
-                    zIndex: 2,
-                    backdropFilter: "blur(30px)",
-                    border: "none",
-                  }}
-                  > */}
                   <TableCell
                     style={{
                       color: "white",
@@ -213,17 +209,6 @@ const League = ({ raceSessions }) => {
             <TableBody>
                 {users.map((user, index) => (
                   <TableRow sx={{ display: "flex", width: "max-content" }} key={user._id}>
-              {/* <Typography
-                style={{
-                  display: "flex",
-                    position: "sticky",
-                    width: 210,
-                    left: 0,
-                    zIndex: 2,
-                    backdropFilter: "blur(30px)",
-                    border: "none",
-                  }}
-                  > */}
 
                   <TableCell
                     sx={{
@@ -259,6 +244,7 @@ const League = ({ raceSessions }) => {
                     }}
                   >
                     <Box
+                    onClick={() => handleUserClick(user._id)} // Pass user._id here
                       sx={{
                         maxHeight: "40px", // Adjust as needed for visible height
                         overflowY: "auto",

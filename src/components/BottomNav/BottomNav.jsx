@@ -10,16 +10,21 @@ const BottomNav = ({ userInfo }) => {
   const routeToIndexMap = {
     '/': 0,
     '/league': 1,
+    '/userpredictions': 1,
     '/play': 2,
     '/raceresult': 3,
     '/mypredictions': 4,
     '/admin': 5,
   };
 
-  const indexToRouteMap = Object.keys(routeToIndexMap).reduce(
-    (acc, key) => ({ ...acc, [routeToIndexMap[key]]: key }),
-    {}
-  );
+// This ensures only the first occurrence of each index is stored (primary route)
+const indexToRouteMap = {};
+for (const [path, idx] of Object.entries(routeToIndexMap)) {
+  if (!(idx in indexToRouteMap)) {
+    indexToRouteMap[idx] = path;
+  }
+}
+
 
   useEffect(() => {
     const currentPath = location.pathname;
